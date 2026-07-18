@@ -79,11 +79,20 @@ const activeNet = () => state.merged ? state.hebbNet : state.net;
 // ---------- boot ----------
 
 window.addEventListener('load', () => {
-  Promise.all(PAGES.map(p => new Promise(res => {
+  Promise.all(PAGES.map(p => new Promise((res, rej) => {
     const im = new Image();
+    // Hugging Face serves these via a cross-origin CDN redirect; without CORS
+    // mode the canvas taints and getImageData() throws. The CDN sends
+    // Access-Control-Allow-Origin: *, so anonymous CORS is clean here and on
+    // any same-origin host too.
+    im.crossOrigin = 'anonymous';
     im.onload = () => res(im);
+    im.onerror = () => rej(new Error('could not load ' + p.src));
     im.src = p.src;
-  }))).then(init);
+  }))).then(init).catch(err => {
+    console.error(err);
+    setStatus('could not load the page images — try a hard refresh');
+  });
 });
 
 function init(imgs) {
