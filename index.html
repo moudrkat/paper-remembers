@@ -93,24 +93,29 @@
 
   <div class="rail">
     <div class="card">
-      <h2>INSTRUMENT — EQ [7], COMPUTED LIVE</h2>
-      <div class="eq">E = −½ ΣΣ T<sub>ij</sub> μ<sub>i</sub> μ<sub>j</sub>
-        <span class="eq-note">— in the μ = ±1 variables of p. 2557</span></div>
-      <div>selected memory: <span id="sel-tag">[7]</span></div>
-      <div id="e-value">—</div>
-      <canvas id="e-trace" width="240" height="96"></canvas>
-      <div class="trace-cap">the hill is E [7]; the dot is your print. Rule [1] steps it downhill to a bottom — the equation, or its negative.</div>
+      <div class="hint">drag your cursor across a printed equation to damage it —</div>
+      <div class="controls">
+        <button id="btn-heal">heal it</button>
+        <button id="btn-reset">reset</button>
+      </div>
       <div id="status">loading the print…</div>
       <div id="verdict"></div>
-      <div class="hint">damage it by dragging your cursor across the print</div>
-      <div class="controls">
-        <button id="btn-heal">heal</button>
-        <button id="btn-reset">reset print</button>
-      </div>
-      <div class="hint" style="margin-top:8px">or overload it, the way the paper warns against:</div>
-      <div class="controls">
-        <button id="btn-merge">cram all four into one net</button>
-      </div>
+
+      <details class="deeper">
+        <summary>look closer — the energy it rolls down</summary>
+        <div class="eq">E = −½ ΣΣ T<sub>ij</sub> μ<sub>i</sub> μ<sub>j</sub></div>
+        <div class="sub">memory <span id="sel-tag">[7]</span> · E = <span id="e-value">—</span></div>
+        <canvas id="e-trace" width="240" height="96"></canvas>
+        <div class="trace-cap">the hill is E, equation [7]; the dot is your print. Rule [1] steps it downhill to a bottom — the equation, or its photographic negative.</div>
+      </details>
+
+      <details class="deeper">
+        <summary>overload it — the way the paper warns against</summary>
+        <div class="trace-cap">Store all four equations in one network and they merge into a single ghost (p. 2557).</div>
+        <div class="controls">
+          <button id="btn-merge">cram all four into one net</button>
+        </div>
+      </details>
     </div>
   </div>
 </div>

@@ -169,10 +169,23 @@ header .tagline {
 @media (prefers-color-scheme: light) { .section-head { color: #6b6257; } }
 
 .card .hint {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: #6b6257;
-  margin: 4px 0 2px;
+  margin: 0 0 8px;
 }
+.card .deeper {
+  margin-top: 14px;
+  border-top: 1px solid rgba(40, 30, 10, 0.18);
+  padding-top: 10px;
+}
+.card .deeper summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.card .deeper .eq { margin: 10px 0 4px; }
+.card .sub { font-size: 0.72rem; color: #6b6257; margin-bottom: 4px; }
 
 .patch.healing {
   outline: 1.5px dashed var(--accent);

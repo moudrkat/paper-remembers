@@ -35,6 +35,7 @@ const state = {
   canvases: {},  // patch id -> overlay canvas
   active: 2,     // patch index being played; default Eq [7]
   healing: false,
+  autoHeal: 0,   // pending auto-heal timer after a stroke
   raf: 0,
   eTrace: [],
   demoDone: false,
@@ -90,7 +91,7 @@ function init(img) {
   buildOverlays();
   wireControls();
   setActive(2); // Eq [7], the star
-  setStatus('ready — smudge an equation');
+  setStatus('drag your cursor across an equation to rub out the ink');
   state.introTimers.push(setTimeout(narrateIntro, 500)); // the hero is first; teach immediately
   if (location.search.includes('debug')) $('#page-hero').classList.add('debug');
 }
@@ -126,15 +127,19 @@ function setActive(idx) {
 function startSmudge(e, cv) {
   e.preventDefault();
   if (state.healing) stopHeal();
+  clearTimeout(state.autoHeal); // a new stroke cancels a pending auto-heal
   state.toucheds[state.active] = true;
   cv.setPointerCapture(e.pointerId);
+  setStatus('rubbing out the ink…');
   const move = ev => smudgeAt(ev, cv);
   smudgeAt(e, cv);
   cv.addEventListener('pointermove', move);
   cv.addEventListener('pointerup', () => {
     cv.removeEventListener('pointermove', move);
     refreshEnergy();
-    setStatus('corrupted — press heal, or keep smudging');
+    // let go, and it heals itself — cause and effect in one gesture
+    setStatus('let go — now watch it heal itself…');
+    state.autoHeal = setTimeout(heal, 650);
   }, { once: true });
 }
 
@@ -176,6 +181,7 @@ function refreshEnergy() {
 
 function resetPrint() {
   stopHeal();
+  clearTimeout(state.autoHeal);
   state.works[state.active] = Uint8Array.from(state.patterns[state.active]);
   state.toucheds[state.active] = false;
   state.eTrace = [];
@@ -196,7 +202,7 @@ function heal() {
   state.eTrace = [net.energy()];
   state.healing = true;
   $('#verdict').textContent = '';
-  setStatus('relaxing — asynchronous updates, rule [1], random order');
+  setStatus('healing — the equation is pulling its ink back into place…');
   const cv = activeCanvas();
   cv.classList.add('healing');
   const tick = () => {
@@ -238,16 +244,19 @@ function verdict() {
     return;
   }
   const d = net.hammingTo(0);
-  if (d === 0)
-    setVerdict(`recovered ${tag} exactly — 0 of ${N.toLocaleString()} bits ` +
-      `wrong, energy strictly downhill the whole way`);
-  else if (d === N)
-    setVerdict(`healed into its own photographic negative — the complement ` +
-      `is an equally deep minimum; past 50% corruption its basin wins`);
-  else
-    setVerdict(`stable with ${d.toLocaleString()} bit errors — a nearby ` +
-      `local minimum (${(100 * d / N).toFixed(1)}% off ${tag})`);
-  setStatus('stable — a full pass with zero flips');
+  if (d === 0) {
+    setVerdict(`restored ${tag} exactly — every pixel back where it belongs.`);
+    setStatus('healed — the memory came back whole');
+  } else if (d === N) {
+    setVerdict(`it healed into the photographic negative of ${tag} — an ` +
+      `equally deep valley. You rubbed out more than half, so it fell the ` +
+      `other way.`);
+    setStatus('healed — but into the negative');
+  } else {
+    setVerdict(`came back ${(100 * d / N).toFixed(1)}% off ${tag} — close, ` +
+      `but it settled in a nearby dip.`);
+    setStatus('healed — nearly, not exactly');
+  }
 }
 
 // ---------- the guided intro: teach the idea in three beats ----------
@@ -343,7 +352,7 @@ function endIntro() {
   const ov = $('#intro');
   ov.classList.remove('show');
   setTimeout(() => { ov.hidden = true; }, 450);
-  setStatus('your turn — drag your cursor across any equation');
+  setStatus('your turn — drag your cursor across an equation to rub out the ink');
 }
 
 // ---------- drawing ----------
@@ -422,6 +431,7 @@ function wireControls() {
 
 function toggleMerge(on) {
   stopHeal();
+  clearTimeout(state.autoHeal);
   state.merged = on;
   const btn = $('#btn-merge');
   btn.classList.toggle('on', on);
