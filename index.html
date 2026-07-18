@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The paper that remembers itself — Hopfield 1982, live</title>
-<meta name="description" content="J. J. Hopfield's 1982 paper, running its own equations on its own print. Smudge an equation; the energy function it defines pulls it back.">
+<meta name="description" content="Rub out any part of a 1982 Nobel-winning paper and watch the whole page rebuild itself — the same memory mechanism that powers modern AI.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,20 +16,21 @@
   </div>
   <h1>The paper that remembers itself</h1>
   <p class="tagline">
-    Rub out a printed equation with your cursor — and watch it heal itself,
-    pulled back into place by the very equation printed on the page.
+    Scribble out any part of this page — a word, a line, the title, a whole
+    paragraph. Let go, and the page rebuilds itself from nothing but what it
+    remembers.
   </p>
   <p class="age">
-    J.&nbsp;J.&nbsp;Hopfield, 1982 — <span id="age">44</span> years old, and
-    the network it defines won the 2024 Nobel Prize in Physics. Four of its
-    printed equations are stored as memories in that very network; every pixel
-    of ink is a neuron.
+    It is a memory in the sense of J.&nbsp;J.&nbsp;Hopfield's 1982 paper —
+    <span id="age">44</span> years old, and the idea won the 2024 Nobel Prize
+    in Physics. The paper stores <em>itself</em> as the memory; every speck of
+    ink is one tiny switch in the network.
   </p>
 </header>
 
+<!-- intro narration ribbon (fixed, non-blocking) -->
 <div id="intro" class="intro" hidden>
   <div class="intro-card">
-    <canvas id="intro-canvas" width="540" height="72"></canvas>
     <p id="intro-text"></p>
     <button id="intro-skip">skip →</button>
   </div>
@@ -37,83 +38,108 @@
 
 <div class="layout">
   <div class="pages">
-    <div class="page-wrap" id="page-hero">
-      <img id="hero-img" src="media/page-4.png" alt="Hopfield 1982, page 2556 — the energy function, equation 7">
-      <!-- patch overlays are injected here by app.js -->
+
+    <div class="stage">
+      <div class="stage-bar">
+        <button id="prev-page">‹ prev</button>
+        <span id="page-label">PNAS 1982 · p. 2554</span>
+        <button id="next-page">next ›</button>
+      </div>
+      <div class="stage-scroll">
+        <canvas id="stage-canvas"></canvas>
+      </div>
+      <div class="caption">scribble anywhere on the page with your cursor, then let go — the whole page remembers itself</div>
     </div>
-    <div class="caption">the four boxed equations are stored memories — smudge one with your cursor</div>
+
+    <div class="reveal">
+      <h2>What you just watched is how AI remembers.</h2>
+      <p>
+        A damaged input snapping back to the nearest thing it has stored — that
+        is not a metaphor for modern AI. In 2020 this exact 1982 rule was
+        <a href="https://arxiv.org/abs/2008.02217">proven to be identical</a> to
+        <strong>“attention,”</strong> the mechanism inside every large language
+        model — GPT, Claude, all of them. When an AI recalls what you told it,
+        this is the operation running underneath. You are looking at the
+        ancestor of ChatGPT: a physics paper about magnets and neurons, and you
+        can rub it out and watch it think its way back.
+      </p>
+    </div>
+
+    <div class="story">
+      <h2>The whole story, in four steps</h2>
+      <ol>
+        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982</strong></a> — Hopfield shows a network of simple on/off units can store memories and rebuild each one from just a fragment.</li>
+        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024</strong></a> — the idea wins the Nobel Prize in Physics (shared with Geoffrey Hinton).</li>
+        <li><a href="https://doi.org/10.1051/jphyslet:019850046020035900"><strong>1985</strong></a> — the projection rule lets one network hold many overlapping memories without blurring them. That is the rule this page runs.</li>
+        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020</strong></a> — “Hopfield Networks Is All You Need”: this rule is proven to be exactly the attention inside today's AI language models.</li>
+      </ol>
+    </div>
 
     <div class="note">
-      This is the paper, not an animation of it: storage is prescription [2],
-      the dynamics is rule [1], and the number in the instrument is E of
-      equation [7] — which rule [1] can only ever push downhill.
-      <a href="https://arxiv.org/abs/2008.02217">In 2020</a> this update rule
-      was shown to be exactly transformer attention: the memory you just
-      smudged is an ancestor of the mechanism inside every large language model.
+      <p><strong>How it actually works.</strong> The page is a grid of on/off
+      switches — one per pixel of ink. The clean page sits at the bottom of a
+      "valley." When you scribble, you shove the switches up a hillside; let go,
+      and they roll back down to the nearest valley bottom. Because that bottom
+      is a stored page, the page returns. Nothing points it at the answer — it
+      simply falls there. Five pages are stored in the <em>same</em> network,
+      and it still finds the right one.</p>
     </div>
 
     <details class="limits">
-      <summary>Honest limits — what this does and doesn't show</summary>
+      <summary>The honest details — is this really the paper?</summary>
       <ul>
-        <li>Each equation is <strong>one stored pattern in its own network</strong>. Recovery is easy because it is the only memory there — this shows recall, not capacity. The real limit (Hopfield's ~0.15N) lives in the Fig. 2 bench below.</li>
-        <li>Damage past half heals to the <strong>photographic negative</strong> — an equally deep minimum, not the original. At exactly half it's a coin toss.</li>
-        <li>Store all four in <strong>one</strong> network and they merge — p. 2557 warns of exactly this; we tried, they do. Hence one net each.</li>
-        <li>This is the discrete <strong>1982</strong> model with pixels as neurons — a faithful but didactic mapping, not a claim about how brains or LLMs store text.</li>
+        <li><strong>Storing five whole pages in one network is the hard case.</strong> Hopfield's original 1982 rule can't do it — pages share so much white space they blur into one ghost (you can switch to that rule, right, and watch it happen). To make recall work this page uses the <strong>projection (pseudo-inverse) rule</strong>, a well-known 1985 improvement (Personnaz–Guyon–Dreyfus). Same network, same "roll downhill" dynamics, same energy — only the way memories are written into the weights is smarter.</li>
+        <li>The page runs at a reduced resolution (the network's-eye view is a pure black/white bitmap), so tiny text looks rough — that is the memory, not a photo.</li>
+        <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. Both are honest; the readout tells you.</li>
+        <li>Pixels-as-switches is the classic way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
       </ul>
     </details>
 
-    <h2 class="section-head">The full paper — five pages, PNAS, April 1982</h2>
-    <div class="page-wrap"><img src="media/page-2.png" alt="Hopfield 1982, page 2554" loading="lazy"></div>
-    <div class="page-wrap"><img src="media/page-3.png" alt="Hopfield 1982, page 2555 — update rule [1] and storage prescription [2]" loading="lazy"></div>
-    <div class="page-wrap"><img src="media/page-5.png" alt="Hopfield 1982, page 2557 — Fig. 2, error distribution of recalled memories" loading="lazy"></div>
-
-    <div class="bench">
-      <h2>RE-RUN FIG. 2 — THE RECALL-ERROR HISTOGRAM</h2>
-      <p>
-        This reproduces <strong>Fig. 2</strong> above — how many bits come back
-        wrong when you overload the memory. (Fig. 1, on p. 2555, is the neuron
-        input-output curve; not this.) N&nbsp;=&nbsp;100 neurons, <em>n</em>
-        random memories, each relaxed by rule [1]. Push <em>n</em> past ~15 and
-        recall falls apart, exactly as the paper found.
-      </p>
-      <label>n =
-        <select id="fig2-n">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15" selected>15</option>
-        </select>
-      </label>
-      <button id="btn-fig2">run the 1982 experiment</button>
-      <canvas id="fig2-chart" width="560" height="240"></canvas>
-      <div id="fig2-out"></div>
-    </div>
-
-    <div class="page-wrap"><img src="media/page-6.png" alt="Hopfield 1982, page 2558" loading="lazy"></div>
+    <details class="fullpaper">
+      <summary>Re-run Hopfield's own Fig. 2 capacity experiment</summary>
+      <div class="bench">
+        <p>
+          Hopfield measured how recall breaks down as you cram in more memories.
+          100 switches, <em>n</em> random memories, his original 1982 rule. Push
+          <em>n</em> past ~15 and recall falls apart — the very limit the 1985
+          projection rule above was built to push past.
+        </p>
+        <label>n =
+          <select id="fig2-n">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15" selected>15</option>
+          </select>
+        </label>
+        <button id="btn-fig2">run the 1982 experiment</button>
+        <canvas id="fig2-chart" width="560" height="240"></canvas>
+        <div id="fig2-out"></div>
+      </div>
+    </details>
   </div>
 
   <div class="rail">
     <div class="card">
-      <div class="hint">drag your cursor across a printed equation to damage it —</div>
+      <div class="hint">Scribble your cursor anywhere on the page, then let go. It rebuilds itself.</div>
       <div class="controls">
-        <button id="btn-heal">heal it</button>
-        <button id="btn-reset">reset</button>
+        <button id="btn-heal">rebuild now</button>
+        <button id="btn-reset">reset page</button>
       </div>
-      <div id="status">loading the print…</div>
+      <div id="status">loading the page…</div>
       <div id="verdict"></div>
 
       <details class="deeper">
-        <summary>look closer — the energy it rolls down</summary>
-        <div class="eq">E = −½ ΣΣ T<sub>ij</sub> μ<sub>i</sub> μ<sub>j</sub></div>
-        <div class="sub">memory <span id="sel-tag">[7]</span> · E = <span id="e-value">—</span></div>
+        <summary>see the "valley" it rolls into</summary>
+        <div class="sub">page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
         <canvas id="e-trace" width="240" height="96"></canvas>
-        <div class="trace-cap">the hill is E, equation [7]; the dot is your print. Rule [1] steps it downhill to a bottom — the equation, or its photographic negative.</div>
+        <div class="trace-cap">the hill is the network's energy; the dot is your scribbled page. It rolls downhill into a valley — the stored page, or its photographic negative.</div>
       </details>
 
       <details class="deeper">
-        <summary>overload it — the way the paper warns against</summary>
-        <div class="trace-cap">Store all four equations in one network and they merge into a single ghost (p. 2557).</div>
+        <summary>try Hopfield's original 1982 rule</summary>
+        <div class="trace-cap">The 1985 rule this page uses keeps the five pages apart. Hopfield's original 1982 rule can't — watch a damaged page rebuild into a blurred ghost of all five.</div>
         <div class="controls">
-          <button id="btn-merge">cram all four into one net</button>
+          <button id="btn-merge">switch to Hopfield's 1982 rule</button>
         </div>
       </details>
     </div>
@@ -122,10 +148,11 @@
 
 <footer>
   Paper: J. J. Hopfield, PNAS 79:2554–2558 (1982), © National Academy of
-  Sciences; scan via JSTOR, shown here for personal, educational use.
+  Sciences; scan for personal, educational use. The projection rule is
+  Personnaz, Guyon &amp; Dreyfus (1985); the attention equivalence is Ramsauer
+  et al., <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a> (2020).
   Everything runs in your browser; nothing is sent anywhere.
-  Made by Unt1l1f1nd —
-  <a href="https://github.com/moudrkat">github</a>.
+  Made by Unt1l1f1nd — <a href="https://github.com/moudrkat">github</a>.
 </footer>
 
 <script>
