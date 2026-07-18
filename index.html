@@ -74,6 +74,15 @@
       </p>
     </div>
 
+    <div class="provenance">
+      <h2>Which part comes from which paper</h2>
+      <ul>
+        <li><strong>Hopfield, 1982 — everything you watch.</strong> The switches, the recall, the energy equation [7], the proof it settles downhill [8], memories as valleys. The whole idea and the whole machine are his.</li>
+        <li><strong>1985 — one small upgrade.</strong> A smarter recipe for the connection strengths, so overlapping pages don't blur together. Nothing else changes — same recall, same energy, same idea. (Flip the toggle on the right to run Hopfield's <em>original</em> 1982 recipe and watch the pages blur.)</li>
+        <li><strong>2020 — the AI link, not running here.</strong> Hopfield's same idea, made continuous, turns out to be exactly the “attention” inside GPT and Claude. It is the reason this matters, not part of the demo.</li>
+      </ul>
+    </div>
+
     <div class="story">
       <h2>The whole story, in four steps</h2>
       <ol>
@@ -145,10 +154,10 @@
       </details>
 
       <details class="deeper">
-        <summary>try Hopfield's original 1982 rule</summary>
-        <div class="trace-cap">The 1985 rule this page uses keeps the five pages apart. Hopfield's original 1982 rule can't — watch a damaged page rebuild into a blurred ghost of all five.</div>
+        <summary>try Hopfield's original 1982 storage recipe</summary>
+        <div class="trace-cap">Only one thing changes: <em>how the wiring is computed</em>. This page uses the 1985 recipe, which keeps the five pages apart. Switch to Hopfield's original 1982 recipe and the same pages blur into one ghost — everything else (recall, energy) is identical.</div>
         <div class="controls">
-          <button id="btn-merge">switch to Hopfield's 1982 rule</button>
+          <button id="btn-merge">switch to Hopfield's 1982 recipe</button>
         </div>
       </details>
     </div>

@@ -235,6 +235,24 @@ header .tagline {
 }
 .attention p { margin: 0; max-width: 64ch; line-height: 1.55; }
 
+/* which part comes from which paper */
+.provenance {
+  background: var(--card);
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin: 0 0 26px;
+}
+.provenance h2 {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 10px;
+}
+.provenance ul { margin: 0; padding-left: 20px; }
+.provenance li { margin: 8px 0; line-height: 1.5; }
+.provenance strong { color: var(--ink); }
+
 /* the story in four links */
 .story {
   background: var(--card);

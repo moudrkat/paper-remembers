@@ -25,11 +25,12 @@ const PAGE_NOTES = [
    the whole thing. Two notes bring back a song; a glimpse brings back a face.
    That is exactly what you do when you scribble a page and it rebuilds.`,
   `<strong>Here are the two working equations.</strong> <b>[2]</b> <em>stores</em>
-   a memory — wire together every pair of switches that are ON together ("fire
-   together, wire together"). <b>[1]</b> <em>recalls</em> — each switch keeps
-   flipping to match its neighbours' votes until the whole pattern locks onto the
-   nearest stored memory. No switch knows the answer; it emerges from all of them.
-   (Fig. 1 is just how one neuron turns input into an on/off-ish output.)`,
+   a memory — Hopfield's original 1982 recipe: wire together every pair of
+   switches that are ON together ("fire together, wire together"). This is the
+   one part the 1985 upgrade replaces with a smarter recipe. <b>[1]</b>
+   <em>recalls</em> — each switch keeps flipping to match its neighbours' votes
+   until the pattern locks onto the nearest stored memory; that rule is pure 1982
+   and never changes. (Fig. 1 is just how one neuron turns input into output.)`,
   `<strong>Equation [7] is the star — the network's energy.</strong> One number
    for how much all the switches disagree with their wiring. Hopfield proved
    (<b>[8]</b>) it can only go <em>down</em> as the network updates. So memories
