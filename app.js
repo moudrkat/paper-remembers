@@ -132,7 +132,7 @@ function init(imgs) {
   wireControls();
   setActive(0);
   setStatus('scroll the pages · scribble anywhere on any of them, then let go');
-  state.introTimers.push(setTimeout(narrateIntro, 500));
+  state.introTimers.push(setTimeout(narrateIntro, 150));
   if (location.search.includes('debug')) document.body.classList.add('debug');
 }
 

@@ -6,6 +6,12 @@
 <title>The paper that remembers itself — Hopfield 1982, live</title>
 <meta name="description" content="Rub out any part of a 1982 Nobel-winning paper and watch the whole page rebuild itself — the same memory mechanism that powers modern AI.">
 <link rel="stylesheet" href="style.css">
+<!-- start fetching the page images during HTML parse so the intro starts sooner -->
+<link rel="preload" as="image" href="media/page-2.png" crossorigin>
+<link rel="preload" as="image" href="media/page-3.png" crossorigin>
+<link rel="preload" as="image" href="media/page-4.png" crossorigin>
+<link rel="preload" as="image" href="media/page-5.png" crossorigin>
+<link rel="preload" as="image" href="media/page-6.png" crossorigin>
 </head>
 <body>
 
@@ -52,10 +58,15 @@
       <h2>What you just did is where AI's memory comes from.</h2>
       <p>
         Think of a chatbot pulling up the one thing you told it that matters,
-        right when it matters. That is the same move you just made: hand it a
-        scrap, and the whole memory comes back. The modern version of this 1982
-        idea is the very piece that lets ChatGPT and Claude do it — you just ran
-        it by hand, with your finger, on a 45-year-old page.
+        right when it matters. That's the same move you just made: hand it a
+        scrap, and the whole memory comes back. You just ran it by hand — with
+        your finger, on a 45-year-old page.
+      </p>
+      <p>
+        That move has a name: <strong>attention</strong>. Stacking it, over and
+        over, is what lets ChatGPT and Claude hold a conversation. Their version
+        works in shades of grey instead of plain on/off — but it's the same idea
+        you're playing with.
       </p>
     </div>
 
@@ -99,32 +110,13 @@
       what you just did to a page.</p>
     </div>
 
-    <div class="attention">
-      <h2>You have already felt this — every time you chat with an AI</h2>
-      <p>
-        When you type to a chatbot and it keeps track of what you said earlier
-        and pulls back the part that matters, right when it matters — that act,
-        <em>finding the most relevant stored thing and bringing it back</em>, is
-        the exact move you just made by hand. You gave this page a damaged scrap;
-        it found the whole memory that fits and pulled it back.
-      </p>
-      <p>
-        Inside the AI, the “pages” are words and the switches hold shades of grey
-        instead of plain on/off — but the move is identical: a cue fetching its
-        closest memories. That move has a name — <strong>attention</strong> — and
-        stacking it, over and over, all through a giant network is what lets a
-        chatbot hold a conversation with you. You just did it, by hand, on a
-        1982 page.
-      </p>
-    </div>
-
     <div class="story">
       <h2>The whole story, plainly</h2>
       <ul>
-        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982 — this paper.</strong></a> John Hopfield showed that a bunch of simple on/off switches, wired together, can store memories and rebuild any one of them from just a scrap. Everything you are playing with — the switches, the healing, the rolling-downhill-to-a-memory — is his.</li>
-        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024 — the Nobel.</strong></a> This idea won the Nobel Prize in Physics, shared with Geoffrey Hinton.</li>
-        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985 — the one upgrade you are running.</strong></a> Three researchers found a smarter way to set the wiring so many similar pages don't smear together. Nothing else changes — same healing, same idea. Flip the toggle on the right to switch back to Hopfield's original 1982 wiring and watch the pages smear.</li>
-        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020 — why it matters for AI.</strong></a> The same idea, tuned to work with shades of grey instead of on/off, turned out to be exactly the “attention” step inside AI chatbots like GPT and Claude. (That version is not what runs here — this is the original.)</li>
+        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982 — this paper.</strong></a> John Hopfield showed that simple on/off switches, wired together, can store memories and rebuild any one from a scrap. Everything you're playing with is his.</li>
+        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985 — the one upgrade you're running.</strong></a> A smarter way to set the wiring, so many similar pages don't smear together. (Flip the toggle to Hopfield's original 1982 wiring and watch them smear.)</li>
+        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020 — why it matters for AI.</strong></a> The same idea, in shades of grey, turned out to be the “attention” inside chatbots like GPT and Claude.</li>
+        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024 — the Nobel.</strong></a> It won the Nobel Prize in Physics, shared with Geoffrey Hinton.</li>
       </ul>
     </div>
 
