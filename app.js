@@ -16,6 +16,35 @@ const PAGES = [
   { src: 'media/page-5.png', label: 'p. 2557' },
   { src: 'media/page-6.png', label: 'p. 2558' },
 ];
+
+// a plain-English reading companion, shown under each page as you scroll
+const PAGE_NOTES = [
+  `<strong>The core idea (see the abstract, top).</strong> A normal computer
+   looks up memory by <em>address</em> — "give me slot #4837." This looks it up
+   by <em>content</em>: hand it a fragment or a damaged copy, and it gives back
+   the whole thing. Two notes bring back a song; a glimpse brings back a face.
+   That is exactly what you do when you scribble a page and it rebuilds.`,
+  `<strong>Here are the two working equations.</strong> <b>[2]</b> <em>stores</em>
+   a memory — wire together every pair of switches that are ON together ("fire
+   together, wire together"). <b>[1]</b> <em>recalls</em> — each switch keeps
+   flipping to match its neighbours' votes until the whole pattern locks onto the
+   nearest stored memory. No switch knows the answer; it emerges from all of them.
+   (Fig. 1 is just how one neuron turns input into an on/off-ish output.)`,
+  `<strong>Equation [7] is the star — the network's energy.</strong> One number
+   for how much all the switches disagree with their wiring. Hopfield proved
+   (<b>[8]</b>) it can only go <em>down</em> as the network updates. So memories
+   are <em>valleys</em> in an energy landscape, and recall is a damaged page
+   rolling downhill into the nearest valley — the recovered page. The hill drawn
+   in the instrument on the right is this equation.`,
+  `<strong>Fig. 2 is an experiment you can re-run (below).</strong> Cram more
+   memories into one network and count how many come back with errors. A few
+   memories → perfect recall; too many → the valleys merge and recall breaks —
+   at about <em>0.15 × the number of switches</em>. That merging is exactly what
+   happens if you switch to Hopfield's 1982 rule and wreck a page.`,
+  `<strong>Closing discussion.</strong> Categories, forgetting old memories, and
+   why this behaves like a real, fault-tolerant memory — one that degrades
+   gracefully instead of failing all at once.`,
+];
 const WORK_W = 760;            // network resolution (pixels across a page)
 const INK_THRESHOLD = 155;
 const BRUSH_FRAC = 0.028;      // brush radius as a fraction of page width
@@ -109,7 +138,10 @@ function buildStage() {
     cv.width = state.W; cv.height = state.H;
     cv.className = 'page-canvas';
     cv.addEventListener('pointerdown', e => startDamage(e, i));
-    slot.appendChild(lab); slot.appendChild(cv);
+    const note = document.createElement('div');
+    note.className = 'page-note';
+    note.innerHTML = PAGE_NOTES[i];
+    slot.appendChild(lab); slot.appendChild(cv); slot.appendChild(note);
     host.appendChild(slot);
     state.canvases[i] = cv;
     render(i);
