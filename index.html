@@ -21,10 +21,11 @@
     itself from nothing but what it remembers.
   </p>
   <p class="age">
-    This is J.&nbsp;J.&nbsp;Hopfield's 1982 paper — almost 45 years old — and
-    the idea in it won the 2024 Nobel Prize in Physics. What it describes is a
-    <em>memory</em>, and here the paper stores <em>itself</em> as that memory:
-    every speck of ink is one tiny switch in the network.
+    This is J.&nbsp;J.&nbsp;Hopfield's 1982 paper — almost 45 years old, five
+    pages long. The idea in it won the 2024 Nobel Prize in Physics and grew into
+    the way today's AI chatbots keep track of what you tell them. Here the paper
+    stores <em>itself</em> as the memory: every speck of ink is one tiny switch,
+    and you can rub any of it out and watch it come back.
   </p>
 </header>
 
@@ -101,17 +102,21 @@
     </div>
 
     <div class="attention">
-      <h2>How a memory lookup becomes “attention”</h2>
+      <h2>You have already felt this — every time you chat with an AI</h2>
       <p>
-        You handed the network a damaged page and it gave back the nearest
-        <em>complete</em> page it had stored — a lookup by similarity. As an AI
-        reads, every earlier word is a stored memory; for the word it is on now,
-        it pulls back the stored words most similar to that one, and blends them.
-        That is the essence of attention: a cue fetching its closest memories.
-        Same move you just made — only with
-        words instead of pages, and shades of grey instead of black and white.
-        Stack that lookup all through a giant network and you have a language
-        model.
+        When you type to a chatbot and it keeps track of what you said earlier
+        and pulls back the part that matters, right when it matters — that act,
+        <em>finding the most relevant stored thing and bringing it back</em>, is
+        the exact move you just made by hand. You gave this page a damaged scrap;
+        it found the whole memory that fits and pulled it back.
+      </p>
+      <p>
+        Inside the AI, the “pages” are words and the switches hold shades of grey
+        instead of plain on/off — but the move is identical: a cue fetching its
+        closest memories. That move has a name — <strong>attention</strong> — and
+        stacking it, over and over, all through a giant network is what lets a
+        chatbot hold a conversation with you. You just did it, by hand, on a
+        1982 page.
       </p>
     </div>
 
@@ -125,6 +130,18 @@
       </ul>
     </div>
 
+
+    <div class="tribute">
+      <p class="lead">Five pages. 1982.</p>
+      <p>A physicist asked whether a heap of simple switches could remember the
+      way a mind does — and answered <em>yes</em>, in the language of magnets.
+      Four decades later that idea grew into machines that write, translate, and
+      talk with you. You just held its seed in your hands, rubbed it out, and
+      watched it heal.</p>
+      <p>And the whole paper is right above you — not a picture of it, the
+      working memory itself. Scroll it. Every equation you pass is explained
+      beside it. You are reading the thing that remembers.</p>
+    </div>
 
     <details class="limits">
       <summary>The honest details — is this really the paper?</summary>
