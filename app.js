@@ -24,13 +24,14 @@ const PAGE_NOTES = [
    by <em>content</em>: hand it a fragment or a damaged copy, and it gives back
    the whole thing. Two notes bring back a song; a glimpse brings back a face.
    That is exactly what you do when you scribble a page and it rebuilds.`,
-  `<strong>Here are the two working equations.</strong> <b>[2]</b> <em>stores</em>
-   a memory — Hopfield's original 1982 recipe: wire together every pair of
-   switches that are ON together ("fire together, wire together"). This is the
-   one part the 1985 upgrade replaces with a smarter recipe. <b>[1]</b>
-   <em>recalls</em> — each switch keeps flipping to match its neighbours' votes
-   until the pattern locks onto the nearest stored memory; that rule is pure 1982
-   and never changes. (Fig. 1 is just how one neuron turns input into output.)`,
+  `<strong>Here are the two working equations.</strong> <b>[2]</b> is how you
+   <em>store</em> a memory — Hopfield's original 1982 way: strengthen the link
+   between every pair of switches that agree (both on, or both off). This is the
+   one part the 1985 upgrade does more cleverly. <b>[1]</b> is how it
+   <em>recalls</em> — each switch keeps flipping to match what its neighbours are
+   telling it, until the whole pattern locks onto the nearest stored memory; that
+   rule is pure 1982 and never changes. (Fig. 1 is just how one neuron turns its
+   input into an on-or-off output.)`,
   `<strong>Equation [7] is the star — the network's energy.</strong> One number
    for how much all the switches disagree with their wiring. Hopfield proved
    (<b>[8]</b>) it can only go <em>down</em> as the network updates. So memories
@@ -39,9 +40,12 @@ const PAGE_NOTES = [
    in the instrument on the right is this equation.`,
   `<strong>Fig. 2 is an experiment you can re-run (below).</strong> Cram more
    memories into one network and count how many come back with errors. A few
-   memories → perfect recall; too many → the valleys merge and recall breaks —
-   at about <em>0.15 × the number of switches</em>. That merging is exactly what
-   happens if you switch to Hopfield's 1982 rule and wreck a page.`,
+   memories → perfect recall; too many → recall breaks down, at about
+   <em>0.15 × the number of switches</em>. (That is about <em>too many</em>
+   memories. A separate but related trouble is memories that are <em>too
+   similar</em> — like these mostly-white pages — which blur together even
+   though there are only five. That is what you see if you switch to Hopfield's
+   1982 wiring.)`,
   `<strong>Closing discussion.</strong> Categories, forgetting old memories, and
    why this behaves like a real, fault-tolerant memory — one that degrades
    gracefully instead of failing all at once.`,

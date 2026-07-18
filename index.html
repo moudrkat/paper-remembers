@@ -21,10 +21,10 @@
     itself from nothing but what it remembers.
   </p>
   <p class="age">
-    It is a memory in the sense of J.&nbsp;J.&nbsp;Hopfield's 1982 paper —
-    <span id="age">44</span> years old, and the idea won the 2024 Nobel Prize
-    in Physics. The paper stores <em>itself</em> as the memory; every speck of
-    ink is one tiny switch in the network.
+    This is J.&nbsp;J.&nbsp;Hopfield's 1982 paper — almost 45 years old — and
+    the idea in it won the 2024 Nobel Prize in Physics. What it describes is a
+    <em>memory</em>, and here the paper stores <em>itself</em> as that memory:
+    every speck of ink is one tiny switch in the network.
   </p>
 </header>
 
@@ -53,7 +53,7 @@
         memory — is the classical 1982 form of this network. In 2020 the same
         network, generalized to continuous values, was
         <a href="https://arxiv.org/abs/2008.02217">shown to compute exactly
-        “attention”</a> — the core step inside transformer AI models like GPT
+        “attention”</a> — a core step inside transformer AI models like GPT
         and Claude. So today's chatbots recall context using a direct
         descendant of the mechanism you just played with: an idea that began as
         physics, about magnets and neurons.
@@ -68,11 +68,12 @@
         <span class="eq-ref">Equation&nbsp;[7], page&nbsp;2556</span>
       </div>
 
-      <p><strong>What it says.</strong> Each <b>V</b> is one switch — picture it
-      as a tiny magnet pointing up or down. Each <b>T<sub>ij</sub></b> is the
-      strength of the link between two switches: how much they “want” to point
-      the same way. <b>E</b> sums this over every pair — a single number for how
-      much the whole network disagrees with its own wiring.</p>
+      <p><strong>What it says.</strong> Each <b>V</b> is one switch — on or off.
+      (Hopfield shows this is <em>isomorphic</em> to a spin: a tiny magnet
+      pointing up or down.) Each <b>T<sub>ij</sub></b> is the strength of the
+      link between two switches — how much they “want” to agree. <b>E</b> sums
+      this over every pair: a single number for how much the whole network
+      disagrees with its own wiring.</p>
 
       <p><strong>How it works.</strong> The recall rule only ever flips a switch
       in a way that lowers <b>E</b>, never raises it — Hopfield proves this
@@ -103,33 +104,25 @@
       <h2>How a memory lookup becomes “attention”</h2>
       <p>
         You handed the network a damaged page and it gave back the nearest
-        <em>complete</em> page it had stored — a lookup by similarity. That is
-        all attention is. As an AI reads, every earlier word is a stored
-        memory; for the word it is on now, it pulls back the stored words most
-        similar to that one, and blends them. Same move you just made — a cue
-        fetching its closest memory — only with words instead of pages, and
-        shades of grey instead of black and white. Stack that lookup millions
-        of times and you have a language model.
+        <em>complete</em> page it had stored — a lookup by similarity. As an AI
+        reads, every earlier word is a stored memory; for the word it is on now,
+        it pulls back the stored words most similar to that one, and blends them.
+        That is the essence of attention: a cue fetching its closest memories.
+        Same move you just made — only with
+        words instead of pages, and shades of grey instead of black and white.
+        Stack that lookup all through a giant network and you have a language
+        model.
       </p>
     </div>
 
-    <div class="provenance">
-      <h2>Which part comes from which paper</h2>
-      <ul>
-        <li><strong>Hopfield, 1982 — everything you watch.</strong> The switches, the recall, the energy equation [7], the proof it settles downhill [8], memories as valleys. The whole idea and the whole machine are his.</li>
-        <li><strong>1985 — one small upgrade.</strong> A smarter recipe for the connection strengths, so overlapping pages don't blur together. Nothing else changes — same recall, same energy, same idea. (Flip the toggle on the right to run Hopfield's <em>original</em> 1982 recipe and watch the pages blur.)</li>
-        <li><strong>2020 — the AI link, not running here.</strong> Hopfield's same idea, made continuous, turns out to be exactly the “attention” inside GPT and Claude. It is the reason this matters, not part of the demo.</li>
-      </ul>
-    </div>
-
     <div class="story">
-      <h2>The whole story, in four steps</h2>
-      <ol>
-        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982</strong></a> — Hopfield shows a network of simple on/off units can store memories and rebuild each one from just a fragment.</li>
-        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024</strong></a> — the idea wins the Nobel Prize in Physics (shared with Geoffrey Hinton).</li>
-        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985</strong></a> — Personnaz, Guyon &amp; Dreyfus's projection rule lets one network store many overlapping memories and recall each without error. That is the rule this page runs.</li>
-        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020</strong></a> — the same network, generalized to continuous values (“Hopfield Networks Is All You Need”), is shown to compute exactly the <em>attention</em> step inside transformer AI models like GPT and Claude.</li>
-      </ol>
+      <h2>The whole story, plainly</h2>
+      <ul>
+        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982 — this paper.</strong></a> John Hopfield showed that a bunch of simple on/off switches, wired together, can store memories and rebuild any one of them from just a scrap. Everything you are playing with — the switches, the healing, the rolling-downhill-to-a-memory — is his.</li>
+        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024 — the Nobel.</strong></a> This idea won the Nobel Prize in Physics, shared with Geoffrey Hinton.</li>
+        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985 — the one upgrade you are running.</strong></a> Three researchers found a smarter way to set the wiring so many similar pages don't smear together. Nothing else changes — same healing, same idea. Flip the toggle on the right to switch back to Hopfield's original 1982 wiring and watch the pages smear.</li>
+        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020 — why it matters for AI.</strong></a> The same idea, tuned to work with shades of grey instead of on/off, turned out to be exactly the “attention” step inside AI chatbots like GPT and Claude. (That version is not what runs here — this is the original.)</li>
+      </ul>
     </div>
 
 
@@ -180,7 +173,7 @@
         <summary>see the "valley" it rolls into</summary>
         <div class="sub">page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
         <canvas id="e-trace" width="240" height="96"></canvas>
-        <div class="trace-cap">the hill is the network's energy; the dot is your scribbled page. It rolls downhill into a valley — the stored page, or its photographic negative.</div>
+        <div class="trace-cap">a sketch of the idea: two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. (The real landscape has far more dimensions; this is a cartoon of it.)</div>
       </details>
 
       <details class="deeper">
@@ -206,7 +199,8 @@
 </footer>
 
 <script>
-  document.getElementById('age').textContent = new Date().getFullYear() - 1982;
+  var _age = document.getElementById('age');
+  if (_age) _age.textContent = new Date().getFullYear() - 1982;
 </script>
 <script src="hopfield.js"></script>
 <script src="app.js"></script>
