@@ -27,9 +27,10 @@ const state = {
   hebbNet: null,  // Hopfield's 1982 Hebbian net over all pages (the toggle)
   merged: false,  // is the 1982 rule switched on?
   paper: [236, 232, 223],
-  page: 0,        // page currently on the stage
-  work: null,     // current (possibly damaged) bitmap being shown
-  touched: false,
+  works: [],      // per-page (possibly damaged) bitmap on the stage
+  canvases: [],   // per-page canvas element
+  touched: [],    // per-page: has it been scribbled?
+  active: 0,      // last page the cursor touched (drives the instrument)
   healing: false,
   autoHeal: 0,
   raf: 0,
@@ -84,48 +85,60 @@ function init(imgs) {
   state.net = new Hopfield(state.patterns, 'spin', 'projection');
   state.hebbNet = new Hopfield(state.patterns, 'spin'); // the 1982 contrast
 
-  const cv = $('#stage-canvas');
-  cv.width = state.W; cv.height = state.H;
-  setPage(0);
+  buildStage();
   wireControls();
-  setStatus('scribble anywhere on the page, then let go');
+  setActive(0);
+  setStatus('scroll the pages · scribble anywhere on any of them, then let go');
   state.introTimers.push(setTimeout(narrateIntro, 500));
   if (location.search.includes('debug')) document.body.classList.add('debug');
 }
 
-// ---------- page + drawing ----------
+// ---------- stage: all five pages stacked, scrollable, each scribbleable ----------
 
-function setPage(i) {
-  stopHeal();
-  clearTimeout(state.autoHeal);
-  state.page = (i + PAGES.length) % PAGES.length;
-  state.work = Uint8Array.from(state.patterns[state.page]);
-  state.touched = false;
-  $('#page-label').textContent = 'PNAS 1982 · ' + PAGES[state.page].label;
-  $('#sel-tag').textContent = PAGES[state.page].label.replace('p. ', '');
-  $('#e-value').textContent = '—';
-  setVerdict('');
-  render();
-  drawTrace();
+function buildStage() {
+  const host = $('#stage-scroll');
+  PAGES.forEach((p, i) => {
+    state.works[i] = Uint8Array.from(state.patterns[i]);
+    state.touched[i] = false;
+    const slot = document.createElement('div');
+    slot.className = 'page-slot';
+    const lab = document.createElement('div');
+    lab.className = 'page-tab';
+    lab.textContent = 'PNAS 1982 · ' + p.label;
+    const cv = document.createElement('canvas');
+    cv.width = state.W; cv.height = state.H;
+    cv.className = 'page-canvas';
+    cv.addEventListener('pointerdown', e => startDamage(e, i));
+    slot.appendChild(lab); slot.appendChild(cv);
+    host.appendChild(slot);
+    state.canvases[i] = cv;
+    render(i);
+  });
 }
 
-function render() {
-  const cv = $('#stage-canvas'), ctx = cv.getContext('2d');
+function render(i) {
+  const cv = state.canvases[i], ctx = cv.getContext('2d');
   const im = ctx.createImageData(state.W, state.H);
-  const d = im.data, v = state.work, [pr, pg, pb] = state.paper;
-  for (let i = 0; i < state.N; i++) {
-    const o = i * 4;
-    if (v[i]) { d[o] = 24; d[o+1] = 22; d[o+2] = 20; }
+  const d = im.data, v = state.works[i], [pr, pg, pb] = state.paper;
+  for (let k = 0; k < state.N; k++) {
+    const o = k * 4;
+    if (v[k]) { d[o] = 24; d[o+1] = 22; d[o+2] = 20; }
     else { d[o] = pr; d[o+1] = pg; d[o+2] = pb; }
     d[o+3] = 255;
   }
   ctx.putImageData(im, 0, 0);
 }
 
-// ---------- damage (cursor, anywhere) ----------
+function setActive(i) {
+  state.active = i;
+  $('#sel-tag').textContent = PAGES[i].label.replace('p. ', '');
+  drawTrace();
+}
 
-function brush(cx, cy) {
-  const R = state.W * BRUSH_FRAC, r2 = R * R, W = state.W, v = state.work;
+// ---------- damage (cursor, anywhere on any page) ----------
+
+function brush(cx, cy, i) {
+  const R = state.W * BRUSH_FRAC, r2 = R * R, W = state.W, v = state.works[i];
   const x0 = Math.max(0, cx - R | 0), x1 = Math.min(W - 1, cx + R | 0);
   const y0 = Math.max(0, cy - R | 0), y1 = Math.min(state.H - 1, cy + R | 0);
   for (let y = y0; y <= y1; y++)
@@ -141,16 +154,17 @@ function canvasXY(ev, cv) {
           (ev.clientY - rect.top) * state.H / rect.height];
 }
 
-function startDamage(e) {
-  const cv = $('#stage-canvas');
+function startDamage(e, i) {
+  const cv = state.canvases[i];
   e.preventDefault();
   if (state.healing) stopHeal();
   clearTimeout(state.autoHeal);
-  state.touched = true;
+  setActive(i);
+  state.touched[i] = true;
   cv.setPointerCapture(e.pointerId);
   setStatus('rubbing out the ink…');
-  const [x, y] = canvasXY(e, cv); brush(x, y); render();
-  const move = ev => { const [mx, my] = canvasXY(ev, cv); brush(mx, my); render(); };
+  const [x, y] = canvasXY(e, cv); brush(x, y, i); render(i);
+  const move = ev => { const [mx, my] = canvasXY(ev, cv); brush(mx, my, i); render(i); };
   cv.addEventListener('pointermove', move);
   cv.addEventListener('pointerup', () => {
     cv.removeEventListener('pointermove', move);
@@ -162,28 +176,29 @@ function startDamage(e) {
 // ---------- rebuild (the network recalling the page) ----------
 
 function heal() {
-  if (!state.touched || state.healing) return;
+  const i = state.active;
+  if (!state.touched[i] || state.healing) return;
   const net = activeNet();
-  net.setState(state.work);
+  net.setState(state.works[i]);
   state.healing = true;
   setVerdict('');
   setStatus(state.merged
     ? "Hopfield's 1982 rule — watch the pages blur together…"
     : 'rebuilding — rolling downhill to the page it remembers…');
-  const cv = $('#stage-canvas');
+  const cv = state.canvases[i];
   cv.classList.add('healing');
   const chunk = Math.max(20000, state.N / 40 | 0);
   const tick = () => {
     if (!state.healing) return;
     net.step(chunk);
-    state.work.set(net.V);
-    render();
+    state.works[i].set(net.V);
+    render(i);
     $('#e-value').textContent = fmtE(net.energy());
     drawTrace();
     if (net.stable) {
       state.healing = false;
       cv.classList.remove('healing');
-      verdict();
+      verdict(i);
       return;
     }
     state.raf = setTimeout(tick, 16);
@@ -194,16 +209,16 @@ function heal() {
 function stopHeal() {
   state.healing = false;
   clearTimeout(state.raf);
-  const cv = $('#stage-canvas');
-  if (cv) cv.classList.remove('healing');
+  document.querySelectorAll('.page-canvas.healing')
+    .forEach(c => c.classList.remove('healing'));
 }
 
-function verdict() {
+function verdict(i) {
   const net = activeNet();
-  const label = PAGES[state.page].label;
+  const label = PAGES[i].label;
   const dists = state.patterns.map((_, s) => net.hammingTo(s));
   let best = 0; for (let s = 1; s < dists.length; s++) if (dists[s] < dists[best]) best = s;
-  const own = dists[state.page];
+  const own = dists[i];
 
   if (state.merged) {
     setVerdict(`with Hopfield's 1982 rule the five pages blur together — you ` +
@@ -221,7 +236,7 @@ function verdict() {
     setVerdict(`you wiped out more than half, so it rolled into the ` +
       `photographic negative of ${label} — an equally deep valley.`);
     setStatus('rebuilt — into the negative');
-  } else if (best !== state.page) {
+  } else if (best !== i) {
     setVerdict(`you damaged it so far it landed on ${PAGES[best].label} ` +
       `instead of ${label} — past the edge of its own valley.`);
     setStatus('rebuilt — into a different page');
@@ -235,11 +250,12 @@ function verdict() {
 function resetPage() {
   stopHeal();
   clearTimeout(state.autoHeal);
-  state.work = Uint8Array.from(state.patterns[state.page]);
-  state.touched = false;
+  const i = state.active;
+  state.works[i] = Uint8Array.from(state.patterns[i]);
+  state.touched[i] = false;
   $('#e-value').textContent = '—';
   setVerdict('');
-  render();
+  render(i);
   drawTrace();
   setStatus('page restored — scribble anywhere and let go');
 }
@@ -253,10 +269,16 @@ function toggleMerge(on) {
   const btn = $('#btn-merge');
   btn.classList.toggle('on', on);
   btn.textContent = on ? '1982 rule on — switch back' : "switch to Hopfield's 1982 rule";
-  resetPage();
+  PAGES.forEach((_, i) => {
+    state.works[i] = Uint8Array.from(state.patterns[i]);
+    state.touched[i] = false;
+    render(i);
+  });
+  $('#e-value').textContent = '—';
+  setVerdict('');
   setStatus(on
-    ? "Hopfield's 1982 rule on — scribble a page and watch it blur into a ghost"
-    : '1985 rule back — scribble a page; the right one returns whole');
+    ? "Hopfield's 1982 rule on — scribble any page and watch it blur into a ghost"
+    : '1985 rule back — scribble any page; the right one returns whole');
 }
 
 // ---------- guided intro (narrate while the real page heals) ----------
@@ -277,7 +299,7 @@ async function narrateIntro() {
   if (location.search.includes('debug')) return;
   if (state.demoDone) return;
   state.demoDone = true;
-  setPage(2); // the equations page reads well
+  setActive(0); // the top page, already in view
 
   const ov = $('#intro');
   ov.hidden = false;
@@ -292,12 +314,12 @@ async function narrateIntro() {
 
   await sayIntro('Watch. We rub a hole right through it.');
   await wait(400);
-  state.touched = true;
+  state.touched[0] = true;
   const W = state.W, H = state.H;
   for (let t = 1; t <= 22; t++) {
     if (state.introAborted) return;
-    brush(W * (0.1 + 0.8 * t / 22), H * (0.5 + 0.28 * Math.sin(t * 0.7)));
-    render();
+    brush(W * (0.1 + 0.8 * t / 22), H * (0.22 + 0.16 * Math.sin(t * 0.7)), 0);
+    render(0);
     await wait(55);
   }
   if (state.introAborted) return;
@@ -305,27 +327,27 @@ async function narrateIntro() {
   await sayIntro('Nobody tells it what was there.\nIt rolls downhill to the page it remembers…');
   await wait(1100);
   if (state.introAborted) return;
-  await healAwait();
+  await healAwait(0);
   if (state.introAborted) return;
 
-  await sayIntro('The page rebuilt itself.\nThis exact step is how today’s AI remembers ↓');
+  await sayIntro('The page rebuilt itself.\nThis exact idea is how today’s AI remembers ↓');
   await wait(2400);
   endIntro();
 }
 
-// heal the current page and resolve when stable (used by the intro)
-function healAwait() {
+// heal page i and resolve when stable (used by the intro)
+function healAwait(i) {
   return new Promise(res => {
     const net = activeNet();
-    net.setState(state.work);
-    const cv = $('#stage-canvas');
+    net.setState(state.works[i]);
+    const cv = state.canvases[i];
     cv.classList.add('healing');
     const chunk = Math.max(20000, state.N / 40 | 0);
     const tick = () => {
       if (state.introAborted) { cv.classList.remove('healing'); return res(); }
       net.step(chunk);
-      state.work.set(net.V);
-      render();
+      state.works[i].set(net.V);
+      render(i);
       if (net.stable) { cv.classList.remove('healing'); return res(); }
       state.introTimers.push(setTimeout(tick, 16));
     };
@@ -341,8 +363,10 @@ function endIntro() {
   const ov = $('#intro');
   ov.classList.remove('show');
   setTimeout(() => { ov.hidden = true; }, 450);
-  resetPage();
-  setStatus('your turn — scribble anywhere on the page and let go');
+  state.works[0] = Uint8Array.from(state.patterns[0]);
+  state.touched[0] = false;
+  render(0);
+  setStatus('your turn — scribble anywhere on any page and let go');
 }
 
 // ---------- energy landscape (look closer) ----------
@@ -366,7 +390,7 @@ function drawTrace() {
   ctx.stroke();
   ctx.globalAlpha = 1;
   const net = activeNet();
-  let x = ((net.m && net.m[state.page]) || 0) / state.N;
+  let x = ((net.m && net.m[state.active]) || 0) / state.N;
   x = Math.max(-1, Math.min(1, x));
   ctx.fillStyle = accent;
   ctx.beginPath(); ctx.arc(xToPx(x), eToPx(-x*x), 4.5, 0, 7); ctx.fill();
@@ -438,12 +462,8 @@ function setStatus(s) { $('#status').textContent = s; }
 function setVerdict(s) { $('#verdict').textContent = s; }
 
 function wireControls() {
-  const cv = $('#stage-canvas');
-  cv.addEventListener('pointerdown', startDamage);
   $('#btn-heal').onclick = heal;
   $('#btn-reset').onclick = resetPage;
   $('#btn-merge').onclick = () => toggleMerge(!state.merged);
-  $('#prev-page').onclick = () => setPage(state.page - 1);
-  $('#next-page').onclick = () => setPage(state.page + 1);
   $('#btn-fig2').onclick = () => runFig2(+$('#fig2-n').value);
 }

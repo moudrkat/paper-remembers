@@ -16,9 +16,9 @@
   </div>
   <h1>The paper that remembers itself</h1>
   <p class="tagline">
-    Scribble out any part of this page — a word, a line, the title, a whole
-    paragraph. Let go, and the page rebuilds itself from nothing but what it
-    remembers.
+    Scroll through all five pages and scribble out any part of any of them — a
+    word, a line, the title, a whole paragraph. Let go, and the page rebuilds
+    itself from nothing but what it remembers.
   </p>
   <p class="age">
     It is a memory in the sense of J.&nbsp;J.&nbsp;Hopfield's 1982 paper —
@@ -40,28 +40,37 @@
   <div class="pages">
 
     <div class="stage">
-      <div class="stage-bar">
-        <button id="prev-page">‹ prev</button>
-        <span id="page-label">PNAS 1982 · p. 2554</span>
-        <button id="next-page">next ›</button>
+      <div class="stage-scroll" id="stage-scroll">
+        <!-- one canvas per page, injected by app.js — scroll through all five -->
       </div>
-      <div class="stage-scroll">
-        <canvas id="stage-canvas"></canvas>
-      </div>
-      <div class="caption">scribble anywhere on the page with your cursor, then let go — the whole page remembers itself</div>
+      <div class="caption">scroll through all five pages · scribble anywhere on any page, then let go — it rebuilds itself</div>
     </div>
 
     <div class="reveal">
-      <h2>What you just watched is how AI remembers.</h2>
+      <h2>What you just watched is the ancestor of how AI remembers.</h2>
       <p>
-        A damaged input snapping back to the nearest thing it has stored — that
-        is not a metaphor for modern AI. In 2020 this exact 1982 rule was
-        <a href="https://arxiv.org/abs/2008.02217">proven to be identical</a> to
-        <strong>“attention,”</strong> the mechanism inside every large language
-        model — GPT, Claude, all of them. When an AI recalls what you told it,
-        this is the operation running underneath. You are looking at the
-        ancestor of ChatGPT: a physics paper about magnets and neurons, and you
-        can rub it out and watch it think its way back.
+        The pull you saw — a damaged input snapping back to the nearest stored
+        memory — is the classical 1982 form of this network. In 2020 the same
+        network, generalized to continuous values, was
+        <a href="https://arxiv.org/abs/2008.02217">shown to compute exactly
+        “attention”</a> — the core step inside transformer AI models like GPT
+        and Claude. So today's chatbots recall context using a direct
+        descendant of the mechanism you just played with: an idea that began as
+        physics, about magnets and neurons.
+      </p>
+    </div>
+
+    <div class="attention">
+      <h2>How a memory lookup becomes “attention”</h2>
+      <p>
+        You handed the network a damaged page and it gave back the nearest
+        <em>complete</em> page it had stored — a lookup by similarity. That is
+        all attention is. As an AI reads, every earlier word is a stored
+        memory; for the word it is on now, it pulls back the stored words most
+        similar to that one, and blends them. Same move you just made — a cue
+        fetching its closest memory — only with words instead of pages, and
+        shades of grey instead of black and white. Stack that lookup millions
+        of times and you have a language model.
       </p>
     </div>
 
@@ -70,8 +79,8 @@
       <ol>
         <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982</strong></a> — Hopfield shows a network of simple on/off units can store memories and rebuild each one from just a fragment.</li>
         <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024</strong></a> — the idea wins the Nobel Prize in Physics (shared with Geoffrey Hinton).</li>
-        <li><a href="https://doi.org/10.1051/jphyslet:019850046020035900"><strong>1985</strong></a> — the projection rule lets one network hold many overlapping memories without blurring them. That is the rule this page runs.</li>
-        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020</strong></a> — “Hopfield Networks Is All You Need”: this rule is proven to be exactly the attention inside today's AI language models.</li>
+        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985</strong></a> — Personnaz, Guyon &amp; Dreyfus's projection rule lets one network store many overlapping memories and recall each without error. That is the rule this page runs.</li>
+        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020</strong></a> — the same network, generalized to continuous values (“Hopfield Networks Is All You Need”), is shown to compute exactly the <em>attention</em> step inside transformer AI models like GPT and Claude.</li>
       </ol>
     </div>
 
@@ -148,11 +157,13 @@
 
 <footer>
   Paper: J. J. Hopfield, PNAS 79:2554–2558 (1982), © National Academy of
-  Sciences; scan for personal, educational use. The projection rule is
-  Personnaz, Guyon &amp; Dreyfus (1985); the attention equivalence is Ramsauer
-  et al., <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a> (2020).
-  Everything runs in your browser; nothing is sent anywhere.
-  Made by Unt1l1f1nd — <a href="https://github.com/moudrkat">github</a>.
+  Sciences; shown for personal, educational use. Projection rule: Personnaz,
+  Guyon &amp; Dreyfus, J. Phys. Lett. 46, L359 (1985). The attention
+  equivalence is for the modern <em>continuous</em> Hopfield network: Ramsauer
+  et al., <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a>
+  (2020). 2024 Nobel Prize in Physics: Hopfield &amp; Hinton. Everything runs
+  in your browser; nothing is sent anywhere. Made by Unt1l1f1nd —
+  <a href="https://github.com/moudrkat">github</a>.
 </footer>
 
 <script>
