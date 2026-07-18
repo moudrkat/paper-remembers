@@ -60,6 +60,45 @@
       </p>
     </div>
 
+    <div class="physics" id="physics">
+      <h2>The one equation — and why it is physics</h2>
+
+      <div class="eq-display">
+        <span class="eq-body">E &nbsp;=&nbsp; −<sup>1</sup>⁄<sub>2</sub> &nbsp;∑∑<sub>i≠j</sub>&nbsp; T<sub>ij</sub> V<sub>i</sub> V<sub>j</sub></span>
+        <span class="eq-ref">Equation&nbsp;[7], page&nbsp;2556</span>
+      </div>
+
+      <p><strong>What it says.</strong> Each <b>V</b> is one switch — picture it
+      as a tiny magnet pointing up or down. Each <b>T<sub>ij</sub></b> is the
+      strength of the link between two switches: how much they “want” to point
+      the same way. <b>E</b> sums this over every pair — a single number for how
+      much the whole network disagrees with its own wiring.</p>
+
+      <p><strong>How it works.</strong> The recall rule only ever flips a switch
+      in a way that lowers <b>E</b>, never raises it — Hopfield proves this
+      (equation&nbsp;[8]). So the network slides downhill and stops at a nearby
+      low point — “a least (local) E,” in his words. Those low points are the
+      stored memories. A scribbled page is a ball on a hillside; you let go, and
+      it rolls to the nearest valley floor.</p>
+
+      <p><strong>Why it is physics — in his own words.</strong> This energy is
+      not a metaphor for physics; it <em>is</em> physics. On the page above,
+      Hopfield writes:</p>
+      <blockquote>“This case is isomorphic with an Ising model. T<sub>ij</sub>
+      provides the role of the exchange coupling… When T<sub>ij</sub> is
+      symmetric but has a random character (the spin glass) there are known to
+      be many (locally) stable states.”</blockquote>
+      <p>The Ising model is physicists' model of a magnet; a <em>spin glass</em>
+      is a disordered magnet with many stable configurations. Hopfield's leap
+      was to see that those many stable configurations could be <em>memories</em>
+      — so remembering becomes nothing more exotic than a magnetic system
+      relaxing to a nearby low-energy state. That is why a paper about neurons
+      won a Nobel Prize in <em>Physics</em>. The 2024 committee put his
+      contribution plainly: he “created an associative memory that can store and
+      reconstruct images and other types of patterns in data” — which is exactly
+      what you just did to a page.</p>
+    </div>
+
     <div class="attention">
       <h2>How a memory lookup becomes “attention”</h2>
       <p>
@@ -93,15 +132,6 @@
       </ol>
     </div>
 
-    <div class="note">
-      <p><strong>How it actually works.</strong> The page is a grid of on/off
-      switches — one per pixel of ink. The clean page sits at the bottom of a
-      "valley." When you scribble, you shove the switches up a hillside; let go,
-      and they roll back down to the nearest valley bottom. Because that bottom
-      is a stored page, the page returns. Nothing points it at the answer — it
-      simply falls there. Five pages are stored in the <em>same</em> network,
-      and it still finds the right one.</p>
-    </div>
 
     <details class="limits">
       <summary>The honest details — is this really the paper?</summary>
