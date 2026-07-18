@@ -84,6 +84,8 @@ function init(img) {
   }
   // each merged net stores every equation, so any cue collapses to the shared phantom
   state.mergedNets = state.patterns.map(() => new Hopfield(state.patterns, 'spin'));
+  // seed each net at its stored equation so the landscape dot starts in the well
+  state.nets.forEach((n, i) => n.setState(state.patterns[i]));
 
   buildOverlays();
   wireControls();
@@ -359,24 +361,48 @@ function drawState(cv, v) {
   ctx.putImageData(im, 0, 0);
 }
 
+// The instrument IS equation [7]: the curve is E over how well the current
+// state overlaps the stored equation; the dot is the print. Rule [1] steps
+// the dot downhill into a bottom — the equation (right) or its negative
+// (left) — and the peak between them is the 50% coin-flip ridge. This is how
+// the equation is used: it is the landscape the healing descends.
 function drawTrace() {
   const cv = $('#e-trace'), ctx = cv.getContext('2d');
-  ctx.clearRect(0, 0, cv.width, cv.height);
-  const t = state.eTrace;
-  if (t.length < 2) return;
-  let lo = Infinity, hi = -Infinity;
-  for (const e of t) { if (e < lo) lo = e; if (e > hi) hi = e; }
-  if (hi === lo) hi = lo + 1;
-  ctx.strokeStyle = getComputedStyle(document.documentElement)
-    .getPropertyValue('--accent').trim() || '#b3402e';
-  ctx.lineWidth = 2;
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+  const css = getComputedStyle(document.documentElement);
+  const accent = css.getPropertyValue('--accent').trim() || '#b3402e';
+  const ink = css.getPropertyValue('--ink').trim() || '#1a1816';
+  const pad = 8, top = 12, bot = H - 16;
+  const xToPx = x => pad + (W - 2 * pad) * (x + 1) / 2; // overlap x in [-1,1]
+  const eToPx = e => top + (bot - top) * (-e);          // e in [-1,0]; 0 = peak = top
+  const Ecurve = x => -x * x; // true normalized shape of E[7] for one pattern
+
+  // energy landscape
+  ctx.strokeStyle = ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.5;
   ctx.beginPath();
-  t.forEach((e, i) => {
-    const x = 4 + (cv.width - 8) * i / (t.length - 1);
-    const y = 6 + (cv.height - 12) * (e - lo) / (hi - lo);
-    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-  });
+  for (let k = 0; k <= 48; k++) {
+    const x = -1 + 2 * k / 48, X = xToPx(x), Y = eToPx(Ecurve(x));
+    k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+  }
   ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // the print, as a ball on the hill: x = overlap with the cued equation
+  const net = activeNet();
+  const mIdx = state.merged ? state.active : 0;
+  let x = (net.m[mIdx] || 0) / net.N;
+  x = Math.max(-1, Math.min(1, x));
+  ctx.fillStyle = accent;
+  ctx.beginPath(); ctx.arc(xToPx(x), eToPx(Ecurve(x)), 4.5, 0, 7); ctx.fill();
+
+  // labels
+  ctx.fillStyle = ink; ctx.globalAlpha = 0.65;
+  ctx.font = '9px ui-monospace, monospace';
+  ctx.textAlign = 'left';   ctx.fillText('negative', pad, H - 3);
+  ctx.textAlign = 'right';  ctx.fillText('eq [7]', W - pad, H - 3);
+  ctx.textAlign = 'center'; ctx.fillText('50%', W / 2, top - 2);
+  ctx.globalAlpha = 1;
 }
 
 function fmtE(e) { return e.toLocaleString('en-US', { maximumFractionDigits: 0 }); }

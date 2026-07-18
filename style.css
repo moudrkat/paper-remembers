@@ -217,7 +217,8 @@ header .tagline {
 .card .eq { font-family: Georgia, serif; font-style: italic; margin-bottom: 6px; }
 .card .eq-note { font-family: ui-monospace, monospace; font-style: normal; font-size: 0.62rem; color: #6b6257; }
 #e-value { font-size: 1.5rem; letter-spacing: 0.02em; margin: 2px 0 4px; }
-#e-trace { width: 100%; height: 80px; display: block; margin-bottom: 6px; }
+#e-trace { width: 100%; height: 96px; display: block; margin-bottom: 2px; }
+.trace-cap { font-size: 0.66rem; color: #6b6257; line-height: 1.35; margin-bottom: 8px; }
 #status { color: #6b6257; min-height: 2.4em; }
 #verdict { color: var(--accent); min-height: 3.5em; margin-top: 4px; }
 
