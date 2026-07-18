@@ -233,6 +233,7 @@ button {
 }
 button:hover { background: rgba(40, 30, 10, 0.08); }
 #btn-heal { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+#btn-merge.on { background: var(--accent); color: var(--card); border-color: var(--accent); }
 
 /* cards inline with the pages */
 .note, .bench {

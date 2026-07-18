@@ -25,7 +25,9 @@ const INK_THRESHOLD = 160; // luminance below this = ink
 const BRUSH_R = 16;        // smudge brush radius, native px
 
 const state = {
-  nets: [],      // one single-memory net per patch, spin mode (p. 2557)
+  nets: [],       // one single-memory net per patch, spin mode (p. 2557)
+  mergedNets: [], // one net per patch, each storing ALL four (the merge demo)
+  merged: false,  // are all four crammed into one network?
   patterns: [],  // Uint8Array per patch (the stored V^s)
   works: [],     // per-patch working state (what the canvas shows)
   toucheds: [],  // per-patch: has the visitor (or the demo) damaged it?
@@ -43,7 +45,10 @@ const state = {
 const $ = sel => document.querySelector(sel);
 const work = () => state.works[state.active];
 const activeCanvas = () => state.canvases[PATCHES[state.active].id];
-const activeNet = () => state.nets[state.active];
+// in merged mode, patch i's net stores all four patterns and is cued at i;
+// otherwise it stores only its own equation
+const netFor = i => state.merged ? state.mergedNets[i] : state.nets[i];
+const activeNet = () => netFor(state.active);
 
 // ---------- boot ----------
 
@@ -77,6 +82,8 @@ function init(img) {
     state.toucheds.push(false);
     state.nets.push(new Hopfield([pat], 'spin'));
   }
+  // each merged net stores every equation, so any cue collapses to the shared phantom
+  state.mergedNets = state.patterns.map(() => new Hopfield(state.patterns, 'spin'));
 
   buildOverlays();
   wireControls();
@@ -220,6 +227,14 @@ function stopHeal() {
 function verdict() {
   const net = activeNet();
   const tag = PATCHES[state.active].tag;
+  if (state.merged) {
+    const own = net.hammingTo(state.active);
+    setVerdict(`asked for ${tag}, got a ghost of all four — a spurious ` +
+      `mixture, ${(100 * own / N).toFixed(1)}% off ${tag}. Stored together, ` +
+      `the equations merged (p. 2557).`);
+    setStatus('stable — but on a blended memory, not ' + tag);
+    return;
+  }
   const d = net.hammingTo(0);
   if (d === 0)
     setVerdict(`recovered ${tag} exactly — 0 of ${N.toLocaleString()} bits ` +
@@ -371,7 +386,66 @@ function setVerdict(s) { $('#verdict').textContent = s; }
 function wireControls() {
   $('#btn-heal').onclick = heal;
   $('#btn-reset').onclick = resetPrint;
+  $('#btn-merge').onclick = () => toggleMerge(!state.merged);
   $('#btn-fig2').onclick = () => runFig2(+$('#fig2-n').value);
+}
+
+// ---------- the merge demo (Hopfield p. 2557: memories too close merge) ----------
+// Cram all four equations into one network and every cue collapses to the same
+// spurious ghost — a superposition the net can no longer pull apart.
+
+function toggleMerge(on) {
+  stopHeal();
+  state.merged = on;
+  const btn = $('#btn-merge');
+  btn.classList.toggle('on', on);
+  btn.textContent = on ? 'four in one net ✓ — reset' : 'cram all four into one net';
+  if (on) return revealMerge();
+  PATCHES.forEach((p, i) => {
+    state.works[i] = Uint8Array.from(state.patterns[i]);
+    state.toucheds[i] = false;
+    state.canvases[p.id].getContext('2d').clearRect(0, 0, PW, PH); // show the clean scan
+  });
+  $('#e-value').textContent = '—';
+  setVerdict('');
+  setStatus('back to one network per equation — clean recall');
+}
+
+// heal all four cued equations at once, through their shared-memory nets
+function revealMerge() {
+  const nets = state.mergedNets;
+  PATCHES.forEach((p, i) => {
+    state.works[i] = Uint8Array.from(state.patterns[i]);
+    nets[i].setState(state.works[i]);
+    drawState(state.canvases[p.id], state.works[i]);
+    state.canvases[p.id].classList.add('healing');
+  });
+  state.healing = true;
+  setVerdict('');
+  setStatus('four equations, one network — watch them collapse together');
+  const tick = () => {
+    if (!state.healing) return;
+    let allStable = true;
+    PATCHES.forEach((p, i) => {
+      if (!nets[i].stable) {
+        nets[i].step(1800);
+        state.works[i].set(nets[i].V);
+        drawState(state.canvases[p.id], state.works[i]);
+        allStable = false;
+      }
+    });
+    if (allStable) {
+      state.healing = false;
+      PATCHES.forEach(p => state.canvases[p.id].classList.remove('healing'));
+      setVerdict('all four settled into the SAME ghost — the network can no ' +
+        'longer tell the equations apart. Memories too close together merge ' +
+        '(Hopfield, p. 2557). That is why each one gets its own network.');
+      setStatus('stable — one blurred memory where four used to be');
+      return;
+    }
+    state.raf = setTimeout(tick, 16);
+  };
+  state.raf = setTimeout(tick, 16);
 }
 
 // ---------- Fig. 2, re-run live (N = 100, exactly the paper's experiment,
