@@ -1,0 +1,199 @@
+:root {
+  --paper-bg: #e9e3d5;
+  --ink: #1a1816;
+  --accent: #b3402e;
+  --card: #f6f2e8;
+  --shadow: 0 2px 14px rgba(40, 30, 10, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper-bg: #262320; --ink: #1a1816; --card: #efe9dc; }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper-bg);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.5;
+}
+
+header {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 16px 8px;
+  color: color-mix(in srgb, var(--card) 92%, black);
+}
+@media (prefers-color-scheme: light) {
+  header { color: var(--ink); }
+}
+header h1 { font-size: 2.1rem; margin: 10px 0 6px; font-style: italic; }
+header p { max-width: 62ch; margin: 6px 0; }
+header .how { font-family: ui-monospace, 'Cascadia Mono', monospace; font-size: 0.82rem; color: var(--accent); }
+header .age { font-size: 1.05rem; }
+header .age #age { color: var(--accent); font-weight: 700; }
+
+.masthead {
+  font-variant: small-caps;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  border-top: 2px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.stamp {
+  font-family: ui-monospace, monospace;
+  font-variant: normal;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  padding: 2px 8px;
+  transform: rotate(-4deg);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 900px) 270px;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+}
+
+.pages { min-width: 0; }
+.page-wrap { position: relative; margin: 0 0 26px; box-shadow: var(--shadow); }
+.page-wrap img {
+  display: block; width: 100%; height: auto;
+  filter: sepia(0.22) contrast(1.02); /* age the scan visibly */
+}
+.page-wrap::after { /* foxing vignette on the old paper */
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px rgba(120, 90, 30, 0.18),
+              inset 0 0 6px rgba(120, 90, 30, 0.12);
+}
+/* patch canvases sit above the vignette and age like the scan */
+.patch { z-index: 2; filter: sepia(0.22) contrast(1.02); }
+
+.caption {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin: -18px 0 26px;
+  text-align: center;
+}
+@media (prefers-color-scheme: dark) {
+  .caption { color: color-mix(in srgb, var(--accent) 80%, white); }
+}
+
+.patch.healing {
+  outline: 1.5px dashed var(--accent);
+  animation: healpulse 0.9s ease-in-out infinite;
+}
+@keyframes healpulse {
+  0%, 100% { outline-offset: 3px; outline-color: var(--accent); }
+  50% { outline-offset: 6px; outline-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+}
+
+/* patch overlays on the hero page */
+.patch {
+  position: absolute;
+  cursor: crosshair;
+  touch-action: none;
+  outline: 1px dashed color-mix(in srgb, var(--accent) 30%, transparent);
+  outline-offset: 3px;
+}
+.patch:hover { outline-color: color-mix(in srgb, var(--accent) 70%, transparent); }
+.patch.selected { outline: 1.5px dashed var(--accent); }
+.debug .patch { outline: 1px solid red; }
+
+/* instrument rail */
+.rail { min-width: 0; }
+.card {
+  position: sticky;
+  top: 14px;
+  background: var(--card);
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  box-shadow: var(--shadow);
+  padding: 14px;
+  font-family: ui-monospace, 'Cascadia Mono', monospace;
+  font-size: 0.78rem;
+}
+.card h2 {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.card .eq { font-family: Georgia, serif; font-style: italic; margin-bottom: 6px; }
+.card .eq-note { font-family: ui-monospace, monospace; font-style: normal; font-size: 0.62rem; color: #6b6257; }
+#e-value { font-size: 1.5rem; letter-spacing: 0.02em; margin: 2px 0 4px; }
+#e-trace { width: 100%; height: 80px; display: block; margin-bottom: 6px; }
+#status { color: #6b6257; min-height: 2.4em; }
+#verdict { color: var(--accent); min-height: 3.5em; margin-top: 4px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+button {
+  font-family: inherit;
+  font-size: 0.75rem;
+  background: none;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 4px 9px;
+  cursor: pointer;
+}
+button:hover { background: rgba(40, 30, 10, 0.08); }
+#btn-heal { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* cards inline with the pages */
+.note, .bench {
+  background: var(--card);
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin: -8px 0 26px;
+  font-size: 0.92rem;
+}
+.note { border-left: 3px solid var(--accent); }
+.bench h2 {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin: 0 0 6px;
+}
+#fig2-chart { width: 100%; max-width: 560px; height: auto; display: block; margin: 8px 0; }
+#fig2-out { font-family: ui-monospace, monospace; font-size: 0.75rem; color: #6b6257; }
+.bench select {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+}
+
+footer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 16px 48px;
+  font-size: 0.8rem;
+  color: #8a8172;
+}
+footer a { color: inherit; }
+
+@media (max-width: 1100px) {
+  .layout { display: block; }
+  .rail { position: sticky; top: 0; z-index: 10; margin-bottom: 14px; }
+  .card { position: static; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .card h2, .card .eq { flex-basis: 100%; margin: 0; }
+  #e-trace { width: 130px; height: 44px; }
+  #e-value { font-size: 1.1rem; }
+  #status, #verdict { min-height: 0; flex-basis: 100%; }
+}

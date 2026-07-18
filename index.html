@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The paper that remembers itself — Hopfield 1982, live</title>
+<meta name="description" content="J. J. Hopfield's 1982 paper, running its own equations on its own print. Smudge an equation; the energy function it defines pulls it back.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="masthead">
+    Proc. Natl. Acad. Sci. USA · Vol. 79 · pp. 2554–2558 · Biophysics
+    <span class="stamp">APR 15 1982</span>
+  </div>
+  <h1>The paper that remembers itself</h1>
+  <p class="age">
+    This journal page is <span id="age">44</span> years old — printed when
+    the IBM PC was one year old, nine years before the web. In 2024 it won
+    its author the Nobel Prize in Physics. It is running, live, in your
+    browser.
+  </p>
+  <p>
+    J.&nbsp;J.&nbsp;Hopfield, 1982 — <em>Neural networks and physical systems
+    with emergent collective computational abilities</em>. It defines a memory
+    whose stored patterns are minima of an energy: equation [7], page
+    2556. Here, four of the paper's printed equations are stored as memories
+    in exactly that network — every pixel of print is a neuron. Damage the
+    print, and the equation pulls itself back into place, downhill in its own
+    energy.
+  </p>
+  <p class="how">
+    scroll to page 2556 · smudge an equation with your cursor · press heal ·
+    watch E go downhill and the print fall back into place
+  </p>
+</header>
+
+<div class="layout">
+  <div class="pages">
+    <div class="page-wrap"><img src="media/page-2.png" alt="Hopfield 1982, page 2554" loading="lazy"></div>
+    <div class="page-wrap"><img src="media/page-3.png" alt="Hopfield 1982, page 2555 — update rule [1] and storage prescription [2]" loading="lazy"></div>
+
+    <div class="page-wrap" id="page-hero">
+      <img id="hero-img" src="media/page-4.png" alt="Hopfield 1982, page 2556 — the energy function, equation 7">
+      <!-- patch overlays are injected here by app.js -->
+    </div>
+    <div class="caption">the four boxed equations are stored memories — smudge one with your cursor</div>
+
+    <div class="note">
+      The healing you just watched is the paper, not an animation of it:
+      storage is the Hebbian prescription [2], the dynamics is rule [1] —
+      asynchronous, random order — with the threshold choice from
+      page&nbsp;2557 (the μ&nbsp;=&nbsp;±1 variables), and the number in the
+      margin instrument is E of equation [7], which rule [1] can only ever
+      decrease (equation [8]). The failure modes are honest physics too:
+      corrupt past 50% and the print heals into its own <em>photographic
+      negative</em> — the complement is an equally deep minimum. At exactly
+      50% it's a coin toss. Erase everything and it resurrects — blank paper
+      still agrees with the print about the background, and that agreement is
+      enough to fall back in. And each equation lives in its own network for
+      the reason the paper gives on page&nbsp;2557: the four strips share
+      their white background, and "memories too close to each other are
+      confused and tend to merge" — we tried; they do.
+      A 2020 footnote: Ramsauer et&nbsp;al.,
+      <a href="https://arxiv.org/abs/2008.02217"><em>Hopfield Networks is All
+      You Need</em></a>, proved the modern continuous version of this update
+      rule is exactly transformer attention — the memory you just smudged is a
+      direct ancestor of the mechanism inside every large language model.
+    </div>
+
+    <div class="page-wrap"><img src="media/page-5.png" alt="Hopfield 1982, page 2557 — Fig. 2, error distribution of recalled memories" loading="lazy"></div>
+
+    <div class="bench">
+      <h2>RE-RUN FIG. 2 — LIVE, IN YOUR BROWSER</h2>
+      <p>
+        Fig.&nbsp;2 above took Hopfield a 1982 computer. Your browser re-runs
+        the same experiment in milliseconds: N&nbsp;=&nbsp;100 neurons,
+        <em>n</em> random memories stored by equation [2], each started at its
+        nominal state and relaxed by rule [1]; the bars are the distribution of
+        errors in what came back.
+      </p>
+      <label>n =
+        <select id="fig2-n">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15" selected>15</option>
+        </select>
+      </label>
+      <button id="btn-fig2">run the 1982 experiment</button>
+      <canvas id="fig2-chart" width="560" height="240"></canvas>
+      <div id="fig2-out"></div>
+    </div>
+
+    <div class="page-wrap"><img src="media/page-6.png" alt="Hopfield 1982, page 2558" loading="lazy"></div>
+  </div>
+
+  <div class="rail">
+    <div class="card">
+      <h2>INSTRUMENT — EQ [7], COMPUTED LIVE</h2>
+      <div class="eq">E = −½ ΣΣ T<sub>ij</sub> μ<sub>i</sub> μ<sub>j</sub>
+        <span class="eq-note">— in the μ = ±1 variables of p. 2557</span></div>
+      <div>selected memory: <span id="sel-tag">[7]</span></div>
+      <div id="e-value">—</div>
+      <canvas id="e-trace" width="240" height="80"></canvas>
+      <div id="status">loading the print…</div>
+      <div id="verdict"></div>
+      <div class="controls">
+        <button id="btn-30">corrupt 30%</button>
+        <button id="btn-50">corrupt 50%</button>
+        <button id="btn-90">corrupt 90%</button>
+        <button id="btn-blank">erase all</button>
+        <button id="btn-heal">heal</button>
+        <button id="btn-reset">reset print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Paper: J. J. Hopfield, PNAS 79:2554–2558 (1982), © National Academy of
+  Sciences; scan via JSTOR, shown here for personal, educational use.
+  Everything runs in your browser; nothing is sent anywhere.
+  Made by Kateřina Fajmanová —
+  <a href="https://github.com/moudrkat">github</a>.
+</footer>
+
+<script>
+  document.getElementById('age').textContent = new Date().getFullYear() - 1982;
+</script>
+<script src="hopfield.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
