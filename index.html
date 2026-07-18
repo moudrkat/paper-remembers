@@ -21,11 +21,12 @@
     itself from nothing but what it remembers.
   </p>
   <p class="age">
-    This is J.&nbsp;J.&nbsp;Hopfield's 1982 paper — almost 45 years old, five
-    pages long. The idea in it won the 2024 Nobel Prize in Physics and grew into
-    the way today's AI chatbots keep track of what you tell them. Here the paper
-    stores <em>itself</em> as the memory: every speck of ink is one tiny switch,
-    and you can rub any of it out and watch it come back.
+    This is a real scientific paper from 1982, by the physicist John Hopfield.
+    It describes a strange kind of memory — one that can rebuild the whole thing
+    from just a piece of it, the way two notes can bring back a whole song. So
+    we stored the paper inside that very memory. Every speck of ink is one tiny
+    switch; rub any of it out, and it finds its way back. The idea won the 2024
+    Nobel Prize in Physics.
   </p>
 </header>
 
@@ -48,16 +49,13 @@
     </div>
 
     <div class="reveal">
-      <h2>What you just watched is the ancestor of how AI remembers.</h2>
+      <h2>What you just did is where AI's memory comes from.</h2>
       <p>
-        The pull you saw — a damaged input snapping back to the nearest stored
-        memory — is the classical 1982 form of this network. In 2020 the same
-        network, generalized to continuous values, was
-        <a href="https://arxiv.org/abs/2008.02217">shown to compute exactly
-        “attention”</a> — a core step inside transformer AI models like GPT
-        and Claude. So today's chatbots recall context using a direct
-        descendant of the mechanism you just played with: an idea that began as
-        physics, about magnets and neurons.
+        Think of a chatbot pulling up the one thing you told it that matters,
+        right when it matters. That is the same move you just made: hand it a
+        scrap, and the whole memory comes back. The modern version of this 1982
+        idea is the very piece that lets ChatGPT and Claude do it — you just ran
+        it by hand, with your finger, on a 45-year-old page.
       </p>
     </div>
 
@@ -188,10 +186,10 @@
       <div id="verdict"></div>
 
       <details class="deeper">
-        <summary>see the "valley" it rolls into</summary>
-        <div class="sub">page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
+        <summary>see the "valley" it rolls into — this is equation [7]</summary>
+        <div class="sub">this hill <em>is</em> equation [7], the paper's energy. Every stored page is a valley in it. page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
         <canvas id="e-trace" width="240" height="96"></canvas>
-        <div class="trace-cap">a sketch of the idea: two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. (The real landscape has far more dimensions; this is a cartoon of it.)</div>
+        <div class="trace-cap">Two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. (A cartoon: the real landscape has thousands of dimensions.)</div>
       </details>
 
       <details class="deeper">

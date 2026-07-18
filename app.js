@@ -471,6 +471,9 @@ function drawTrace() {
   ctx.textAlign = 'left';   ctx.fillText('negative', pad, H - 3);
   ctx.textAlign = 'right';  ctx.fillText('the page', W - pad, H - 3);
   ctx.textAlign = 'center'; ctx.fillText('50%', W/2, top - 2);
+  ctx.fillStyle = accent; ctx.textAlign = 'left';
+  ctx.fillText('E — equation [7]', pad, top + 8);
+  ctx.globalAlpha = 1;
   ctx.globalAlpha = 1;
 }
 
