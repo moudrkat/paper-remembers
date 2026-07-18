@@ -202,21 +202,47 @@ function canvasXY(ev, cv) {
 
 function startDamage(e, i) {
   const cv = state.canvases[i];
-  e.preventDefault();
   if (state.healing) stopHeal();
   clearTimeout(state.autoHeal);
   setActive(i);
-  state.touched[i] = true;
-  cv.setPointerCapture(e.pointerId);
-  setStatus('rubbing out the ink…');
-  const [x, y] = canvasXY(e, cv); brush(x, y, i); render(i);
-  const move = ev => { const [mx, my] = canvasXY(ev, cv); brush(mx, my, i); render(i); };
-  cv.addEventListener('pointermove', move);
-  cv.addEventListener('pointerup', () => {
+
+  // On a phone (touch-action: pan-y) a vertical swipe must scroll, not draw.
+  // Mouse/pen draw immediately; touch only starts drawing once the finger
+  // moves sideways — so a scroll gesture never leaves a stray mark.
+  const isTouch = e.pointerType === 'touch';
+  if (!isTouch) e.preventDefault();
+  const start = canvasXY(e, cv);
+  let drawing = !isTouch;
+  const begin = () => {
+    drawing = true;
+    state.touched[i] = true;
+    try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+    setStatus('rubbing out the ink…');
+  };
+  if (drawing) { begin(); brush(start[0], start[1], i); render(i); }
+
+  const move = ev => {
+    const [mx, my] = canvasXY(ev, cv);
+    if (!drawing) {
+      if (Math.abs(mx - start[0]) > 6) begin(); else return;
+    }
+    brush(mx, my, i); render(i);
+  };
+  const cleanup = () => {
     cv.removeEventListener('pointermove', move);
-    setStatus('let go — now watch the page rebuild itself…');
-    state.autoHeal = setTimeout(heal, 600);
-  }, { once: true });
+    cv.removeEventListener('pointerup', up);
+    cv.removeEventListener('pointercancel', cleanup);
+  };
+  const up = () => {
+    cleanup();
+    if (state.touched[i]) {
+      setStatus('let go — now watch the page rebuild itself…');
+      state.autoHeal = setTimeout(heal, 600);
+    }
+  };
+  cv.addEventListener('pointermove', move);
+  cv.addEventListener('pointerup', up, { once: true });
+  cv.addEventListener('pointercancel', cleanup, { once: true });
 }
 
 // ---------- rebuild (the network recalling the page) ----------

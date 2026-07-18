@@ -182,7 +182,8 @@ header .tagline {
   width: 100%;
   height: auto;
   cursor: crosshair;
-  touch-action: none;
+  /* let a vertical swipe scroll the page; a sideways swipe scribbles/erases */
+  touch-action: pan-y;
   background: var(--card);
   border-bottom: 8px solid var(--paper-bg);
 }
@@ -493,11 +494,28 @@ footer {
 footer a { color: inherit; }
 
 @media (max-width: 1100px) {
-  .layout { display: block; }
-  .rail { position: sticky; top: 0; z-index: 10; margin-bottom: 14px; }
-  .card { position: static; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .card h2, .card .eq { flex-basis: 100%; margin: 0; }
-  #e-trace { width: 130px; height: 44px; }
-  #e-value { font-size: 1.1rem; }
-  #status, #verdict { min-height: 0; flex-basis: 100%; }
+  /* stack: controls first, then the pages flow in the document itself */
+  .layout { display: flex; flex-direction: column; gap: 14px; }
+  .rail { order: -1; }
+  .card { position: static; }
+  /* no nested scroll box on touch — let the phone scroll the whole document */
+  .stage-scroll { max-height: none; overflow: visible; }
+}
+
+@media (max-width: 600px) {
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img, canvas { max-width: 100%; }
+  .layout, .pages, .stage, .stage-scroll, .page-slot, .rail, .card { min-width: 0; max-width: 100%; }
+  header { padding: 24px 14px 6px; }
+  header h1 { font-size: 1.6rem; }
+  header .tagline { font-size: 1.1rem; }
+  header .age { font-size: 0.98rem; }
+  .masthead { flex-wrap: wrap; row-gap: 6px; font-size: 0.64rem; letter-spacing: 0.08em; }
+  .stamp { white-space: nowrap; }
+  .reveal, .physics, .attention, .tribute, .story, .provenance, .note, .limits, .fullpaper { padding-left: 15px; padding-right: 15px; }
+  .reveal h2, .physics h2, .attention h2, .story h2, .provenance h2 { font-size: 1.15rem; }
+  .tribute .lead { font-size: 1.3rem; }
+  .eq-display { overflow-x: auto; }
+  .eq-body { font-size: 1.3rem; }
+  .card { padding: 12px; }
 }
