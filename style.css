@@ -116,6 +116,8 @@ header .tagline {
   transition: opacity 0.5s ease;
 }
 .intro.show { opacity: 1; }
+.intro[hidden] { display: none; } /* beat the class's display:flex so it stops eating clicks */
+.intro:not(.show) { pointer-events: none; } /* never block the page once it starts fading */
 .intro-card {
   background: var(--card);
   color: var(--ink);
@@ -242,6 +244,24 @@ button:hover { background: rgba(40, 30, 10, 0.08); }
   font-size: 0.92rem;
 }
 .note { border-left: 3px solid var(--accent); }
+
+.limits {
+  background: var(--card);
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  box-shadow: var(--shadow);
+  padding: 10px 16px;
+  margin: -8px 0 26px;
+  font-size: 0.86rem;
+}
+.limits summary {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  cursor: pointer;
+}
+.limits ul { margin: 10px 0 2px; padding-left: 20px; }
+.limits li { margin: 6px 0; }
 .bench h2 {
   font-family: ui-monospace, monospace;
   font-size: 0.75rem;

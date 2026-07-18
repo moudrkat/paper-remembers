@@ -20,19 +20,10 @@
     pulled back into place by the very equation printed on the page.
   </p>
   <p class="age">
-    This journal page is <span id="age">44</span> years old — printed when
-    the IBM PC was one year old, nine years before the web. In 2024 it won
-    its author the Nobel Prize in Physics. It is running, live, in your
-    browser.
-  </p>
-  <p>
-    J.&nbsp;J.&nbsp;Hopfield, 1982 — <em>Neural networks and physical systems
-    with emergent collective computational abilities</em>. It defines a memory
-    whose stored patterns are minima of an energy: equation [7], page
-    2556. Here, four of the paper's printed equations are stored as memories
-    in exactly that network — every pixel of print is a neuron. Damage the
-    print, and the equation pulls itself back into place, downhill in its own
-    energy.
+    J.&nbsp;J.&nbsp;Hopfield, 1982 — <span id="age">44</span> years old, and
+    the network it defines won the 2024 Nobel Prize in Physics. Four of its
+    printed equations are stored as memories in that very network; every pixel
+    of ink is a neuron.
   </p>
 </header>
 
@@ -53,25 +44,23 @@
     <div class="caption">the four boxed equations are stored memories — smudge one with your cursor</div>
 
     <div class="note">
-      The healing you just watched is the paper, not an animation of it:
-      storage is the Hebbian prescription [2], the dynamics is rule [1] —
-      asynchronous, random order — with the threshold choice from
-      page&nbsp;2557 (the μ&nbsp;=&nbsp;±1 variables), and the number in the
-      margin instrument is E of equation [7], which rule [1] can only ever
-      decrease (equation [8]). The failure modes are honest physics too:
-      scribble out more than half of an equation and it heals into its own
-      <em>photographic negative</em> — the complement is an equally deep
-      minimum. At exactly half, it's a coin toss. And each equation lives in
-      its own network for
-      the reason the paper gives on page&nbsp;2557: the four strips share
-      their white background, and "memories too close to each other are
-      confused and tend to merge" — we tried; they do.
-      A 2020 footnote: Ramsauer et&nbsp;al.,
-      <a href="https://arxiv.org/abs/2008.02217"><em>Hopfield Networks is All
-      You Need</em></a>, proved the modern continuous version of this update
-      rule is exactly transformer attention — the memory you just smudged is a
-      direct ancestor of the mechanism inside every large language model.
+      This is the paper, not an animation of it: storage is prescription [2],
+      the dynamics is rule [1], and the number in the instrument is E of
+      equation [7] — which rule [1] can only ever push downhill.
+      <a href="https://arxiv.org/abs/2008.02217">In 2020</a> this update rule
+      was shown to be exactly transformer attention: the memory you just
+      smudged is an ancestor of the mechanism inside every large language model.
     </div>
+
+    <details class="limits">
+      <summary>Honest limits — what this does and doesn't show</summary>
+      <ul>
+        <li>Each equation is <strong>one stored pattern in its own network</strong>. Recovery is easy because it is the only memory there — this shows recall, not capacity. The real limit (Hopfield's ~0.15N) lives in the Fig. 2 bench below.</li>
+        <li>Damage past half heals to the <strong>photographic negative</strong> — an equally deep minimum, not the original. At exactly half it's a coin toss.</li>
+        <li>Store all four in <strong>one</strong> network and they merge — p. 2557 warns of exactly this; we tried, they do. Hence one net each.</li>
+        <li>This is the discrete <strong>1982</strong> model with pixels as neurons — a faithful but didactic mapping, not a claim about how brains or LLMs store text.</li>
+      </ul>
+    </details>
 
     <h2 class="section-head">The full paper — five pages, PNAS, April 1982</h2>
     <div class="page-wrap"><img src="media/page-2.png" alt="Hopfield 1982, page 2554" loading="lazy"></div>
@@ -79,13 +68,13 @@
     <div class="page-wrap"><img src="media/page-5.png" alt="Hopfield 1982, page 2557 — Fig. 2, error distribution of recalled memories" loading="lazy"></div>
 
     <div class="bench">
-      <h2>RE-RUN FIG. 2 — LIVE, IN YOUR BROWSER</h2>
+      <h2>RE-RUN FIG. 2 — THE RECALL-ERROR HISTOGRAM</h2>
       <p>
-        Fig.&nbsp;2 above took Hopfield a 1982 computer. Your browser re-runs
-        the same experiment in milliseconds: N&nbsp;=&nbsp;100 neurons,
-        <em>n</em> random memories stored by equation [2], each started at its
-        nominal state and relaxed by rule [1]; the bars are the distribution of
-        errors in what came back.
+        This reproduces <strong>Fig. 2</strong> above — how many bits come back
+        wrong when you overload the memory. (Fig. 1, on p. 2555, is the neuron
+        input-output curve; not this.) N&nbsp;=&nbsp;100 neurons, <em>n</em>
+        random memories, each relaxed by rule [1]. Push <em>n</em> past ~15 and
+        recall falls apart, exactly as the paper found.
       </p>
       <label>n =
         <select id="fig2-n">
