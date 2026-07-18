@@ -15,6 +15,10 @@
     <span class="stamp">APR 15 1982</span>
   </div>
   <h1>The paper that remembers itself</h1>
+  <p class="tagline">
+    Rub out a printed equation with your cursor — and watch it heal itself,
+    pulled back into place by the very equation printed on the page.
+  </p>
   <p class="age">
     This journal page is <span id="age">44</span> years old — printed when
     the IBM PC was one year old, nine years before the web. In 2024 it won
@@ -30,17 +34,18 @@
     print, and the equation pulls itself back into place, downhill in its own
     energy.
   </p>
-  <p class="how">
-    scroll to page 2556 · smudge an equation with your cursor · press heal ·
-    watch E go downhill and the print fall back into place
-  </p>
 </header>
+
+<div id="intro" class="intro" hidden>
+  <div class="intro-card">
+    <canvas id="intro-canvas" width="540" height="72"></canvas>
+    <p id="intro-text"></p>
+    <button id="intro-skip">skip →</button>
+  </div>
+</div>
 
 <div class="layout">
   <div class="pages">
-    <div class="page-wrap"><img src="media/page-2.png" alt="Hopfield 1982, page 2554" loading="lazy"></div>
-    <div class="page-wrap"><img src="media/page-3.png" alt="Hopfield 1982, page 2555 — update rule [1] and storage prescription [2]" loading="lazy"></div>
-
     <div class="page-wrap" id="page-hero">
       <img id="hero-img" src="media/page-4.png" alt="Hopfield 1982, page 2556 — the energy function, equation 7">
       <!-- patch overlays are injected here by app.js -->
@@ -54,11 +59,10 @@
       page&nbsp;2557 (the μ&nbsp;=&nbsp;±1 variables), and the number in the
       margin instrument is E of equation [7], which rule [1] can only ever
       decrease (equation [8]). The failure modes are honest physics too:
-      corrupt past 50% and the print heals into its own <em>photographic
-      negative</em> — the complement is an equally deep minimum. At exactly
-      50% it's a coin toss. Erase everything and it resurrects — blank paper
-      still agrees with the print about the background, and that agreement is
-      enough to fall back in. And each equation lives in its own network for
+      scribble out more than half of an equation and it heals into its own
+      <em>photographic negative</em> — the complement is an equally deep
+      minimum. At exactly half, it's a coin toss. And each equation lives in
+      its own network for
       the reason the paper gives on page&nbsp;2557: the four strips share
       their white background, and "memories too close to each other are
       confused and tend to merge" — we tried; they do.
@@ -69,6 +73,9 @@
       direct ancestor of the mechanism inside every large language model.
     </div>
 
+    <h2 class="section-head">The full paper — five pages, PNAS, April 1982</h2>
+    <div class="page-wrap"><img src="media/page-2.png" alt="Hopfield 1982, page 2554" loading="lazy"></div>
+    <div class="page-wrap"><img src="media/page-3.png" alt="Hopfield 1982, page 2555 — update rule [1] and storage prescription [2]" loading="lazy"></div>
     <div class="page-wrap"><img src="media/page-5.png" alt="Hopfield 1982, page 2557 — Fig. 2, error distribution of recalled memories" loading="lazy"></div>
 
     <div class="bench">
@@ -105,11 +112,8 @@
       <canvas id="e-trace" width="240" height="80"></canvas>
       <div id="status">loading the print…</div>
       <div id="verdict"></div>
+      <div class="hint">damage it by dragging your cursor across the print</div>
       <div class="controls">
-        <button id="btn-30">corrupt 30%</button>
-        <button id="btn-50">corrupt 50%</button>
-        <button id="btn-90">corrupt 90%</button>
-        <button id="btn-blank">erase all</button>
         <button id="btn-heal">heal</button>
         <button id="btn-reset">reset print</button>
       </div>
@@ -121,7 +125,7 @@
   Paper: J. J. Hopfield, PNAS 79:2554–2558 (1982), © National Academy of
   Sciences; scan via JSTOR, shown here for personal, educational use.
   Everything runs in your browser; nothing is sent anywhere.
-  Made by Kateřina Fajmanová —
+  Made by Unt1l1f1nd —
   <a href="https://github.com/moudrkat">github</a>.
 </footer>
 

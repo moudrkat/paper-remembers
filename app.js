@@ -36,6 +36,8 @@ const state = {
   raf: 0,
   eTrace: [],
   demoDone: false,
+  introTimers: [],
+  introAborted: false,
 };
 
 const $ = sel => document.querySelector(sel);
@@ -80,7 +82,7 @@ function init(img) {
   wireControls();
   setActive(2); // Eq [7], the star
   setStatus('ready — smudge an equation');
-  watchForFirstView();
+  state.introTimers.push(setTimeout(narrateIntro, 500)); // the hero is first; teach immediately
   if (location.search.includes('debug')) $('#page-hero').classList.add('debug');
 }
 
@@ -127,8 +129,8 @@ function startSmudge(e, cv) {
   }, { once: true });
 }
 
-function brush(cx, cy) {
-  const w = work();
+function brush(cx, cy, w) {
+  w = w || work();
   const r2 = BRUSH_R * BRUSH_R;
   const x0 = Math.max(0, cx - BRUSH_R | 0), x1 = Math.min(PW - 1, cx + BRUSH_R | 0);
   const y0 = Math.max(0, cy - BRUSH_R | 0), y1 = Math.min(PH - 1, cy + BRUSH_R | 0);
@@ -161,31 +163,6 @@ function refreshEnergy() {
   $('#e-value').textContent = fmtE(e);
   state.eTrace.push(e);
   drawTrace();
-}
-
-function corrupt(frac) {
-  if (state.healing) stopHeal();
-  state.toucheds[state.active] = true;
-  const w = work();
-  for (let i = 0; i < N; i++) if (Math.random() < frac) w[i] ^= 1;
-  drawState(activeCanvas(), w);
-  state.eTrace = [];
-  refreshEnergy();
-  const pct = Math.round(frac * 100);
-  setStatus(pct === 50
-    ? `corrupted 50% — dead center between print and negative; heal is a coin toss`
-    : `corrupted ${pct}% of ${N.toLocaleString()} bits — press heal`);
-}
-
-function blank() {
-  if (state.healing) stopHeal();
-  state.toucheds[state.active] = true;
-  work().fill(0);
-  drawState(activeCanvas(), work());
-  state.eTrace = [];
-  refreshEnergy();
-  setStatus('erased to blank paper — press heal: the background still agrees ' +
-    'with the print, so blank sits inside its basin');
 }
 
 function resetPrint() {
@@ -228,14 +205,14 @@ function heal() {
       verdict();
       return;
     }
-    state.raf = requestAnimationFrame(tick);
+    state.raf = setTimeout(tick, 16);
   };
-  state.raf = requestAnimationFrame(tick);
+  state.raf = setTimeout(tick, 16);
 }
 
 function stopHeal() {
   state.healing = false;
-  cancelAnimationFrame(state.raf);
+  clearTimeout(state.raf);
   document.querySelectorAll('.patch.healing')
     .forEach(c => c.classList.remove('healing'));
 }
@@ -256,44 +233,100 @@ function verdict() {
   setStatus('stable — a full pass with zero flips');
 }
 
-// ---------- the unprompted first miracle ----------
-// When page 2556 first scrolls into view, an invisible hand smudges Eq [7]
-// and the paper heals itself. Awe first, instructions later.
+// ---------- the guided intro: teach the idea in three beats ----------
+// On first view, a dim overlay narrates ON the equation — this is a memory,
+// damage it, watch it heal — then fades and hands control over. The whole
+// point of the page has to land in about five seconds, before anyone scrolls.
 
-function watchForFirstView() {
-  const hero = $('#page-hero');
-  const obs = new IntersectionObserver(entries => {
-    for (const e of entries)
-      if (e.isIntersecting) { obs.disconnect(); setTimeout(autoDemo, 600); }
-  }, { threshold: 0.45 });
-  obs.observe(hero);
+function wait(ms) {
+  return new Promise(res => state.introTimers.push(setTimeout(res, ms)));
 }
 
-function autoDemo() {
-  if (location.search.includes('debug')) return; // calibration mode stays pristine
-  if (state.demoDone || state.healing) return;
-  if (state.toucheds.some(Boolean)) return; // visitor beat us to it
+function sayIntro(t) {
+  const tx = $('#intro-text');
+  tx.style.opacity = 0;
+  return wait(300).then(() => {
+    if (state.introAborted) return;
+    tx.textContent = t;
+    tx.style.opacity = 1;
+    return wait(350);
+  });
+}
+
+// The demo lives entirely inside the card — its own copy of Eq [7], its own
+// net — so it needs no particular scroll position and can never miss.
+async function narrateIntro() {
+  if (location.search.includes('debug')) return; // calibration stays pristine
+  if (state.demoDone) return;
   state.demoDone = true;
-  setActive(2); // Eq [7]
-  state.toucheds[2] = true;
-  const cv = activeCanvas();
-  let t = 0;
-  setStatus('watch — smudging Eq [7]…');
-  const sweep = setInterval(() => {
-    t++;
-    const cx = 40 + (PW - 80) * t / 16;
-    const cy = PH / 2 + Math.sin(t * 0.85) * 16;
-    brush(cx, cy);
-    drawState(cv, work());
-    if (t >= 16) {
-      clearInterval(sweep);
-      refreshEnergy();
-      setTimeout(() => { heal(); }, 800);
-      setTimeout(() => {
-        if (!state.healing) setStatus('your turn — smudge any equation');
-      }, 7000);
-    }
-  }, 80);
+  setActive(2); // reflect [7] as selected in the instrument
+
+  const cv = $('#intro-canvas');
+  const pat = state.patterns[2];
+  const net = new Hopfield([pat], 'spin');
+  const w = Uint8Array.from(pat);
+  const draw = () => drawState(cv, w);
+  draw();
+
+  const ov = $('#intro');
+  ov.hidden = false;
+  $('#intro-skip').onclick = () => endIntro();
+  await wait(40);
+  if (state.introAborted) return;
+  ov.classList.add('show');
+
+  await sayIntro('This is a printed equation from the paper.\nHere it is a memory — every speck of ink a neuron.');
+  await wait(2400);
+  if (state.introAborted) return;
+
+  await sayIntro('Damage it — rub the ink out.');
+  await wait(450);
+  if (state.introAborted) return;
+  for (let t = 1; t <= 16; t++) {
+    if (state.introAborted) return;
+    brush(40 + (PW - 80) * t / 16, PH / 2 + Math.sin(t * 0.85) * 16, w);
+    draw();
+    await wait(70);
+  }
+  if (state.introAborted) return;
+
+  await sayIntro('Now watch — it repairs itself, rolling\ndownhill to the one pattern it stored: this one.');
+  await wait(1100);
+  if (state.introAborted) return;
+
+  net.setState(w);
+  await healStrip(net, w, draw);
+  if (state.introAborted) return;
+
+  await sayIntro('That is a 1982 memory, healing itself.\nNow break the real thing ↓');
+  await wait(2000);
+  endIntro();
+}
+
+// animate a single strip's net to stability, drawing every frame
+function healStrip(net, w, draw) {
+  return new Promise(res => {
+    const tick = () => {
+      if (state.introAborted) return res();
+      net.step(1500);
+      w.set(net.V);
+      draw();
+      if (net.stable) return res();
+      state.introTimers.push(setTimeout(tick, 16));
+    };
+    tick();
+  });
+}
+
+function endIntro() {
+  if (state.introAborted) return;
+  state.introAborted = true;
+  state.introTimers.forEach(clearTimeout);
+  state.introTimers = [];
+  const ov = $('#intro');
+  ov.classList.remove('show');
+  setTimeout(() => { ov.hidden = true; }, 450);
+  setStatus('your turn — drag your cursor across any equation');
 }
 
 // ---------- drawing ----------
@@ -336,10 +369,6 @@ function setStatus(s) { $('#status').textContent = s; }
 function setVerdict(s) { $('#verdict').textContent = s; }
 
 function wireControls() {
-  $('#btn-30').onclick = () => corrupt(0.30);
-  $('#btn-50').onclick = () => corrupt(0.50);
-  $('#btn-90').onclick = () => corrupt(0.90);
-  $('#btn-blank').onclick = blank;
   $('#btn-heal').onclick = heal;
   $('#btn-reset').onclick = resetPrint;
   $('#btn-fig2').onclick = () => runFig2(+$('#fig2-n').value);

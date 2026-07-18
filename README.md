@@ -56,14 +56,21 @@ is equation [7], printed on the page it is repairing.
   of Eq [2], the field on neuron *i* is computed from overlaps
   `m_s = ξ^s·state` maintained incrementally; energy comes from the same
   factorization. Algebraically identical to the dense `T`, update by update.
-- "Corruption" = independent bit flips (Hamming noise); the smudge brush
-  flips bits under the cursor.
+- "Corruption" = independent bit flips (Hamming noise); damage is by cursor
+  only — drag across the print to flip bits under the brush. No corrupt/erase
+  buttons; the photographic-negative basin is reachable by scribbling out more
+  than half of an equation.
 - The update schedule is a fresh random permutation per pass; the paper's
   process is random attempts at mean rate W (with replacement). Same fixed
   points, same monotone energy — the permutation just makes "stable" cheap to
   detect (one full pass, zero flips).
-- When page 2556 first scrolls into view, the page smudges Eq [7] itself and
-  heals it once — the physics is identical to the interactive path.
+- On load, a guided intro card runs a self-contained mini-demo — Eq [7]
+  smudged and healed inside the card, narrated in three beats — so the whole
+  idea lands in about five seconds before anyone scrolls. Same physics as the
+  interactive path, on its own copy of the pattern; skippable; suppressed
+  under `?debug`.
+- The live bench re-runs **Fig. 2** (the recall-error histogram, p. 2557), not
+  Fig. 1 (the neuron input-output sigmoid on p. 2555).
 
 ## Prior art
 
