@@ -11,6 +11,10 @@ pinned: false
 
 **Hopfield 1982, running its own equations on its own print.**
 
+**Live: [unt1l1f1nd-paper-remembers.static.hf.space](https://unt1l1f1nd-paper-remembers.static.hf.space)** — scribble on the page and let go.
+
+![the 1982 page scribbled out with the cursor, then rebuilding itself back to clean print — every speck of ink is one neuron](media/hero-heal.gif)
+
 The scanned pages of J. J. Hopfield's *Neural networks and physical systems
 with emergent collective computational abilities* (PNAS 79:2554–2558, 1982)
 are the site. Four printed equations on page 2556 — [6], [7], [8], [9] — are
@@ -96,19 +100,22 @@ prize.
 - `hopfield.js` — the 1982 network (Eqs [1], [2], [7], factorized field/energy)
 - `app.js` — binarize the print into patterns, smudge, heal animation,
   energy instrument, Fig. 2 replication
-- `media/hopfield1982.pdf` + `page-*.png` — the scan (150 dpi renders)
+- `media/page-*.png` — the scan, 150 dpi renders (the source PDF itself is
+  deliberately not in the repo — see Provenance & rights)
 - `?debug` in the URL outlines the stored patch regions
 
 ## Dev
 
     python3 -m http.server 8080     # then http://localhost:8080
 
-Regenerate page renders: `pdftoppm -png -r 150 media/hopfield1982.pdf media/page`
+Regenerate page renders (needs your own copy of the scan, not shipped):
+`pdftoppm -png -r 150 hopfield1982.pdf media/page`
 
 ## Provenance & rights
 
-Paper © 1982 National Academy of Sciences; scan via JSTOR, included for
-personal, educational use with the original notice retained in the PDF.
+Paper © 1982 National Academy of Sciences; scan via JSTOR. Only the page
+renders ship here, for personal, educational use, with the original notice
+retained on the print; the PDF stays out of the repo.
 2020 footnote in the margin: Ramsauer et al., *Hopfield Networks is All You
 Need* (arXiv:2008.02217) — the modern continuous Hopfield update is exactly
 transformer attention.
