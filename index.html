@@ -22,17 +22,14 @@
   </div>
   <h1>The paper that remembers itself</h1>
   <p class="tagline">
-    Scroll through all five pages and scribble out any part of any of them — a
-    word, a line, the title, a whole paragraph. Let go, and the page rebuilds
-    itself from nothing but what it remembers.
+    Scribble out any part of any of these five pages — a word, a line, the
+    title. Let go.
   </p>
   <p class="age">
-    This is a real scientific paper from 1982, by the physicist John Hopfield.
-    It describes a strange kind of memory — one that rebuilds the whole thing
-    from just a piece of it, the way two notes can bring back a whole song.
-    The paper is now stored inside the very memory it describes: every speck of
-    ink below is one switch in the network. The idea won the 2024 Nobel Prize
-    in Physics.
+    A real paper from 1982, by the physicist John Hopfield, describing the kind
+    of memory that brings back a whole song from two notes. The paper is now
+    stored inside the memory it describes: every speck of ink below is one
+    switch in the network. The idea won the 2024 Nobel Prize in Physics.
   </p>
 </header>
 
@@ -63,9 +60,8 @@
         it, over and over, is what lets ChatGPT and Claude hold a conversation.
       </p>
       <p>
-        Their version runs in shades of grey rather than plain on/off, and that
-        continuous form was proved in 2020 to be exactly this network's recall
-        step — the paper is in the sources below.
+        Their version runs in shades of grey rather than plain on/off — the
+        continuous form of the same recall step.
       </p>
     </div>
 
@@ -177,9 +173,8 @@
     <div class="physics" id="asitruns">
       <h2>The rule, as printed and as it runs</h2>
 
-      <p>Equation [1] is the whole of recall: look at what the other switches
-      are saying, and go with them. It is on p. 2555, above. Here it is beside
-      the line in this page's source that executes it.</p>
+      <p>Equation [1], printed on p. 2555 above, beside the line in this page's
+      source that executes it. The panel on the right runs it live.</p>
 
       <div class="codepair">
         <div class="side">
@@ -279,14 +274,14 @@ const nv = <span class="lc-b" id="lc-b1">h &gt; 0 ? 1</span>
 
       <details class="deeper">
         <summary>see the "valley" it rolls into — this is equation [7]</summary>
-        <div class="sub">this hill <em>is</em> equation [7], the paper's energy. Every stored page is a valley in it. page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
+        <div class="sub">page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
         <canvas id="e-trace" width="240" height="96"></canvas>
-        <div class="trace-cap">Two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. Each valley is an <em>attractor</em>: it pulls in every start in its basin, wanted or not. (A cartoon: the real landscape has thousands of dimensions.)</div>
+        <div class="trace-cap">a cartoon — the real landscape has 784,320 dimensions</div>
       </details>
 
       <details class="deeper">
         <summary>try Hopfield's original 1982 storage recipe</summary>
-        <div class="trace-cap">Only one thing changes: <em>how the wiring is computed</em>. This page uses the 1985 recipe, which keeps the five pages apart. Switch to Hopfield's original 1982 recipe and the same pages blur into one ghost — everything else (recall, energy) is identical.</div>
+        <div class="trace-cap">only <b>T</b> changes — then scribble a page</div>
         <div class="controls">
           <button id="btn-merge">switch to Hopfield's 1982 recipe</button>
         </div>
