@@ -472,6 +472,9 @@ footer {
   color: #8a8172;
 }
 footer a { color: inherit; }
+footer p { margin: 0 0 10px; line-height: 1.55; }
+footer p:last-child { margin-bottom: 0; }
+footer strong { color: #a09684; }
 
 @media (max-width: 1100px) {
   /* stack: controls first, then the pages flow in the document itself */

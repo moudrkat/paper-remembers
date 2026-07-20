@@ -128,9 +128,21 @@ Regenerate page renders (needs your own copy of the scan, not shipped):
 
 ## Provenance & rights
 
-Paper © 1982 National Academy of Sciences; scan via JSTOR. Only the page
-renders ship here, for personal, educational use, with the original notice
-retained on the print; the PDF stays out of the repo.
+The paper is © 1982 National Academy of Sciences. **The original is free to
+read from the publisher — [pnas.org](https://www.pnas.org/doi/10.1073/pnas.79.8.2554)
+— and that is where it should be read.**
+
+Only reduced-resolution page renders ship here, for non-commercial,
+educational use, with the original copyright notice left intact on the print.
+They are the substrate this demonstration runs on, not a reading copy. The
+source PDF is not distributed: it is neither in the working tree nor anywhere
+in the git history.
+
+This is an independent tribute. It is not published, endorsed by, or connected
+with John Hopfield, PNAS, or the National Academy of Sciences. Any rights
+holder who would prefer the page images taken down can open an issue here and
+they will be removed.
+
 2020 footnote in the margin: Ramsauer et al., *Hopfield Networks is All You
 Need* (arXiv:2008.02217) — the modern continuous Hopfield update is exactly
 transformer attention.
