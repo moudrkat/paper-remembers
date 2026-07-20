@@ -394,11 +394,7 @@ async function narrateIntro() {
   if (state.introAborted) return;
   ov.classList.add('show');
 
-  await sayIntro('This whole page is a memory —\nevery speck of ink, one switch in a network.');
-  await wait(2200);
-  if (state.introAborted) return;
-
-  await sayIntro('Watch. We rub a hole right through it.');
+  await sayIntro('Watch — we rub a hole straight through the print.');
   await wait(400);
   state.touched[0] = true;
   const W = state.W, H = state.H;
@@ -416,8 +412,8 @@ async function narrateIntro() {
   await healAwait(0);
   if (state.introAborted) return;
 
-  await sayIntro('The page rebuilt itself.\nThis exact idea is how today’s AI remembers ↓');
-  await wait(2400);
+  await sayIntro('It found the page it remembers.\nYour turn ↓');
+  await wait(2000);
   endIntro();
 }
 
@@ -434,7 +430,14 @@ function healAwait(i) {
       net.step(chunk);
       state.works[i].set(net.V);
       render(i);
-      if (net.stable) { cv.classList.remove('healing'); return res(); }
+      showLive(net, true);
+      $('#e-value').textContent = fmtE(net.energy());
+      drawTrace();
+      if (net.stable) {
+        cv.classList.remove('healing');
+        showLive(net, false);
+        return res();
+      }
       state.introTimers.push(setTimeout(tick, 16));
     };
     tick();
