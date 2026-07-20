@@ -92,18 +92,6 @@ header .tagline {
 .stage-scroll .page-wrap { margin: 0; box-shadow: none; }
 .stage .caption { margin-top: 10px; }
 
-.fullpaper { margin: 0 0 26px; }
-.fullpaper > summary {
-  font-family: ui-monospace, monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  cursor: pointer;
-  padding: 10px 0;
-  border-top: 1px solid rgba(120, 90, 30, 0.4);
-}
-.fullpaper[open] > summary { margin-bottom: 18px; }
-
 .page-wrap { position: relative; margin: 0 0 26px; box-shadow: var(--shadow); }
 .page-wrap img {
   display: block; width: 100%; height: auto;
@@ -198,6 +186,18 @@ header .tagline {
 }
 .page-note b { color: var(--accent); font-weight: 700; }
 .page-note strong { display: block; margin-bottom: 3px; }
+
+/* the Fig. 2 bench, once app.js has moved it into the scroll under p. 2557 —
+   it should read as part of the paper, not as a card floating over it */
+.stage-scroll .bench {
+  margin: 0;
+  border: 0;
+  border-top: 2px solid var(--accent);
+  border-bottom: 8px solid var(--paper-bg);
+  box-shadow: none;
+  background: color-mix(in srgb, var(--accent) 8%, var(--card));
+}
+.stage-scroll .bench p { margin: 0 0 10px; }
 
 /* the AI reveal — the punchline */
 .reveal {
@@ -492,7 +492,7 @@ footer a { color: inherit; }
   header .age { font-size: 0.98rem; }
   .masthead { flex-wrap: wrap; row-gap: 6px; font-size: 0.64rem; letter-spacing: 0.08em; }
   .stamp { white-space: nowrap; }
-  .reveal, .physics, .attention, .story, .provenance, .note, .limits, .fullpaper { padding-left: 15px; padding-right: 15px; }
+  .reveal, .physics, .attention, .story, .provenance, .note, .limits { padding-left: 15px; padding-right: 15px; }
   .reveal h2, .physics h2, .attention h2, .story h2, .provenance h2 { font-size: 1.15rem; }
   .eq-display { overflow-x: auto; }
   .eq-body { font-size: 1.3rem; }

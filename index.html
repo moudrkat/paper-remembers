@@ -140,27 +140,29 @@
       </ul>
     </details>
 
-    <details class="fullpaper">
-      <summary>Re-run Hopfield's own Fig. 2 capacity experiment</summary>
-      <div class="bench">
-        <p>
-          Hopfield measured how recall breaks down as you cram in more memories.
-          100 switches, <em>n</em> random memories, his original 1982 rule. Push
-          <em>n</em> past ~15 and recall falls apart — the very limit the 1985
-          projection rule above was built to push past.
-        </p>
-        <label>n =
-          <select id="fig2-n">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15" selected>15</option>
-          </select>
-        </label>
-        <button id="btn-fig2">run the 1982 experiment</button>
-        <canvas id="fig2-chart" width="560" height="240"></canvas>
-        <div id="fig2-out"></div>
-      </div>
-    </details>
+    <!-- app.js moves this into the page scroll, directly under p. 2557 —
+         the page Fig. 2 is printed on -->
+    <div class="bench" id="fig2-block">
+      <h2>Re-run Fig. 2, above</h2>
+      <p>
+        Hopfield measured how recall breaks down as you store more memories:
+        <em>N</em> = 100 switches, <em>n</em> random memories, the 1982 rule of
+        Eq&nbsp;[2], each memory started at its own state and left to settle.
+        The histogram counts how many switches come back wrong. Past
+        <em>n</em>&nbsp;≈&nbsp;0.15&nbsp;<em>N</em> recall breaks down — the
+        limit stated on this page.
+      </p>
+      <label>n =
+        <select id="fig2-n">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15" selected>15</option>
+        </select>
+      </label>
+      <button id="btn-fig2">run the 1982 experiment</button>
+      <canvas id="fig2-chart" width="560" height="240"></canvas>
+      <div id="fig2-out"></div>
+    </div>
   </div>
 
   <div class="rail">

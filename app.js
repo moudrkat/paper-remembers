@@ -159,6 +159,12 @@ function buildStage() {
     note.innerHTML = PAGE_NOTES[i];
     slot.appendChild(lab); slot.appendChild(cv); slot.appendChild(note);
     host.appendChild(slot);
+    // Fig. 2 is printed on p. 2557 — put its live re-run right under that page,
+    // so you meet the experiment where the paper shows it.
+    if (p.label === 'p. 2557') {
+      const bench = $('#fig2-block');
+      if (bench) host.appendChild(bench);
+    }
     state.canvases[i] = cv;
     render(i);
   });
