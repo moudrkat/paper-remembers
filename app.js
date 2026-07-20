@@ -78,9 +78,11 @@ const state = {
   works: [],      // per-page (possibly damaged) bitmap on the stage
   canvases: [],   // per-page canvas element
   touched: [],    // per-page: has it been scribbled?
+  pending: [],    // per-page: still waiting to be rebuilt
   heals: [],      // per-page: how many scribbles have healed back exactly
   active: 0,      // last page the cursor touched (drives the instrument)
   healing: false,
+  healingPage: -1, // which page the shared network is currently rebuilding
   autoHeal: 0,
   raf: 0,
   demoDone: false,
@@ -158,6 +160,7 @@ function buildStage() {
   PAGES.forEach((p, i) => {
     state.works[i] = Uint8Array.from(state.patterns[i]);
     state.touched[i] = false;
+    state.pending[i] = false;
     state.heals[i] = 0;
     const slot = document.createElement('div');
     slot.className = 'page-slot';
@@ -224,7 +227,9 @@ function canvasXY(ev, cv) {
 
 function startDamage(e, i) {
   const cv = state.canvases[i];
-  if (state.healing) stopHeal();
+  // Only interrupt a rebuild that is on THIS page — scribbling page B must not
+  // abandon page A half-healed. Other pages keep rebuilding and stay queued.
+  if (state.healing && state.healingPage === i) stopHeal();
   clearTimeout(state.autoHeal);
   setActive(i);
 
@@ -258,8 +263,9 @@ function startDamage(e, i) {
   const up = () => {
     cleanup();
     if (state.touched[i]) {
+      state.pending[i] = true;
       setStatus('let go — now watch the page rebuild itself…');
-      state.autoHeal = setTimeout(heal, 600);
+      state.autoHeal = setTimeout(healNext, 600);
     }
   };
   cv.addEventListener('pointermove', move);
@@ -269,9 +275,22 @@ function startDamage(e, i) {
 
 // ---------- rebuild (the network recalling the page) ----------
 
-function heal() {
-  const i = state.active;
+// One network is shared by all five pages, so only one can rebuild at a time.
+// Scribble several and they queue: the page you last touched goes first, the
+// rest follow in order. Without this, damage on any page but the active one
+// was silently abandoned.
+function healNext() {
+  if (state.healing) return;  // the running rebuild chains to the next itself
+  const i = state.pending[state.active] ? state.active
+                                        : state.pending.findIndex(Boolean);
+  if (i >= 0) heal(i);
+}
+
+function heal(i) {
+  if (i === undefined) i = state.active;
   if (!state.touched[i] || state.healing) return;
+  setActive(i);
+  state.healingPage = i;
   const net = activeNet();
   net.setState(state.works[i]);
   state.healing = true;
@@ -292,9 +311,13 @@ function heal() {
     drawTrace();
     if (net.stable) {
       state.healing = false;
+      state.healingPage = -1;
+      state.pending[i] = false;
       cv.classList.remove('healing');
       showLive(net, false);
       verdict(i);
+      // hand the network to the next page still waiting
+      if (state.pending.some(Boolean)) state.autoHeal = setTimeout(healNext, 500);
       return;
     }
     state.raf = setTimeout(tick, 16);
@@ -304,6 +327,7 @@ function heal() {
 
 function stopHeal() {
   state.healing = false;
+  state.healingPage = -1;
   clearTimeout(state.raf);
   document.querySelectorAll('.page-canvas.healing')
     .forEach(c => c.classList.remove('healing'));
@@ -352,12 +376,16 @@ function resetPage() {
   const i = state.active;
   state.works[i] = Uint8Array.from(state.patterns[i]);
   state.touched[i] = false;
+  state.pending[i] = false;
   $('#e-value').textContent = '—';
   setVerdict('');
   net_clearLive();
   render(i);
   drawTrace();
   setStatus('page restored');
+  // stopHeal() above may have interrupted another page's rebuild, and the
+  // cleared timer would have stranded anything queued behind it — restart.
+  if (state.pending.some(Boolean)) state.autoHeal = setTimeout(healNext, 300);
 }
 
 // ---------- the 1982-rule toggle ----------
@@ -374,6 +402,7 @@ function toggleMerge(on) {
   PAGES.forEach((_, i) => {
     state.works[i] = Uint8Array.from(state.patterns[i]);
     state.touched[i] = false;
+    state.pending[i] = false;
     render(i);
   });
   $('#e-value').textContent = '—';
