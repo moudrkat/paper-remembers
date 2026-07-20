@@ -496,7 +496,16 @@ header .tagline {
 #e-trace { width: 100%; height: 96px; display: block; margin-bottom: 2px; }
 .trace-cap { font-size: 0.66rem; color: #6b6257; line-height: 1.35; margin-bottom: 8px; }
 #status { color: #6b6257; min-height: 2.4em; }
-#verdict { color: var(--accent); min-height: 3.5em; margin-top: 4px; }
+/* a reading, not a paragraph — set like the other instruments */
+#verdict {
+  color: var(--accent);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  min-height: 2.2em;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
 
 .controls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 button {

@@ -301,43 +301,34 @@ function verdict(i) {
   const dists = state.patterns.map((_, s) => net.hammingTo(s));
   let best = 0; for (let s = 1; s < dists.length; s++) if (dists[s] < dists[best]) best = s;
   const own = dists[i];
+  const N = state.N.toLocaleString('en-US');
 
+  // The verdict is a measurement, not a lecture — what "attractor" means is
+  // explained once, in the physics section. Here it is just the number.
   if (state.merged) {
-    setVerdict(`with Hopfield's 1982 rule the five pages blur together — you ` +
-      `get a ghost, not ${label}. This is the failure the projection rule was ` +
-      `built to fix.`);
-    setStatus('rebuilt — but into a blurred ghost of all five pages');
+    setVerdict(`ghost — all five pages merged`);
+    setStatus("Hopfield's 1982 rule: the pages blur together");
     return;
   }
   if (own === 0) {
     state.heals[i]++;
-    if (state.heals[i] === 1) {
-      setVerdict(`it rebuilt ${label} exactly — every pixel — out of a network ` +
-        `that also holds the other four pages. Nobody told it which page you ` +
-        `wrecked; it found it. Now scribble the same page again, completely ` +
-        `differently, and see where you land.`);
-    } else {
-      setVerdict(`${label}, exact again — that's ${state.heals[i]} different ` +
-        `scribbles with one identical ending. Every start inside the valley ` +
-        `rolls to the same floor. That is what "attractor" means, and why ` +
-        `this whole field is called attractor networks.`);
-    }
-    setStatus('rebuilt — the right page came back whole');
+    setVerdict(state.heals[i] === 1
+      ? `${label} · exact · 0 of ${N} pixels wrong`
+      : `${label} · exact · ${state.heals[i]} scribbles → 1 identical ending`);
+    setStatus(state.heals[i] === 1
+      ? 'rebuilt — now wreck it again, somewhere else'
+      : 'rebuilt');
   } else if (own === state.N) {
-    setVerdict(`you wiped out more than half, so it rolled into the ` +
-      `photographic negative of ${label} — an equally deep valley. A perfectly ` +
-      `stable ending nobody asked for: the network doesn't care what you ` +
-      `wanted, only which basin you started in.`);
-    setStatus('rebuilt — into the negative');
+    setVerdict(`negative of ${label} · ${N} of ${N} pixels inverted`);
+    setStatus('settled in the opposite valley');
   } else if (best !== i) {
-    setVerdict(`you damaged it so far it landed on ${PAGES[best].label} ` +
-      `instead of ${label} — past the edge of its own valley, into a ` +
-      `neighbouring attractor.`);
-    setStatus('rebuilt — into a different page');
+    setVerdict(`${PAGES[best].label} · wrong page · ` +
+      `${own.toLocaleString('en-US')} pixels off ${label}`);
+    setStatus('settled in a neighbouring valley');
   } else {
-    setVerdict(`came back ${(100*own/state.N).toFixed(1)}% off ${label} — ` +
-      `close, but it settled in a nearby dip.`);
-    setStatus('rebuilt — nearly, not exactly');
+    setVerdict(`${label} · ${(100*own/state.N).toFixed(2)}% off · ` +
+      `${own.toLocaleString('en-US')} pixels`);
+    setStatus('settled just short of the floor');
   }
 }
 
