@@ -64,6 +64,16 @@ const PAGE_NOTES = [
    in Physics, and the continuous version of rule <b>[1]</b> turned out to be
    the “attention” inside every chatbot you use.`,
 ];
+const SPOT_HOLD = 9;           // frames (~145ms) one sampled update stays put
+// Pace the rebuild by how much ink is still moving, not by a fixed batch size.
+// Each frame, aim for about TARGET_FLIPS pixels actually changing: if fewer are
+// changing, check more pixels per frame; if more, check fewer. So the visible
+// rate of change stays steady, the settle tail — where nothing moves — costs
+// almost nothing, and the duration scales with the damage instead of always
+// taking one full sweep of all 784,320 pixels.
+const MIN_CHUNK = 4000;        // slowest: a heavy scribble, ~3.5s
+const MAX_CHUNK = 40000;       // fastest: the quiet tail
+const TARGET_FLIPS = 60;       // flips per frame the loop steers toward
 const WORK_W = 760;            // network resolution (pixels across a page)
 const INK_THRESHOLD = 155;
 const BRUSH_FRAC = 0.028;      // brush radius as a fraction of page width
@@ -83,6 +93,13 @@ const state = {
   active: 0,      // last page the cursor touched (drives the instrument)
   healing: false,
   healingPage: -1, // which page the shared network is currently rebuilding
+  // One real update, held still long enough for a human to read it. Thousands
+  // of pixels are checked per frame, so the panel and the page would otherwise
+  // both strobe. This samples a genuine flip, marks its pixel on the page, and
+  // keeps it on screen for SPOT_HOLD frames.
+  spot: null,
+  spotAge: 0,
+  spotShown: 0,   // how many of those flips the ring actually stopped on
   autoHeal: 0,
   raf: 0,
   demoDone: false,
@@ -198,6 +215,24 @@ function render(i) {
     d[o+3] = 255;
   }
   ctx.putImageData(im, 0, 0);
+  // the pixel the rule is deciding right now — drawn after putImageData,
+  // which would otherwise wipe it
+  const sp = state.spot;
+  if (sp && sp.page === i) {
+    const x = sp.i % state.W, y = (sp.i / state.W) | 0;
+    const accent = getComputedStyle(document.documentElement)
+      .getPropertyValue('--accent').trim() || '#b3402e';
+    ctx.save();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    // a ring that opens outward over the hold, so the eye is drawn to it
+    const t = state.spotAge / SPOT_HOLD;
+    ctx.globalAlpha = 1 - t * 0.65;
+    ctx.beginPath(); ctx.arc(x, y, 5 + 16 * t, 0, 7); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 7); ctx.stroke();
+    ctx.restore();
+  }
 }
 
 function setActive(i) {
@@ -291,6 +326,9 @@ function heal(i) {
   if (!state.touched[i] || state.healing) return;
   setActive(i);
   state.healingPage = i;
+  state.spot = null;
+  state.spotAge = SPOT_HOLD;   // sample on the very first frame
+  state.spotShown = 0;
   const net = activeNet();
   net.setState(state.works[i]);
   state.healing = true;
@@ -300,11 +338,20 @@ function heal(i) {
     : 'rebuilding — rolling downhill to the page it remembers…');
   const cv = state.canvases[i];
   cv.classList.add('healing');
-  const chunk = Math.max(20000, state.N / 40 | 0);
+  let chunk = MIN_CHUNK;
   const tick = () => {
     if (!state.healing) return;
     net.step(chunk);
+    chunk = Math.max(MIN_CHUNK, Math.min(MAX_CHUNK,
+      Math.round(chunk * TARGET_FLIPS / Math.max(1, net.upFlips + net.downFlips))));
     state.works[i].set(net.V);
+    // hold one genuine update from this batch, in the direction that actually
+    // dominated it, until the hold expires
+    if (++state.spotAge >= SPOT_HOLD || !state.spot) {
+      const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
+      if (pick) { state.spot = { i: pick.i, h: pick.h, to: pick.to, page: i }; state.spotShown++; }
+      state.spotAge = 0;
+    }
     render(i);
     $('#e-value').textContent = fmtE(net.energy());
     showLive(net, true);
@@ -313,6 +360,8 @@ function heal(i) {
       state.healing = false;
       state.healingPage = -1;
       state.pending[i] = false;
+      state.spot = null;
+      render(i);              // repaint without the ring
       cv.classList.remove('healing');
       showLive(net, false);
       verdict(i);
@@ -328,6 +377,7 @@ function heal(i) {
 function stopHeal() {
   state.healing = false;
   state.healingPage = -1;
+  state.spot = null;
   clearTimeout(state.raf);
   document.querySelectorAll('.page-canvas.healing')
     .forEach(c => c.classList.remove('healing'));
@@ -469,16 +519,29 @@ function healAwait(i) {
     net.setState(state.works[i]);
     const cv = state.canvases[i];
     cv.classList.add('healing');
-    const chunk = Math.max(20000, state.N / 40 | 0);
+    state.spot = null;
+    state.spotAge = SPOT_HOLD;
+    let chunk = MIN_CHUNK;
     const tick = () => {
-      if (state.introAborted) { cv.classList.remove('healing'); return res(); }
+      if (state.introAborted) { state.spot = null; cv.classList.remove('healing'); return res(); }
       net.step(chunk);
+      chunk = Math.max(MIN_CHUNK, Math.min(MAX_CHUNK,
+        Math.round(chunk * TARGET_FLIPS / Math.max(1, net.upFlips + net.downFlips))));
       state.works[i].set(net.V);
+      // same held sample as the main rebuild — the intro is where most people
+      // watch this happen, so it must show the ring too
+      if (++state.spotAge >= SPOT_HOLD || !state.spot) {
+        const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
+        if (pick) { state.spot = { i: pick.i, h: pick.h, to: pick.to, page: i }; state.spotShown++; }
+        state.spotAge = 0;
+      }
       render(i);
       showLive(net, true);
       $('#e-value').textContent = fmtE(net.energy());
       drawTrace();
       if (net.stable) {
+        state.spot = null;
+        render(i);              // repaint without the ring
         cv.classList.remove('healing');
         showLive(net, false);
         return res();
@@ -621,14 +684,15 @@ function showLive(net, running) {
   // lit branch coin-tosses at 60Hz. Show the direction that actually dominated
   // the batch instead — and the numbers from a flip that really went that way,
   // so the h on screen always agrees with the branch lit below it.
+  // Mid-rebuild, show the held update — the same one ringed on the page — so
+  // i, h and the lit branch all describe one decision and stay still long
+  // enough to read. lastFlip alone resampled 60 times a second.
   let f = net.lastFlip;
-  if (running && (net.upFlips || net.downFlips)) {
-    const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
-    if (pick) f = pick;
-  }
+  if (running && state.spot) f = state.spot;
   $('#lc-state').textContent = running ? 'running' : (f ? 'settled' : 'idle');
   ['#lc-b1', '#lc-b2', '#lc-b3'].forEach(s => $(s).classList.remove('on'));
   $('#lc-flips').textContent = net.flips.toLocaleString('en-US');
+  $('#lc-shown').textContent = state.spotShown.toLocaleString('en-US');
   if (!f) { $('#lc-h').textContent = '—'; $('#lc-i').textContent = '—'; return; }
   $('#lc-i').textContent = f.i.toLocaleString('en-US');
   $('#lc-h').textContent = (f.h >= 0 ? '+' : '') + f.h.toLocaleString('en-US',

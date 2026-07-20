@@ -302,6 +302,14 @@ body.rule-1982 .lc-t-1982 { display: block; }
   font-variant-numeric: tabular-nums;
 }
 .lc-unit { font-size: 0.63rem; color: #7d7568; letter-spacing: 0.05em; }
+/* the honest caveat: what you watch is sampled, not the whole run */
+.lc-sample {
+  display: block;
+  font-size: 0.6rem;
+  line-height: 1.4;
+  color: #9a9184;
+  margin-top: 5px;
+}
 
 /* the story in four links */
 .story {

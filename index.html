@@ -136,17 +136,21 @@
             <i>T<sub>ii</sub></i> = 0
             <span class="lc-c">the wiring · Hopfield 1982, eq&nbsp;[2].<br>same line with <b>G</b> = identity</span>
           </div>
-          <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">ink</span></div>
-          <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">paper</span></div>
-          <div class="lc-b" id="lc-b3"><i>V<sub>i</sub></i> unchanged &nbsp;if <i>h<sub>i</sub></i> = 0<span class="lc-c">tie</span></div>
+          <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">becomes ink</span></div>
+          <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">becomes paper</span></div>
+          <div class="lc-b" id="lc-b3"><i>V<sub>i</sub></i> unchanged &nbsp;if <i>h<sub>i</sub></i> = 0<span class="lc-c">stays as it is</span></div>
           <!-- every symbol on screen gets defined here — nothing is assumed -->
           <div class="lc-foot">
             <span><i>V</i> = the page right now · 1 = ink, 0 = paper</span>
+            <span>→ = becomes · <i>i</i> is marked on the page as it decides</span>
             <span><i>ξ<sup>s</sup></i> = stored page <i>s</i>, ±1 per pixel · <i>s</i>, <i>r</i> = 1…5</span>
             <span>then pick another pixel. that is the whole rule.</span>
           </div>
         </div>
-        <div class="lc-count"><span id="lc-flips">0</span> <span class="lc-unit">switches flipped</span></div>
+        <div class="lc-count"><span id="lc-flips">0</span> <span class="lc-unit">switches flipped</span>
+          <!-- both numbers count the same thing: flips. no ratio to reconcile -->
+          <span class="lc-sample">the ring stopped on <b id="lc-shown">0</b> of them</span>
+        </div>
       </div>
 
       <details class="deeper">
