@@ -185,6 +185,15 @@ header .tagline {
   line-height: 1.5;
 }
 .page-note b { color: var(--accent); font-weight: 700; }
+.page-note em { color: color-mix(in srgb, var(--ink) 78%, var(--card)); }
+.note-eq {
+  display: block;
+  text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  margin: 10px 0;
+}
 .page-note strong { display: block; margin-bottom: 3px; }
 
 /* the Fig. 2 bench, once app.js has moved it into the scroll under p. 2557 —

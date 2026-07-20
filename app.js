@@ -19,36 +19,50 @@ const PAGES = [
 
 // a plain-English reading companion, shown under each page as you scroll
 const PAGE_NOTES = [
-  `<strong>The core idea (see the abstract, top).</strong> A normal computer
-   looks up memory by <em>address</em> — "give me slot #4837." This looks it up
-   by <em>content</em>: hand it a fragment, or a damaged copy, and it gives back
-   the whole thing — the way a glimpse of a face brings back the whole face.
-   Hopfield's term for it is on the first line of the abstract:
-   <em>content-addressable memory</em>.`,
-  `<strong>Here are the two working equations.</strong> <b>[2]</b> is how you
-   <em>store</em> a memory — Hopfield's original 1982 way: strengthen the link
-   between every pair of switches that agree (both on, or both off). This is the
-   one part this page replaces, with the 1985 rule written out below.
-   <b>[1]</b> is how it
-   <em>recalls</em> — each switch keeps flipping to match what its neighbours are
-   telling it, until the whole pattern locks onto the nearest stored memory; that
-   rule is pure 1982 and never changes. (Fig. 1 is just how one neuron turns its
-   input into an on-or-off output.)`,
-  `<strong>Equation [7] — the network's energy.</strong> One number
-   for how much all the switches disagree with their wiring. Hopfield proved
-   (<b>[8]</b>) it can only go <em>down</em> as the network updates. So memories
-   are <em>valleys</em> in an energy landscape, and recall is a damaged page
-   rolling downhill into the nearest valley — the recovered page. The hill drawn
-   in the instrument on the right is this equation.`,
-  `<strong>Fig. 2 is an experiment, and it is running right below.</strong>
-   Store more and more memories in one network, then count how many come back
-   with errors: a few → perfect recall, too many → breakdown. Note what this
-   measures — <em>too many</em> memories. The different problem, memories that
-   are <em>too similar</em>, is the one these five near-identical pages run
-   into, and it is what the paragraph on this page about merging describes.`,
-  `<strong>Closing discussion.</strong> Categories, forgetting old memories, and
-   why this behaves like a real, fault-tolerant memory — one that degrades
-   gracefully instead of failing all at once.`,
+  // p. 2554 — the abstract
+  `<strong>Memory looked up by content, not address.</strong> A computer fetches
+   “slot #4837.” This is handed a fragment, or a damaged copy, and gives back
+   the whole — the way a glimpse of a face brings back the face. Hopfield's
+   name for it is in the abstract's first line: <em>content-addressable
+   memory</em>.`,
+
+  // p. 2555 — equations [1] and [2]
+  `<strong>The two working rules.</strong> <b>[1]</b> is recall: each switch
+   flips to match what the others are telling it. That is what rebuilds your
+   scribbles, and the panel on the right runs this exact line, pixel by pixel.
+   <b>[2]</b> is storage: link two pixels that agree in a stored page.
+   <span class="note-eq">T<sub>ij</sub> = ∑<sub>s,r</sub> ξ<sub>i</sub><sup>s</sup> <b>(G<sup>−1</sup>)<sub>sr</sub></b> ξ<sub>j</sub><sup>r</sup></span>
+   One change here is not from 1982: storage uses the 1985 projection rule
+   above. <b>G</b> is how much the pages overlap; set <b>G</b> to the identity
+   and it collapses back into <b>[2]</b>. Five pages of one journal overlap far
+   too much for <b>[2]</b> — the toggle on the right shows them merging.`,
+
+  // p. 2556 — equations [7] and [8]
+  `<strong>[7] is the energy — the whole theory.</strong> One number for how
+   much the switches disagree with their wiring; <b>[8]</b> proves recall can
+   only lower it. So memories are valleys, and a scribbled page is a ball
+   rolling to the nearest floor. Hopfield, four lines down: <em>“This case is
+   isomorphic with an Ising model… when T<sub>ij</sub> is symmetric but has a
+   random character (the spin glass) there are known to be many (locally)
+   stable states.”</em> An Ising model is a magnet. That is why a paper about
+   neurons is physics.`,
+
+  // p. 2557 — Fig. 2, the attractor sentence, the merge warning
+  `<strong>He names the valleys here.</strong> In italics, right column:
+   <em>“The phase space flow is apparently dominated by attractors which are
+   the nominally assigned memories.”</em> An attractor: many different starts,
+   one shared ending. Scribble this page two completely different ways and
+   watch both land on the identical print. Also here, the warning that forced
+   the 1985 rule: <em>“memories too close to each other are confused and tend
+   to merge.”</em> And Fig. 2 — the capacity experiment, re-runnable just
+   below.`,
+
+  // p. 2558 — discussion
+  `<strong>It fails softly.</strong> Overload it and recall degrades instead of
+   collapsing — the closing pages are about categories, forgetting, and why
+   this behaves like real memory. Forty-two years later it won the Nobel Prize
+   in Physics, and the continuous version of rule <b>[1]</b> turned out to be
+   the “attention” inside every chatbot you use.`,
 ];
 const WORK_W = 760;            // network resolution (pixels across a page)
 const INK_THRESHOLD = 155;

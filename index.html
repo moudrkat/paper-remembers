@@ -54,157 +54,12 @@
     <div class="reveal">
       <h2>What you just did is where AI's memory comes from.</h2>
       <p>
-        A chatbot pulling up the one thing you told it that matters, right when
-        it matters, is making the move you just made with your finger on a
-        45-year-old page. It has a name: <strong>attention</strong>. Stacking
-        it, over and over, is what lets ChatGPT and Claude hold a conversation.
-      </p>
-      <p>
-        Their version runs in shades of grey rather than plain on/off — the
-        continuous form of the same recall step.
+        Hand it a scrap, get the whole memory back. That move is called
+        <strong>attention</strong>, and stacking it is what lets a chatbot hold
+        a conversation — the same recall step, run in shades of grey.
       </p>
     </div>
 
-    <div class="physics" id="physics">
-      <h2>The one equation — and why it is physics</h2>
-
-      <div class="eq-display">
-        <span class="eq-body">E &nbsp;=&nbsp; −<sup>1</sup>⁄<sub>2</sub> &nbsp;∑∑<sub>i≠j</sub>&nbsp; T<sub>ij</sub> V<sub>i</sub> V<sub>j</sub></span>
-        <span class="eq-ref">Equation&nbsp;[7], page&nbsp;2556</span>
-      </div>
-
-      <p><strong>What it says.</strong> Each <b>V</b> is one switch — on or off.
-      (Hopfield shows this is <em>isomorphic</em> to a spin: a tiny magnet
-      pointing up or down.) Each <b>T<sub>ij</sub></b> is the strength of the
-      link between two switches — how much they “want” to agree. <b>E</b> sums
-      this over every pair: a single number for how much the whole network
-      disagrees with its own wiring.</p>
-
-      <p><strong>How it works.</strong> The recall rule only ever flips a switch
-      in a way that lowers <b>E</b>, never raises it — Hopfield proves this
-      (equation&nbsp;[8]). So the network slides downhill and stops at a nearby
-      low point — “a least (local) E,” in his words. Those low points are the
-      stored memories. A scribbled page is a ball on a hillside; you let go, and
-      it rolls to the nearest valley floor.</p>
-
-      <p><strong>The valleys have a name — and Hopfield names them.</strong>
-      On page 2557, in italics: <em>“The phase space flow is apparently
-      dominated by attractors which are the nominally assigned memories, each
-      of which dominates a substantial region around it.”</em> An
-      <em>attractor</em>: many different starts, one shared ending, because the
-      dynamics pull everything in a basin to the same floor. Scribble the same
-      page twice, two completely different ways, and watch both scribbles end
-      at the identical print. The field this paper started came to be called
-      <em>attractor networks</em> — and the sentence that named the attractors
-      is stored on a page above, inside one.</p>
-
-      <p><strong>Why it is physics — in his own words.</strong> This energy is
-      not a metaphor for physics; it <em>is</em> physics. On the page above,
-      Hopfield writes:</p>
-      <blockquote>“This case is isomorphic with an Ising model. T<sub>ij</sub>
-      provides the role of the exchange coupling… When T<sub>ij</sub> is
-      symmetric but has a random character (the spin glass) there are known to
-      be many (locally) stable states.”</blockquote>
-      <p>The Ising model is physicists' model of a magnet; a <em>spin glass</em>
-      is a disordered magnet with many stable configurations. The step this
-      paper takes is to read those stable configurations as <em>memories</em>,
-      which puts recall and a magnetic system relaxing to a nearby low-energy
-      state under the same mathematics — the same <b>E</b>, the same descent,
-      the same local minima. That is the whole theory; everything on this page
-      is that one idea running.</p>
-    </div>
-
-    <div class="physics" id="storage">
-      <h2>The one equation here that is <em>not</em> from 1982</h2>
-
-      <p><strong>What has to be decided.</strong> Everything above says what
-      <b>T<sub>ij</sub></b> <em>does</em>. Nothing says how to choose it. That
-      is the one open slot in the theory, and it is the only slot this page
-      fills differently from the paper.</p>
-
-      <div class="eq-display">
-        <span class="eq-body">T<sub>ij</sub> &nbsp;=&nbsp; ∑<sub>s</sub>&nbsp; ξ<sub>i</sub><sup>s</sup> ξ<sub>j</sub><sup>s</sup></span>
-        <span class="eq-ref">1982 — equation&nbsp;[2], page&nbsp;2555</span>
-      </div>
-
-      <p>Hopfield's rule, in one line: for every stored page <b>s</b>, add
-      <b>+1</b> to the link between two pixels that agree in that page and
-      <b>−1</b> where they disagree. (<b>ξ</b> is just a pixel written as
-      <b>±1</b> instead of on/off.) Wire agreement into the weights, and the
-      pattern becomes a valley.</p>
-
-      <div class="eq-display">
-        <span class="eq-body">T<sub>ij</sub> &nbsp;=&nbsp; ∑<sub>s,r</sub>&nbsp; ξ<sub>i</sub><sup>s</sup> <b>(G<sup>−1</sup>)<sub>sr</sub></b> ξ<sub>j</sub><sup>r</sup></span>
-        <span class="eq-ref">1985 — the projection rule (Personnaz–Guyon–Dreyfus), with G<sub>sr</sub> = ξ<sup>s</sup>·ξ<sup>r</sup></span>
-      </div>
-
-      <p><strong>Look at what changed.</strong> One factor. <b>G</b> is the
-      table of overlaps: <b>G<sub>sr</sub></b> counts how much page <b>s</b>
-      and page <b>r</b> already look alike. Set <b>G</b> to the identity —
-      every memory unrelated to every other — and the second equation
-      collapses back into the first. <em>Hopfield's rule is the 1985 rule
-      under the assumption that the memories don't overlap.</em></p>
-
-      <p><strong>Why that assumption breaks here.</strong> On random memories
-      it is nearly true, which is why the 1982 rule is the right tool for the
-      capacity experiment beside p. 2557. But these five pages are the same
-      journal, the same typeface, the same wide white margins — they overlap
-      enormously. Each page's ink then leaks into every other page's weights,
-      and p. 2557 states what follows: “memories too close to each other are
-      confused and tend to merge.” Multiplying by <b>G<sup>−1</sup></b>
-      divides that shared part back out.</p>
-
-      <p><strong>What it buys.</strong> Written this way <b>T</b> is the
-      projection onto the stored pages, so <b>T ξ<sup>s</sup> =
-      ξ<sup>s</sup></b> exactly — every stored page is a perfect fixed point
-      however much the pages resemble each other. That is the entire
-      difference. The rule rebuilding the print is still Eq&nbsp;[1], the
-      energy pulling it downhill is still Eq&nbsp;[7], and the valleys are
-      still attractors; only the choice of <b>T</b> is from 1985. The toggle
-      in the panel swaps it back to Eq&nbsp;[2], so you can watch the merge
-      happen.</p>
-
-      <p><strong>Neither matrix is ever built.</strong> <b>T</b> would have
-      784,320² entries. The field on a pixel is computed from the five
-      overlaps between the image on screen and the stored pages — the same
-      arithmetic, one update at a time.</p>
-    </div>
-
-    <div class="physics" id="asitruns">
-      <h2>The rule, as printed and as it runs</h2>
-
-      <p>Equation [1], printed on p. 2555 above, beside the line in this page's
-      source that executes it. The panel on the right runs it live.</p>
-
-      <div class="codepair">
-        <div class="side">
-          <div class="side-tag">1982 · equation [1], p. 2555</div>
-          <div class="side-body eq">
-            <div>V<sub>i</sub> → 1 &nbsp; if &nbsp; ∑<sub>j≠i</sub> T<sub>ij</sub> V<sub>j</sub> &nbsp;&gt;&nbsp; U<sub>i</sub></div>
-            <div>V<sub>i</sub> → 0 &nbsp; if &nbsp; ∑<sub>j≠i</sub> T<sub>ij</sub> V<sub>j</sub> &nbsp;&lt;&nbsp; U<sub>i</sub></div>
-          </div>
-        </div>
-        <div class="side">
-          <div class="side-tag">hopfield.js · updateOne()</div>
-          <div class="side-body"><pre><code>const nv = h &gt; 0 ? 1
-         : h &lt; 0 ? 0
-         : this.V[i];</code></pre></div>
-        </div>
-      </div>
-
-      <p><b>h</b> is that sum. The threshold is gone because the paper sets it
-      to zero itself — “Unless otherwise stated, we choose
-      U<sub>i</sub> = 0” — so “above threshold” is just <code>h &gt; 0</code>.
-      The third branch is the case the printed rule leaves out: at exactly the
-      threshold, nothing changes.</p>
-
-      <p>That is the entire recall step. Everything else in the file is
-      bookkeeping: which pixel to visit next, and keeping the five overlaps up
-      to date so <b>h</b> is cheap to compute. 177 lines, and you can read all
-      of them —
-      <a href="https://github.com/moudrkat/paper-remembers/blob/main/hopfield.js">hopfield.js</a>.
-      Nothing is stored anywhere except the equations and the print.</p>
-    </div>
 
     <div class="story">
       <h2>The four dates, with sources</h2>
@@ -219,7 +74,7 @@
     <details class="limits">
       <summary>The fine print — is this really the paper?</summary>
       <ul>
-        <li><strong>The storage rule is 1985, not 1982</strong> — the projection rule, because five pages this similar merge under Eq [2]. Both equations are written out and compared above, in <a href="#storage">the one equation here that is not from 1982</a>; the toggle on the right switches between them.</li>
+        <li><strong>The storage rule is 1985, not 1982</strong> — the projection rule, because five pages this similar merge under Eq [2]. It is written out beside p. 2555 above; the toggle on the right switches between them.</li>
         <li>The network's-eye view is a pure black/white bitmap at reduced resolution, so tiny text looks rough — that is the memory, not a photo.</li>
         <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. The readout names which one happened.</li>
         <li>Pixels-as-switches is the standard way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
@@ -230,15 +85,10 @@
     <!-- app.js moves this into the page scroll, directly under p. 2557 —
          the page Fig. 2 is printed on -->
     <div class="bench" id="fig2-block">
-      <h2>Re-run Fig. 2, above</h2>
-      <p>
-        Hopfield measured how recall breaks down as you store more memories:
-        <em>N</em> = 100 switches, <em>n</em> random memories, the 1982 rule of
-        Eq&nbsp;[2], each memory started at its own state and left to settle.
-        The histogram counts how many switches come back wrong. Past
-        <em>n</em>&nbsp;≈&nbsp;0.15&nbsp;<em>N</em> recall breaks down — the
-        limit stated on this page.
-      </p>
+      <h2>Fig. 2, re-run here</h2>
+      <p><em>N</em> = 100 switches, <em>n</em> random memories, the 1982 rule.
+      Bars count errors in each recalled memory. Push <em>n</em> past
+      0.15&nbsp;<em>N</em> and it breaks down.</p>
       <label>n =
         <select id="fig2-n">
           <option value="5">5</option>
