@@ -274,10 +274,12 @@ function heal() {
     state.works[i].set(net.V);
     render(i);
     $('#e-value').textContent = fmtE(net.energy());
+    showLive(net, true);
     drawTrace();
     if (net.stable) {
       state.healing = false;
       cv.classList.remove('healing');
+      showLive(net, false);
       verdict(i);
       return;
     }
@@ -347,6 +349,7 @@ function resetPage() {
   state.touched[i] = false;
   $('#e-value').textContent = '—';
   setVerdict('');
+  net_clearLive();
   render(i);
   drawTrace();
   setStatus('page restored');
@@ -553,6 +556,26 @@ function drawFig2(probs, n) {
 // ---------- helpers + wiring ----------
 
 function fmtE(e) { return e.toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+
+// Show the real values the recall rule just ran on. `h` and the branch taken
+// come straight out of updateOne — this is a readout, not a re-enactment.
+function net_clearLive() {
+  const n = activeNet();
+  if (n) n.lastFlip = null;
+  showLive(n, false);
+}
+
+function showLive(net, running) {
+  const f = net.lastFlip;
+  $('#lc-state').textContent = running ? 'running' : (f ? 'settled' : 'idle');
+  ['#lc-b1', '#lc-b2', '#lc-b3'].forEach(s => $(s).classList.remove('on'));
+  $('#lc-flips').textContent = net.flips.toLocaleString('en-US');
+  if (!f) { $('#lc-h').textContent = '—'; $('#lc-i').textContent = '—'; return; }
+  $('#lc-i').textContent = f.i.toLocaleString('en-US');
+  $('#lc-h').textContent = (f.h >= 0 ? '+' : '') + f.h.toLocaleString('en-US',
+    { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  $('#lc-b' + (f.h > 0 ? 1 : f.h < 0 ? 2 : 3)).classList.add('on');
+}
 function setStatus(s) { $('#status').textContent = s; }
 function setVerdict(s) { $('#verdict').textContent = s; }
 

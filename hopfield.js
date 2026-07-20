@@ -42,6 +42,10 @@ class Hopfield {
     this.cursor = 0;
     this.flipsInPass = 0;
     this.stable = false;
+    // the last update that actually flipped, kept so the page can show the
+    // real numbers the rule ran on: {i, h, to}
+    this.lastFlip = null;
+    this.flips = 0;   // flips in the current recall, for the live readout
     if (rule === 'projection') {
       // Gram matrix G_sr = xi^s . xi^r, then invert (n is tiny)
       const G = [];
@@ -77,6 +81,8 @@ class Hopfield {
     }
     if (this.rule === 'projection') this._refreshW();
     this._newPass();
+    this.lastFlip = null;
+    this.flips = 0;
     this.stable = false;
   }
 
@@ -104,6 +110,8 @@ class Hopfield {
     }
     const nv = h > 0 ? 1 : h < 0 ? 0 : this.V[i];
     if (nv === this.V[i]) return 0;
+    this.lastFlip = { i: i, h: h, to: nv };
+    this.flips++;
     const d = (nv ? 1 : -1) * (this.spin ? 2 : 1);
     this.V[i] = nv;
     this.S += nv ? 1 : -1;

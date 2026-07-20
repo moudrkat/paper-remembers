@@ -254,6 +254,50 @@ header .tagline {
   letter-spacing: 0.06em;
   color: #6b6257;
 }
+/* the recall rule, firing live, in the rail */
+.livecode {
+  margin: 12px 0 0;
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  background: color-mix(in srgb, var(--accent) 5%, var(--card));
+}
+.lc-tag {
+  font-family: ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  padding: 5px 9px;
+  border-bottom: 1px solid rgba(40, 30, 10, 0.18);
+}
+#lc-state { opacity: 0.75; }
+.livecode pre {
+  margin: 0;
+  padding: 9px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ink) 62%, var(--card));
+  overflow-x: auto;
+}
+#lc-h { color: var(--accent); font-weight: 700; }
+/* the branch the rule actually took */
+.lc-b.on {
+  color: var(--card);
+  background: var(--accent);
+  padding: 0 3px;
+}
+.lc-count {
+  font-family: ui-monospace, monospace;
+  padding: 6px 9px 8px;
+  border-top: 1px solid rgba(40, 30, 10, 0.18);
+}
+#lc-flips {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.lc-unit { font-size: 0.63rem; color: #7d7568; letter-spacing: 0.05em; }
+
 /* printed equation beside the line of code that runs it */
 .codepair {
   display: grid;
