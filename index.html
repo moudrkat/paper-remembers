@@ -92,6 +92,17 @@
       stored memories. A scribbled page is a ball on a hillside; you let go, and
       it rolls to the nearest valley floor.</p>
 
+      <p><strong>The valleys have a name — and Hopfield names them.</strong>
+      On page 2557, in italics: <em>“The phase space flow is apparently
+      dominated by attractors which are the nominally assigned memories, each
+      of which dominates a substantial region around it.”</em> An
+      <em>attractor</em>: many different starts, one shared ending, because the
+      dynamics pull everything in a basin to the same floor. Scribble the same
+      page twice, two completely different ways, and watch both scribbles end
+      at the identical print. The field this paper started came to be called
+      <em>attractor networks</em> — and the sentence that named the attractors
+      is stored on a page above, inside one.</p>
+
       <p><strong>Why it is physics — in his own words.</strong> This energy is
       not a metaphor for physics; it <em>is</em> physics. On the page above,
       Hopfield writes:</p>
@@ -111,21 +122,13 @@
     </div>
 
     <div class="story">
-      <h2>The whole story, plainly</h2>
+      <h2>The four dates, with sources</h2>
       <ul>
-        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982 — this paper.</strong></a> John Hopfield showed that simple on/off switches, wired together, can store memories and rebuild any one from a scrap. Everything you're playing with is his.</li>
-        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985 — the one upgrade you're running.</strong></a> A smarter way to set the wiring, so many similar pages don't smear together. (Flip the toggle to Hopfield's original 1982 wiring and watch them smear.)</li>
-        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020 — why it matters for AI.</strong></a> The same idea, in shades of grey, turned out to be the “attention” inside chatbots like GPT and Claude.</li>
-        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024 — the Nobel.</strong></a> It won the Nobel Prize in Physics, shared with Geoffrey Hinton.</li>
+        <li><a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554"><strong>1982</strong></a> — J. J. Hopfield, <em>Neural networks and physical systems with emergent collective computational abilities</em>, PNAS 79:2554–2558. The five pages above.</li>
+        <li><a href="https://www.semanticscholar.org/paper/7da0fa72e851b1bd42c297176cfd998c9930f3fb"><strong>1985</strong></a> — Personnaz, Guyon &amp; Dreyfus, the projection rule: the storage recipe this page actually runs, and the reason five near-identical pages stay apart.</li>
+        <li><a href="https://arxiv.org/abs/2008.02217"><strong>2020</strong></a> — Ramsauer et al., <em>Hopfield Networks is All You Need</em>: the continuous version of the update above is transformer attention.</li>
+        <li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/"><strong>2024</strong></a> — Nobel Prize in Physics, Hopfield and Hinton.</li>
       </ul>
-    </div>
-
-
-    <div class="tribute">
-      <p class="lead">Five pages. 1982.</p>
-      <p>And the whole paper is right above you — not a picture of it, but the
-      working memory itself. Scroll it. Every equation you pass is explained
-      beside it. You are reading the thing that remembers.</p>
     </div>
 
     <details class="limits">
@@ -135,7 +138,7 @@
         <li>The page runs at a reduced resolution (the network's-eye view is a pure black/white bitmap), so tiny text looks rough — that is the memory, not a photo.</li>
         <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. Both are honest; the readout tells you.</li>
         <li>Pixels-as-switches is the classic way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
-        <li><strong>Is the credit clean?</strong> Not entirely — and a tribute should say so. Similar ideas came earlier (Shun'ichi Amari, 1972; William Little, 1974, whom Hopfield cites), and some argue the model shouldn't carry his name alone. What Hopfield added — the energy-function framing and a telling clear enough to cross from physics into biology — is what made it take off. The 2024 physics Nobel for neural networks was itself debated as to whether it counts as physics. None of that makes the idea less beautiful.</li>
+        <li><strong>Is the credit clean?</strong> Not entirely. Similar ideas came earlier (Shun'ichi Amari, 1972; William Little, 1974, whom Hopfield cites), and some argue the model shouldn't carry his name alone. What Hopfield added — the energy-function framing and a telling clear enough to cross from physics into biology — is what made it take off. The 2024 physics Nobel for neural networks was itself debated as to whether it counts as physics.</li>
       </ul>
     </details>
 
@@ -176,7 +179,7 @@
         <summary>see the "valley" it rolls into — this is equation [7]</summary>
         <div class="sub">this hill <em>is</em> equation [7], the paper's energy. Every stored page is a valley in it. page <span id="sel-tag">2554</span> · energy <span id="e-value">—</span></div>
         <canvas id="e-trace" width="240" height="96"></canvas>
-        <div class="trace-cap">Two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. (A cartoon: the real landscape has thousands of dimensions.)</div>
+        <div class="trace-cap">Two valleys — the stored page, and its exact negative — with your scribbled page as the dot. It rolls downhill into whichever valley is nearer. Each valley is an <em>attractor</em>: it pulls in every start in its basin, wanted or not. (A cartoon: the real landscape has thousands of dimensions.)</div>
       </details>
 
       <details class="deeper">

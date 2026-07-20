@@ -157,7 +157,7 @@ class Hopfield {
 }
 
 // invert a small n x n matrix by Gauss-Jordan (n is the number of stored
-// patterns — here 4 — so this is trivially cheap)
+// patterns — here 5 — so this is trivially cheap)
 function invMatrix(M, n) {
   const m = M.map(r => r.slice());
   const I = [];

@@ -64,6 +64,7 @@ const state = {
   works: [],      // per-page (possibly damaged) bitmap on the stage
   canvases: [],   // per-page canvas element
   touched: [],    // per-page: has it been scribbled?
+  heals: [],      // per-page: how many scribbles have healed back exactly
   active: 0,      // last page the cursor touched (drives the instrument)
   healing: false,
   autoHeal: 0,
@@ -143,6 +144,7 @@ function buildStage() {
   PAGES.forEach((p, i) => {
     state.works[i] = Uint8Array.from(state.patterns[i]);
     state.touched[i] = false;
+    state.heals[i] = 0;
     const slot = document.createElement('div');
     slot.className = 'page-slot';
     const lab = document.createElement('div');
@@ -300,17 +302,29 @@ function verdict(i) {
     return;
   }
   if (own === 0) {
-    setVerdict(`it rebuilt ${label} exactly — every pixel — out of a network ` +
-      `that also holds the other four pages. Nobody told it which page you ` +
-      `wrecked; it found it.`);
+    state.heals[i]++;
+    if (state.heals[i] === 1) {
+      setVerdict(`it rebuilt ${label} exactly — every pixel — out of a network ` +
+        `that also holds the other four pages. Nobody told it which page you ` +
+        `wrecked; it found it. Now scribble the same page again, completely ` +
+        `differently, and see where you land.`);
+    } else {
+      setVerdict(`${label}, exact again — that's ${state.heals[i]} different ` +
+        `scribbles with one identical ending. Every start inside the valley ` +
+        `rolls to the same floor. That is what "attractor" means, and why ` +
+        `this whole field is called attractor networks.`);
+    }
     setStatus('rebuilt — the right page came back whole');
   } else if (own === state.N) {
     setVerdict(`you wiped out more than half, so it rolled into the ` +
-      `photographic negative of ${label} — an equally deep valley.`);
+      `photographic negative of ${label} — an equally deep valley. A perfectly ` +
+      `stable ending nobody asked for: the network doesn't care what you ` +
+      `wanted, only which basin you started in.`);
     setStatus('rebuilt — into the negative');
   } else if (best !== i) {
     setVerdict(`you damaged it so far it landed on ${PAGES[best].label} ` +
-      `instead of ${label} — past the edge of its own valley.`);
+      `instead of ${label} — past the edge of its own valley, into a ` +
+      `neighbouring attractor.`);
     setStatus('rebuilt — into a different page');
   } else {
     setVerdict(`came back ${(100*own/state.N).toFixed(1)}% off ${label} — ` +

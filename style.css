@@ -298,26 +298,6 @@ header .tagline {
 .provenance li { margin: 8px 0; line-height: 1.5; }
 .provenance strong { color: var(--ink); }
 
-/* the closing tribute — the awe */
-.tribute {
-  background: var(--ink);
-  color: var(--card);
-  padding: 30px 28px;
-  margin: 26px 0;
-  box-shadow: var(--shadow);
-  text-align: center;
-}
-.tribute .lead {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-style: italic;
-  font-size: 1.7rem;
-  margin: 0 0 14px;
-  color: color-mix(in srgb, var(--accent) 55%, white);
-}
-.tribute p { margin: 0 auto 12px; max-width: 60ch; line-height: 1.6; }
-.tribute p:last-child { margin-bottom: 0; }
-@media (prefers-color-scheme: light) { .tribute { background: #241f1a; } }
-
 /* the story in four links */
 .story {
   background: var(--card);
@@ -512,9 +492,8 @@ footer a { color: inherit; }
   header .age { font-size: 0.98rem; }
   .masthead { flex-wrap: wrap; row-gap: 6px; font-size: 0.64rem; letter-spacing: 0.08em; }
   .stamp { white-space: nowrap; }
-  .reveal, .physics, .attention, .tribute, .story, .provenance, .note, .limits, .fullpaper { padding-left: 15px; padding-right: 15px; }
+  .reveal, .physics, .attention, .story, .provenance, .note, .limits, .fullpaper { padding-left: 15px; padding-right: 15px; }
   .reveal h2, .physics h2, .attention h2, .story h2, .provenance h2 { font-size: 1.15rem; }
-  .tribute .lead { font-size: 1.3rem; }
   .eq-display { overflow-x: auto; }
   .eq-body { font-size: 1.3rem; }
   .card { padding: 12px; }
