@@ -28,11 +28,11 @@
   </p>
   <p class="age">
     This is a real scientific paper from 1982, by the physicist John Hopfield.
-    It describes a strange kind of memory — one that can rebuild the whole thing
-    from just a piece of it, the way two notes can bring back a whole song. So
-    we stored the paper inside that very memory. Every speck of ink is one tiny
-    switch; rub any of it out, and it finds its way back. The idea won the 2024
-    Nobel Prize in Physics.
+    It describes a strange kind of memory — one that rebuilds the whole thing
+    from just a piece of it, the way two notes can bring back a whole song.
+    The paper is now stored inside the very memory it describes: every speck of
+    ink below is one switch in the network. The idea won the 2024 Nobel Prize
+    in Physics.
   </p>
 </header>
 
@@ -51,22 +51,21 @@
       <div class="stage-scroll" id="stage-scroll">
         <!-- one canvas per page, injected by app.js — scroll through all five -->
       </div>
-      <div class="caption">scroll through all five pages · scribble anywhere on any page, then let go — it rebuilds itself</div>
+      <div class="caption">all five pages · 784,320 pixels, each one a switch in the same network</div>
     </div>
 
     <div class="reveal">
       <h2>What you just did is where AI's memory comes from.</h2>
       <p>
-        Think of a chatbot pulling up the one thing you told it that matters,
-        right when it matters. That's the same move you just made: hand it a
-        scrap, and the whole memory comes back. You just ran it by hand — with
-        your finger, on a 45-year-old page.
+        A chatbot pulling up the one thing you told it that matters, right when
+        it matters, is making the move you just made with your finger on a
+        45-year-old page. It has a name: <strong>attention</strong>. Stacking
+        it, over and over, is what lets ChatGPT and Claude hold a conversation.
       </p>
       <p>
-        That move has a name: <strong>attention</strong>. Stacking it, over and
-        over, is what lets ChatGPT and Claude hold a conversation. Their version
-        works in shades of grey instead of plain on/off — but it's the same idea
-        you're playing with.
+        Their version runs in shades of grey rather than plain on/off, and that
+        continuous form was proved in 2020 to be exactly this network's recall
+        step — the paper is in the sources below.
       </p>
     </div>
 
@@ -119,6 +118,62 @@
       is that one idea running.</p>
     </div>
 
+    <div class="physics" id="storage">
+      <h2>The one equation here that is <em>not</em> from 1982</h2>
+
+      <p><strong>What has to be decided.</strong> Everything above says what
+      <b>T<sub>ij</sub></b> <em>does</em>. Nothing says how to choose it. That
+      is the one open slot in the theory, and it is the only slot this page
+      fills differently from the paper.</p>
+
+      <div class="eq-display">
+        <span class="eq-body">T<sub>ij</sub> &nbsp;=&nbsp; ∑<sub>s</sub>&nbsp; ξ<sub>i</sub><sup>s</sup> ξ<sub>j</sub><sup>s</sup></span>
+        <span class="eq-ref">1982 — equation&nbsp;[2], page&nbsp;2555</span>
+      </div>
+
+      <p>Hopfield's rule, in one line: for every stored page <b>s</b>, add
+      <b>+1</b> to the link between two pixels that agree in that page and
+      <b>−1</b> where they disagree. (<b>ξ</b> is just a pixel written as
+      <b>±1</b> instead of on/off.) Wire agreement into the weights, and the
+      pattern becomes a valley.</p>
+
+      <div class="eq-display">
+        <span class="eq-body">T<sub>ij</sub> &nbsp;=&nbsp; ∑<sub>s,r</sub>&nbsp; ξ<sub>i</sub><sup>s</sup> <b>(G<sup>−1</sup>)<sub>sr</sub></b> ξ<sub>j</sub><sup>r</sup></span>
+        <span class="eq-ref">1985 — the projection rule (Personnaz–Guyon–Dreyfus), with G<sub>sr</sub> = ξ<sup>s</sup>·ξ<sup>r</sup></span>
+      </div>
+
+      <p><strong>Look at what changed.</strong> One factor. <b>G</b> is the
+      table of overlaps: <b>G<sub>sr</sub></b> counts how much page <b>s</b>
+      and page <b>r</b> already look alike. Set <b>G</b> to the identity —
+      every memory unrelated to every other — and the second equation
+      collapses back into the first. <em>Hopfield's rule is the 1985 rule
+      under the assumption that the memories don't overlap.</em></p>
+
+      <p><strong>Why that assumption breaks here.</strong> On random memories
+      it is nearly true, which is why the 1982 rule is the right tool for the
+      capacity experiment beside p. 2557. But these five pages are the same
+      journal, the same typeface, the same wide white margins — they overlap
+      enormously. Each page's ink then leaks into every other page's weights,
+      and p. 2557 states what follows: “memories too close to each other are
+      confused and tend to merge.” Multiplying by <b>G<sup>−1</sup></b>
+      divides that shared part back out.</p>
+
+      <p><strong>What it buys.</strong> Written this way <b>T</b> is the
+      projection onto the stored pages, so <b>T ξ<sup>s</sup> =
+      ξ<sup>s</sup></b> exactly — every stored page is a perfect fixed point
+      however much the pages resemble each other. That is the entire
+      difference. The rule rebuilding the print is still Eq&nbsp;[1], the
+      energy pulling it downhill is still Eq&nbsp;[7], and the valleys are
+      still attractors; only the choice of <b>T</b> is from 1985. The toggle
+      in the panel swaps it back to Eq&nbsp;[2], so you can watch the merge
+      happen.</p>
+
+      <p><strong>Neither matrix is ever built.</strong> <b>T</b> would have
+      784,320² entries. The field on a pixel is computed from the five
+      overlaps between the image on screen and the stored pages — the same
+      arithmetic, one update at a time.</p>
+    </div>
+
     <div class="story">
       <h2>The four dates, with sources</h2>
       <ul>
@@ -132,7 +187,7 @@
     <details class="limits">
       <summary>The fine print — is this really the paper?</summary>
       <ul>
-        <li><strong>The storage rule is 1985, not 1982.</strong> The five pages share most of their white background, and p. 2557 states that "memories too close to each other are confused and tend to merge." Under Hopfield's 1982 rule (Eq [2]) they do merge — the toggle on the right runs that rule, and the pages come back as one ghost. This page therefore stores them with the <strong>projection (pseudo-inverse) rule</strong> (Personnaz–Guyon–Dreyfus, 1985), which makes every stored pattern an exact fixed point regardless of overlap. Same network, same Eq [1] dynamics, same Eq [7] energy; only how the memories enter the weights differs.</li>
+        <li><strong>The storage rule is 1985, not 1982</strong> — the projection rule, because five pages this similar merge under Eq [2]. Both equations are written out and compared above, in <a href="#storage">the one equation here that is not from 1982</a>; the toggle on the right switches between them.</li>
         <li>The network's-eye view is a pure black/white bitmap at reduced resolution, so tiny text looks rough — that is the memory, not a photo.</li>
         <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. The readout names which one happened.</li>
         <li>Pixels-as-switches is the standard way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
@@ -167,7 +222,7 @@
 
   <div class="rail">
     <div class="card">
-      <div class="hint">Scribble your cursor anywhere on the page, then let go. It rebuilds itself.</div>
+      <div class="hint">Drag across any page to rub the ink out, then let go.</div>
       <div class="controls">
         <button id="btn-heal">rebuild now</button>
         <button id="btn-reset">reset page</button>

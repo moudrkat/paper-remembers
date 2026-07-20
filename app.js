@@ -21,31 +21,31 @@ const PAGES = [
 const PAGE_NOTES = [
   `<strong>The core idea (see the abstract, top).</strong> A normal computer
    looks up memory by <em>address</em> — "give me slot #4837." This looks it up
-   by <em>content</em>: hand it a fragment or a damaged copy, and it gives back
-   the whole thing. Two notes bring back a song; a glimpse brings back a face.
-   That is exactly what you do when you scribble a page and it rebuilds.`,
+   by <em>content</em>: hand it a fragment, or a damaged copy, and it gives back
+   the whole thing — the way a glimpse of a face brings back the whole face.
+   Hopfield's term for it is on the first line of the abstract:
+   <em>content-addressable memory</em>.`,
   `<strong>Here are the two working equations.</strong> <b>[2]</b> is how you
    <em>store</em> a memory — Hopfield's original 1982 way: strengthen the link
    between every pair of switches that agree (both on, or both off). This is the
-   one part the 1985 upgrade does more cleverly. <b>[1]</b> is how it
+   one part this page replaces, with the 1985 rule written out below.
+   <b>[1]</b> is how it
    <em>recalls</em> — each switch keeps flipping to match what its neighbours are
    telling it, until the whole pattern locks onto the nearest stored memory; that
    rule is pure 1982 and never changes. (Fig. 1 is just how one neuron turns its
    input into an on-or-off output.)`,
-  `<strong>Equation [7] is the star — the network's energy.</strong> One number
+  `<strong>Equation [7] — the network's energy.</strong> One number
    for how much all the switches disagree with their wiring. Hopfield proved
    (<b>[8]</b>) it can only go <em>down</em> as the network updates. So memories
    are <em>valleys</em> in an energy landscape, and recall is a damaged page
    rolling downhill into the nearest valley — the recovered page. The hill drawn
    in the instrument on the right is this equation.`,
-  `<strong>Fig. 2 is an experiment you can re-run (below).</strong> Cram more
-   memories into one network and count how many come back with errors. A few
-   memories → perfect recall; too many → recall breaks down, at about
-   <em>0.15 × the number of switches</em>. (That is about <em>too many</em>
-   memories. A separate but related trouble is memories that are <em>too
-   similar</em> — like these mostly-white pages — which blur together even
-   though there are only five. That is what you see if you switch to Hopfield's
-   1982 wiring.)`,
+  `<strong>Fig. 2 is an experiment, and it is running right below.</strong>
+   Store more and more memories in one network, then count how many come back
+   with errors: a few → perfect recall, too many → breakdown. Note what this
+   measures — <em>too many</em> memories. The different problem, memories that
+   are <em>too similar</em>, is the one these five near-identical pages run
+   into, and it is what the paragraph on this page about merging describes.`,
   `<strong>Closing discussion.</strong> Categories, forgetting old memories, and
    why this behaves like a real, fault-tolerant memory — one that degrades
    gracefully instead of failing all at once.`,
@@ -132,7 +132,7 @@ function init(imgs) {
   buildStage();
   wireControls();
   setActive(0);
-  setStatus('scroll the pages · scribble anywhere on any of them, then let go');
+  setStatus('five pages loaded and stored — ready');
   state.introTimers.push(setTimeout(narrateIntro, 150));
   if (location.search.includes('debug')) document.body.classList.add('debug');
 }
@@ -349,7 +349,7 @@ function resetPage() {
   setVerdict('');
   render(i);
   drawTrace();
-  setStatus('page restored — scribble anywhere and let go');
+  setStatus('page restored');
 }
 
 // ---------- the 1982-rule toggle ----------
@@ -458,7 +458,7 @@ function endIntro() {
   state.works[0] = Uint8Array.from(state.patterns[0]);
   state.touched[0] = false;
   render(0);
-  setStatus('your turn — scribble anywhere on any page and let go');
+  setStatus('your turn');
 }
 
 // ---------- energy landscape (look closer) ----------
