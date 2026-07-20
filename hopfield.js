@@ -45,6 +45,14 @@ class Hopfield {
     // the last update that actually flipped, kept so the page can show the
     // real numbers the rule ran on: {i, h, to}
     this.lastFlip = null;
+    // the latest flip in each direction, plus per-batch tallies. A batch is
+    // ~20,000 updates, so showing one sampled flip strobes at random; these
+    // let the readout show the direction that actually dominated, with the
+    // numbers from a flip that really went that way.
+    this.lastUp = null;    // most recent flip to ink   (h > 0)
+    this.lastDown = null;  // most recent flip to paper (h < 0)
+    this.upFlips = 0;
+    this.downFlips = 0;
     this.flips = 0;   // flips in the current recall, for the live readout
     if (rule === 'projection') {
       // Gram matrix G_sr = xi^s . xi^r, then invert (n is tiny)
@@ -82,6 +90,10 @@ class Hopfield {
     if (this.rule === 'projection') this._refreshW();
     this._newPass();
     this.lastFlip = null;
+    this.lastUp = null;
+    this.lastDown = null;
+    this.upFlips = 0;
+    this.downFlips = 0;
     this.flips = 0;
     this.stable = false;
   }
@@ -110,7 +122,10 @@ class Hopfield {
     }
     const nv = h > 0 ? 1 : h < 0 ? 0 : this.V[i];
     if (nv === this.V[i]) return 0;
-    this.lastFlip = { i: i, h: h, to: nv };
+    const rec = { i: i, h: h, to: nv };
+    this.lastFlip = rec;
+    if (nv) { this.lastUp = rec; this.upFlips++; }
+    else { this.lastDown = rec; this.downFlips++; }
     this.flips++;
     const d = (nv ? 1 : -1) * (this.spin ? 2 : 1);
     this.V[i] = nv;
@@ -124,6 +139,9 @@ class Hopfield {
   // Sets this.stable when a whole pass completes with zero flips.
   step(k) {
     if (this.stable) return;
+    // tallies are per batch — one frame's worth of updates
+    this.upFlips = 0;
+    this.downFlips = 0;
     for (let t = 0; t < k; t++) {
       const i = this.order[this.cursor++];
       if (this.updateOne(i)) this.flipsInPass++;

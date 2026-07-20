@@ -74,7 +74,7 @@
     <details class="limits">
       <summary>The fine print — is this really the paper?</summary>
       <ul>
-        <li><strong>The storage rule is 1985, not 1982</strong> — the projection rule, because five pages this similar merge under Eq [2]. It is written out beside p. 2555 above; the toggle on the right switches between them.</li>
+        <li><strong>The storage rule is 1985, not 1982</strong> — the projection rule, because five pages this similar merge under Eq [2]. Both rules are written out in the panel, and the 1982 toggle switches between them.</li>
         <li>The network's-eye view is a pure black/white bitmap at reduced resolution, so tiny text looks rough — that is the memory, not a photo.</li>
         <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. The readout names which one happened.</li>
         <li>Pixels-as-switches is the standard way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
@@ -104,21 +104,48 @@
 
   <div class="rail">
     <div class="card">
-      <div class="hint">Drag across any page to rub the ink out, then let go.</div>
+      <div class="hint">Scribble across any page — ink comes off, specks land.
+      Then let go.</div>
       <div class="controls">
-        <button id="btn-heal">rebuild now</button>
         <button id="btn-reset">reset page</button>
       </div>
+      <h2>where it landed</h2>
       <div id="status">loading the page…</div>
       <div id="verdict"></div>
 
+      <h2>equation [1], firing</h2>
       <div class="livecode" id="livecode">
         <div class="lc-tag">hopfield.js · updateOne() · <span id="lc-state">idle</span></div>
-        <pre><code>i = <span id="lc-i">—</span>
-h = <span id="lc-h">—</span>
-const nv = <span class="lc-b" id="lc-b1">h &gt; 0 ? 1</span>
-         : <span class="lc-b" id="lc-b2">h &lt; 0 ? 0</span>
-         : <span class="lc-b" id="lc-b3">this.V[i]</span>;</code></pre>
+        <div class="lc-eq">
+          <div class="lc-row">
+            <i>i</i> = <b id="lc-i">—</b>
+            <span class="lc-c">pick one pixel, at random</span>
+          </div>
+          <div class="lc-row">
+            <i>h<sub>i</sub></i> = ∑<sub>j</sub> <i>T<sub>ij</sub></i><i>V<sub>j</sub></i> = <b id="lc-h">—</b>
+            <span class="lc-c">add up what the whole page<br>says pixel <i>i</i> should be</span>
+          </div>
+          <!-- T is the only thing the 1982/1985 toggle changes — so show it,
+               and swap it live when the toggle flips -->
+          <div class="lc-row lc-t lc-t-1985">
+            <i>T<sub>ij</sub></i> = ∑<sub>s,r</sub> <i>ξ<sub>i</sub><sup>s</sup></i> <b>(G<sup>−1</sup>)<sub>sr</sub></b> <i>ξ<sub>j</sub><sup>r</sup></i>
+            <span class="lc-c">the wiring · 1985 rule.<br><b>G</b> is how much the five<br>pages overlap</span>
+          </div>
+          <div class="lc-row lc-t lc-t-1982">
+            <i>T<sub>ij</sub></i> = ∑<sub>s</sub> <i>ξ<sub>i</sub><sup>s</sup></i> <i>ξ<sub>j</sub><sup>s</sup></i>,
+            <i>T<sub>ii</sub></i> = 0
+            <span class="lc-c">the wiring · Hopfield 1982, eq&nbsp;[2].<br>same line with <b>G</b> = identity</span>
+          </div>
+          <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">ink</span></div>
+          <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">paper</span></div>
+          <div class="lc-b" id="lc-b3"><i>V<sub>i</sub></i> unchanged &nbsp;if <i>h<sub>i</sub></i> = 0<span class="lc-c">tie</span></div>
+          <!-- every symbol on screen gets defined here — nothing is assumed -->
+          <div class="lc-foot">
+            <span><i>V</i> = the page right now · 1 = ink, 0 = paper</span>
+            <span><i>ξ<sup>s</sup></i> = stored page <i>s</i>, ±1 per pixel · <i>s</i>, <i>r</i> = 1…5</span>
+            <span>then pick another pixel. that is the whole rule.</span>
+          </div>
+        </div>
         <div class="lc-count"><span id="lc-flips">0</span> <span class="lc-unit">switches flipped</span></div>
       </div>
 
@@ -163,14 +190,9 @@ const nv = <span class="lc-b" id="lc-b1">h &gt; 0 ? 1</span>
   modern <em>continuous</em> Hopfield network: Ramsauer et al.,
   <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a> (2020). 2024
   Nobel Prize in Physics: Hopfield &amp; Hinton. Everything runs in your
-  browser; nothing is sent anywhere. Made by Unt1l1f1nd —
-  <a href="https://github.com/moudrkat">github</a>.</p>
+  browser; nothing is sent anywhere.</p>
 </footer>
 
-<script>
-  var _age = document.getElementById('age');
-  if (_age) _age.textContent = new Date().getFullYear() - 1982;
-</script>
 <script src="hopfield.js"></script>
 <script src="app.js"></script>
 </body>

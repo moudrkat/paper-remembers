@@ -368,6 +368,8 @@ function toggleMerge(on) {
   state.merged = on;
   const btn = $('#btn-merge');
   btn.classList.toggle('on', on);
+  // the rail shows the T that is actually wired up
+  document.body.classList.toggle('rule-1982', on);
   btn.textContent = on ? '1982 rule on — switch back' : "switch to Hopfield's 1982 rule";
   PAGES.forEach((_, i) => {
     state.works[i] = Uint8Array.from(state.patterns[i]);
@@ -408,7 +410,7 @@ async function narrateIntro() {
   if (state.introAborted) return;
   ov.classList.add('show');
 
-  await sayIntro('Watch — we rub a hole straight through the print.');
+  await sayIntro('A real page from 1982.\nWatch us rub a hole through it.');
   await wait(400);
   state.touched[0] = true;
   const W = state.W, H = state.H;
@@ -420,13 +422,13 @@ async function narrateIntro() {
   }
   if (state.introAborted) return;
 
-  await sayIntro('Nobody tells it what was there.\nIt rolls downhill to the page it remembers…');
+  await sayIntro('Nobody tells it what was there.\nIt rolls downhill, out of the damage,\ninto the nearest thing it knows.');
   await wait(1100);
   if (state.introAborted) return;
   await healAwait(0);
   if (state.introAborted) return;
 
-  await sayIntro('It found the page it remembers.\nYour turn ↓');
+  await sayIntro('It landed on the page it remembers.\nThat page is the paper explaining how.\nYour turn ↓');
   await wait(2000);
   endIntro();
 }
@@ -481,7 +483,9 @@ function drawTrace() {
   const css = getComputedStyle(document.documentElement);
   const accent = css.getPropertyValue('--accent').trim() || '#b3402e';
   const ink = css.getPropertyValue('--ink').trim() || '#1a1816';
-  const pad = 8, top = 12, bot = H - 16;
+  // `top` is where the curve peaks (x = 0). Keep it low enough that the two
+  // labels above it clear the arc — at top = 12 the curve cut through "[7]".
+  const pad = 8, top = 22, bot = H - 16;
   const xToPx = x => pad + (W - 2*pad) * (x + 1) / 2;
   const eToPx = e => top + (bot - top) * (-e);
   ctx.strokeStyle = ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.5;
@@ -503,7 +507,7 @@ function drawTrace() {
   ctx.textAlign = 'right';  ctx.fillText('the page', W - pad, H - 3);
   ctx.textAlign = 'center'; ctx.fillText('50%', W/2, top - 2);
   ctx.fillStyle = accent; ctx.textAlign = 'left';
-  ctx.fillText('E — equation [7]', pad, top + 8);
+  ctx.fillText('E — equation [7]', pad, top - 11);
   ctx.globalAlpha = 1;
   ctx.globalAlpha = 1;
 }
@@ -563,18 +567,36 @@ function drawFig2(probs, n) {
 
 // ---------- helpers + wiring ----------
 
-function fmtE(e) { return e.toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+// The projection energy sits around -N/2 (~ -392,160) and reads fine in full.
+// The 1982 Hebbian energy runs to ~1e12 — eighteen digits overflow the rail —
+// so anything large is shown in scientific notation instead.
+function fmtE(e) {
+  const a = Math.abs(e);
+  if (a < 1e7) return e.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  const exp = Math.floor(Math.log10(a));
+  const mant = (e / Math.pow(10, exp)).toFixed(2);
+  const sup = String(exp).replace(/[-\d]/g, c => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]);
+  return mant.replace('-', '−') + ' × 10' + sup;
+}
 
 // Show the real values the recall rule just ran on. `h` and the branch taken
 // come straight out of updateOne — this is a readout, not a re-enactment.
 function net_clearLive() {
   const n = activeNet();
-  if (n) n.lastFlip = null;
+  if (n) { n.lastFlip = null; n.lastUp = null; n.lastDown = null; }
   showLive(n, false);
 }
 
 function showLive(net, running) {
-  const f = net.lastFlip;
+  // Mid-rebuild, lastFlip is one sample out of ~20,000 updates a frame, so the
+  // lit branch coin-tosses at 60Hz. Show the direction that actually dominated
+  // the batch instead — and the numbers from a flip that really went that way,
+  // so the h on screen always agrees with the branch lit below it.
+  let f = net.lastFlip;
+  if (running && (net.upFlips || net.downFlips)) {
+    const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
+    if (pick) f = pick;
+  }
   $('#lc-state').textContent = running ? 'running' : (f ? 'settled' : 'idle');
   ['#lc-b1', '#lc-b2', '#lc-b3'].forEach(s => $(s).classList.remove('on'));
   $('#lc-flips').textContent = net.flips.toLocaleString('en-US');
@@ -588,7 +610,6 @@ function setStatus(s) { $('#status').textContent = s; }
 function setVerdict(s) { $('#verdict').textContent = s; }
 
 function wireControls() {
-  $('#btn-heal').onclick = heal;
   $('#btn-reset').onclick = resetPage;
   $('#btn-merge').onclick = () => toggleMerge(!state.merged);
   $('#btn-fig2').onclick = () => runFig2(+$('#fig2-n').value);

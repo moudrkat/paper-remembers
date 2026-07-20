@@ -29,9 +29,7 @@ header {
 }
 header h1 { font-size: 2.1rem; margin: 10px 0 6px; font-style: italic; }
 header p { max-width: 62ch; margin: 6px 0; }
-header .how { font-family: ui-monospace, 'Cascadia Mono', monospace; font-size: 0.82rem; color: var(--accent); }
 header .age { font-size: 1.05rem; }
-header .age #age { color: var(--accent); font-weight: 700; }
 header .tagline {
   font-size: 1.35rem;
   font-style: italic;
@@ -89,23 +87,7 @@ header .tagline {
   background: var(--card);
   overscroll-behavior: contain;
 }
-.stage-scroll .page-wrap { margin: 0; box-shadow: none; }
 .stage .caption { margin-top: 10px; }
-
-.page-wrap { position: relative; margin: 0 0 26px; box-shadow: var(--shadow); }
-.page-wrap img {
-  display: block; width: 100%; height: auto;
-  filter: sepia(0.22) contrast(1.02); /* age the scan visibly */
-}
-.page-wrap::after { /* foxing vignette on the old paper */
-  content: '';
-  position: absolute; inset: 0;
-  pointer-events: none;
-  box-shadow: inset 0 0 60px rgba(120, 90, 30, 0.18),
-              inset 0 0 6px rgba(120, 90, 30, 0.12);
-}
-/* patch canvases sit above the vignette and age like the scan */
-.patch { z-index: 2; filter: sepia(0.22) contrast(1.02); }
 
 .caption {
   font-family: ui-monospace, monospace;
@@ -228,41 +210,6 @@ header .tagline {
 @media (prefers-color-scheme: light) {
   .reveal { background: #241f1a; }
 }
-
-/* the equation + physics — the heart of the tribute */
-.physics {
-  background: var(--card);
-  border: 1px solid rgba(40, 30, 10, 0.25);
-  border-left: 4px solid var(--accent);
-  box-shadow: var(--shadow);
-  padding: 20px 24px;
-  margin: 26px 0;
-}
-.physics h2 { margin: 0 0 14px; font-size: 1.3rem; font-style: italic; }
-.physics p { margin: 0 0 10px; max-width: 66ch; line-height: 1.55; }
-.physics p:last-child { margin-bottom: 0; }
-.physics b { color: var(--accent); }
-.eq-display {
-  text-align: center;
-  padding: 14px 10px 18px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid rgba(40, 30, 10, 0.18);
-}
-.eq-body {
-  font-family: 'Times New Roman', Georgia, serif;
-  font-style: italic;
-  font-size: 2rem;
-  display: block;
-}
-.eq-ref {
-  display: block;
-  margin-top: 8px;
-  font-family: ui-monospace, monospace;
-  font-style: normal;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  color: #6b6257;
-}
 /* the recall rule, firing live, in the rail */
 .livecode {
   margin: 12px 0 0;
@@ -278,22 +225,71 @@ header .tagline {
   border-bottom: 1px solid rgba(40, 30, 10, 0.18);
 }
 #lc-state { opacity: 0.75; }
-.livecode pre {
-  margin: 0;
-  padding: 9px;
-  font-family: ui-monospace, monospace;
-  font-size: 0.68rem;
-  line-height: 1.6;
-  color: color-mix(in srgb, var(--ink) 62%, var(--card));
-  overflow-x: auto;
+/* equation [1] itself, with the live numbers standing in it — set in serif,
+   because it is the paper's mathematics, not the JavaScript that runs it */
+.lc-eq {
+  padding: 10px 9px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
-#lc-h { color: var(--accent); font-weight: 700; }
-/* the branch the rule actually took */
+.lc-eq i { font-style: italic; }
+.lc-eq sub { font-size: 0.72em; }
+.lc-row { margin-bottom: 8px; }
+.lc-row b, #lc-h, #lc-i {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+/* plain-English gloss — nobody arrives knowing what i and h are */
+.lc-c {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-style: normal;
+  line-height: 1.35;
+  color: #9a9184;
+  margin-top: 1px;
+}
+/* the wiring, T — only one of the two is showing, whichever is wired up */
+.lc-t {
+  border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  padding-left: 7px;
+  margin-left: -1px;
+}
+.lc-t b { color: var(--accent); font-weight: 700; }
+.lc-t sup { font-size: 0.72em; }
+.lc-t-1982 { display: none; }
+body.rule-1982 .lc-t-1985 { display: none; }
+body.rule-1982 .lc-t-1982 { display: block; }
+
+/* the three cases of [1]; the one that just fired lights up */
+.lc-b {
+  padding: 2px 5px;
+  margin: 0 -5px;
+  color: color-mix(in srgb, var(--ink) 55%, var(--card));
+}
+.lc-b .lc-c { display: inline; margin-left: 6px; }
 .lc-b.on {
   color: var(--card);
   background: var(--accent);
-  padding: 0 3px;
 }
+.lc-b.on .lc-c { color: color-mix(in srgb, var(--card) 78%, var(--accent)); }
+/* the legend — every symbol used above, defined once */
+.lc-foot {
+  font-family: ui-monospace, monospace;
+  font-size: 0.62rem;
+  line-height: 1.4;
+  color: #9a9184;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(40, 30, 10, 0.18);
+}
+.lc-foot span { display: block; }
+.lc-foot span + span { margin-top: 3px; }
+.lc-foot i { font-family: Georgia, serif; font-style: italic; }
 .lc-count {
   font-family: ui-monospace, monospace;
   padding: 6px 9px 8px;
@@ -306,99 +302,6 @@ header .tagline {
   font-variant-numeric: tabular-nums;
 }
 .lc-unit { font-size: 0.63rem; color: #7d7568; letter-spacing: 0.05em; }
-
-/* printed equation beside the line of code that runs it */
-.codepair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin: 18px 0;
-}
-.codepair .side {
-  border: 1px solid rgba(40, 30, 10, 0.25);
-  background: color-mix(in srgb, var(--accent) 5%, var(--card));
-  display: flex;
-  flex-direction: column;
-}
-.codepair .side-tag {
-  font-family: ui-monospace, monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  padding: 7px 12px;
-  border-bottom: 1px solid rgba(40, 30, 10, 0.18);
-}
-.codepair .side-body {
-  padding: 18px 14px;
-  flex: 1;
-  overflow-x: auto;
-}
-.codepair .side-body.eq {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.05rem;
-  text-align: center;
-}
-.codepair .side-body.eq div + div { margin-top: 10px; }
-.codepair pre {
-  margin: 0;
-  text-align: left;
-  font-family: ui-monospace, monospace;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  color: var(--ink);
-}
-.physics code {
-  font-family: ui-monospace, monospace;
-  font-size: 0.85em;
-  background: color-mix(in srgb, var(--accent) 12%, var(--card));
-  padding: 1px 4px;
-}
-.codepair pre code { background: none; padding: 0; }
-.physics p code { white-space: nowrap; }
-
-.physics blockquote {
-  margin: 4px 0 10px;
-  padding: 10px 16px;
-  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
-  font-family: Georgia, serif;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* the attention explanation — must be understood, so not collapsed */
-.attention {
-  background: var(--card);
-  border: 1px solid rgba(40, 30, 10, 0.25);
-  border-left: 4px solid var(--accent);
-  box-shadow: var(--shadow);
-  padding: 18px 22px;
-  margin: 0 0 26px;
-}
-.attention h2 {
-  margin: 0 0 8px;
-  font-size: 1.15rem;
-  font-style: italic;
-}
-.attention p { margin: 0; max-width: 64ch; line-height: 1.55; }
-
-/* which part comes from which paper */
-.provenance {
-  background: var(--card);
-  border: 1px solid rgba(40, 30, 10, 0.25);
-  border-left: 4px solid var(--accent);
-  box-shadow: var(--shadow);
-  padding: 16px 20px;
-  margin: 0 0 26px;
-}
-.provenance h2 {
-  font-family: ui-monospace, monospace;
-  font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--accent); margin: 0 0 10px;
-}
-.provenance ul { margin: 0; padding-left: 20px; }
-.provenance li { margin: 8px 0; line-height: 1.5; }
-.provenance strong { color: var(--ink); }
 
 /* the story in four links */
 .story {
@@ -413,7 +316,7 @@ header .tagline {
   font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); margin: 0 0 10px 12px;
 }
-.story ol { margin: 0; padding-left: 34px; }
+.story ul { margin: 0; padding-left: 34px; }
 .story li { margin: 8px 0; line-height: 1.45; }
 .story a { color: var(--accent); text-decoration: none; }
 .story a:hover { text-decoration: underline; }
@@ -427,18 +330,6 @@ header .tagline {
   cursor: pointer;
 }
 #intro-skip:hover { background: rgba(40, 30, 10, 0.08); }
-
-.section-head {
-  font-family: ui-monospace, monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--card) 88%, black);
-  border-top: 1px solid rgba(120, 90, 30, 0.4);
-  padding-top: 18px;
-  margin: 8px 0 20px;
-}
-@media (prefers-color-scheme: light) { .section-head { color: #6b6257; } }
 
 .card .hint {
   font-size: 0.78rem;
@@ -459,27 +350,6 @@ header .tagline {
 .card .deeper .eq { margin: 10px 0 4px; }
 .card .sub { font-size: 0.72rem; color: #6b6257; margin-bottom: 4px; }
 
-.patch.healing {
-  outline: 1.5px dashed var(--accent);
-  animation: healpulse 0.9s ease-in-out infinite;
-}
-@keyframes healpulse {
-  0%, 100% { outline-offset: 3px; outline-color: var(--accent); }
-  50% { outline-offset: 6px; outline-color: color-mix(in srgb, var(--accent) 35%, transparent); }
-}
-
-/* patch overlays on the hero page */
-.patch {
-  position: absolute;
-  cursor: crosshair;
-  touch-action: none;
-  outline: 1px dashed color-mix(in srgb, var(--accent) 30%, transparent);
-  outline-offset: 3px;
-}
-.patch:hover { outline-color: color-mix(in srgb, var(--accent) 70%, transparent); }
-.patch.selected { outline: 1.5px dashed var(--accent); }
-.debug .patch { outline: 1px solid red; }
-
 /* instrument rail */
 .rail { min-width: 0; }
 .card {
@@ -492,16 +362,24 @@ header .tagline {
   font-family: ui-monospace, 'Cascadia Mono', monospace;
   font-size: 0.78rem;
 }
+/* block labels in the rail — the reader needs to know what each readout is */
 .card h2 {
   font-size: 0.72rem;
   letter-spacing: 0.12em;
-  margin: 0 0 8px;
+  margin: 14px 0 6px;
   color: var(--accent);
   font-weight: 600;
+  text-transform: uppercase;
 }
-.card .eq { font-family: Georgia, serif; font-style: italic; margin-bottom: 6px; }
-.card .eq-note { font-family: ui-monospace, monospace; font-style: normal; font-size: 0.62rem; color: #6b6257; }
-#e-value { font-size: 1.5rem; letter-spacing: 0.02em; margin: 2px 0 4px; }
+.card h2 + .livecode { margin-top: 0; }
+#e-value {
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  margin: 2px 0 4px;
+  /* never let a long readout push the rail wider than its column */
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 #e-trace { width: 100%; height: 96px; display: block; margin-bottom: 2px; }
 .trace-cap { font-size: 0.66rem; color: #6b6257; line-height: 1.35; margin-bottom: 8px; }
 #status { color: #6b6257; min-height: 2.4em; }
@@ -527,7 +405,6 @@ button {
   cursor: pointer;
 }
 button:hover { background: rgba(40, 30, 10, 0.08); }
-#btn-heal { border-color: var(--accent); color: var(--accent); font-weight: 700; }
 #btn-merge.on { background: var(--accent); color: var(--card); border-color: var(--accent); }
 
 /* cards inline with the pages */
@@ -539,9 +416,6 @@ button:hover { background: rgba(40, 30, 10, 0.08); }
   margin: -8px 0 26px;
   font-size: 0.92rem;
 }
-.note { border-left: 3px solid var(--accent); }
-.note p { margin: 0 0 10px; }
-.note p:last-child { margin-bottom: 0; }
 
 .limits {
   background: var(--card);
@@ -582,15 +456,23 @@ footer {
   font-size: 0.8rem;
   color: #8a8172;
 }
-footer a { color: inherit; }
+/* stay quiet, but be findable — `color: inherit` alone made these invisible */
+footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+footer a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 footer p { margin: 0 0 10px; line-height: 1.55; }
 footer p:last-child { margin-bottom: 0; }
 footer strong { color: #a09684; }
 
 @media (max-width: 1100px) {
-  /* stack: controls first, then the pages flow in the document itself */
+  /* Stack pages first. The rail used to be a hint and two buttons, so leading
+     with it was fine; it is now the equation panel, and opening a phone on
+     `i = —, h = —` before you have seen a page reads as a wall of symbols. */
   .layout { display: flex; flex-direction: column; gap: 14px; }
-  .rail { order: -1; }
   .card { position: static; }
   /* no nested scroll box on touch — let the phone scroll the whole document */
   .stage-scroll { max-height: none; overflow: visible; }
@@ -606,10 +488,5 @@ footer strong { color: #a09684; }
   header .age { font-size: 0.98rem; }
   .masthead { flex-wrap: wrap; row-gap: 6px; font-size: 0.64rem; letter-spacing: 0.08em; }
   .stamp { white-space: nowrap; }
-  .reveal, .physics, .attention, .story, .provenance, .note, .limits { padding-left: 15px; padding-right: 15px; }
-  .reveal h2, .physics h2, .attention h2, .story h2, .provenance h2 { font-size: 1.15rem; }
-  .codepair { grid-template-columns: 1fr; }
-  .eq-display { overflow-x: auto; }
-  .eq-body { font-size: 1.3rem; }
   .card { padding: 12px; }
 }
