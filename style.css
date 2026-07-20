@@ -205,8 +205,40 @@ header .tagline {
   font-style: italic;
   color: var(--card);
 }
-.reveal p { margin: 0; max-width: 64ch; line-height: 1.5; }
+.reveal p { margin: 0 0 10px; max-width: 64ch; line-height: 1.5; }
+.reveal p:last-child { margin-bottom: 0; }
+/* the two lines the equivalence turns on, set as mathematics */
+.reveal .reveal-eq {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--card);
+  max-width: none;
+  margin: 14px 0;
+  overflow-x: auto;
+}
+/* accent is too dark on the near-black .reveal; lift it like .reveal a does */
+.reveal-eq b {
+  font-style: normal;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--accent) 60%, white);
+}
+.reveal-eq sup, .reveal-eq sub { font-size: 0.7em; }
 .reveal a { color: color-mix(in srgb, var(--accent) 65%, white); }
+/* the derivation, folded away by default — the newcomer never has to open it */
+.reveal-more { margin-top: 14px; }
+.reveal-more > summary {
+  cursor: pointer;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: color-mix(in srgb, var(--accent) 68%, white);
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.reveal-more[open] > summary { margin-bottom: 6px; }
+.reveal-more .reveal-eq { color: var(--card); }
 @media (prefers-color-scheme: light) {
   .reveal { background: #241f1a; }
 }

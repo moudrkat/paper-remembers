@@ -54,10 +54,54 @@
     <div class="reveal">
       <h2>What you just did is where AI's memory comes from.</h2>
       <p>
-        Hand it a scrap, get the whole memory back. That move is called
-        <strong>attention</strong>, and stacking it is what lets a chatbot hold
-        a conversation — the same recall step, run in shades of grey.
+        Give it a fragment, get the whole thing back. That one move — run on
+        words instead of ink — is what a chatbot does to hold a conversation.
+        Its name is <strong>attention</strong>.
       </p>
+
+      <details class="reveal-more">
+        <summary>the two changes that get there, precisely</summary>
+        <p>
+          The move is the same; two things change on the way, and they are
+          <em>not</em> the same change.
+        </p>
+        <p>
+          <strong>A sharper energy.</strong> Equation [7] sums over
+          <em>pairs</em> of pixels; that quadratic is what caps it near
+          0.15&nbsp;<em>N</em>. Score each stored page as a whole instead, and
+          capacity turns exponential — still in black and white:
+        </p>
+        <p class="reveal-eq">
+          E = −∑ exp(<b>x</b><sub>i</sub><sup>⊤</sup> ξ)
+        </p>
+        <p>
+          <strong>Then shades of grey</strong>, which buys differentiability —
+          not capacity — so the whole thing can sit inside a trained network.
+          Recall is now one line:
+        </p>
+        <p class="reveal-eq">
+          ξ<sup>new</sup> = <b>X</b> softmax(β <b>X</b><sup>⊤</sup> ξ)
+        </p>
+        <p>
+          Feed the memories through three learned projections — <em>query</em>,
+          <em>key</em>, <em>value</em> — set β = 1/√<i>d</i><sub>k</sub>, and
+          that same line is attention:
+        </p>
+        <p class="reveal-eq">
+          Z = softmax(<b>QK</b><sup>⊤</sup>/√<i>d</i><sub>k</sub>) <b>V</b>
+        </p>
+        <p>
+          The fragment is the query; the stored pages are the keys and values.
+          In a language model there is no fixed library — each word attends to
+          the <em>other words in the same sentence</em>, so the memories are
+          whatever it is reading.
+        </p>
+        <p>
+          The valley is still there — this energy has a floor too — but it lands
+          in a <strong>single step</strong>, where the 1982 rule you just ran
+          needed thousands of flips to reach it.
+        </p>
+      </details>
     </div>
 
 
@@ -78,6 +122,8 @@
         <li>The network's-eye view is a pure black/white bitmap at reduced resolution, so tiny text looks rough — that is the memory, not a photo.</li>
         <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. The readout names which one happened.</li>
         <li>Pixels-as-switches is the standard way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
+        <li><strong>The two capacities are not measured the same way.</strong> 0.15&nbsp;<em>N</em> is for random patterns at a small error rate; the exponential figure assumes well-separated ones. It is a real jump, but not one number rising on one axis.</li>
+        <li><strong>This demo is a side branch, not a step toward transformers.</strong> It runs the 1982 network with the 1985 projection rule, in black and white, to convergence. The attention story is a different lineage off the same 1982 root — the shared thread is the recall move, not this exact rule.</li>
         <li><strong>Related earlier work,</strong> for anyone tracing the theory: Shun'ichi Amari (1972) and William Little (1974), whom Hopfield cites as refs. 6–8 and 25 on the last page above.</li>
       </ul>
     </details>
@@ -190,8 +236,13 @@
   they will be removed.</p>
 
   <p><strong>Also cited.</strong> Projection rule: Personnaz, Guyon &amp;
-  Dreyfus, J. Phys. Lett. 46, L359 (1985). The attention equivalence is for the
-  modern <em>continuous</em> Hopfield network: Ramsauer et al.,
+  Dreyfus, J. Phys. Lett. 46, L359 (1985). The exponential capacity above is
+  not from continuous states — it comes from the new energy function, in
+  networks that were still binary: Krotov &amp; Hopfield,
+  <a href="https://arxiv.org/abs/1606.01164">arXiv:1606.01164</a> (2016), and
+  Demircigil et al., <a href="https://arxiv.org/abs/1702.01929">arXiv:1702.01929</a>
+  (2017). The attention equivalence is for the modern <em>continuous</em>
+  Hopfield network: Ramsauer et al.,
   <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a> (2020). 2024
   Nobel Prize in Physics: Hopfield &amp; Hinton. Everything runs in your
   browser; nothing is sent anywhere.</p>
