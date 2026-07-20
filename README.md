@@ -13,7 +13,10 @@ pinned: false
 
 **Live: [unt1l1f1nd-paper-remembers.static.hf.space](https://unt1l1f1nd-paper-remembers.static.hf.space)** — scribble on any page and let go.
 
-![a page of the 1982 paper scribbled out with the cursor, then rebuilding itself back to clean print — every speck of ink is one neuron](media/hero-heal.gif)
+![the cursor scribbles equations 7 and 8 off page 2556 into noise; let go and the print rebuilds itself, exactly, every pixel](media/hero-scribble.gif)
+
+*Not a rendering: the frames are the real network relaxing, all five pages
+stored, and it lands back on p. 2556 with zero pixels wrong.*
 
 The scanned pages of J. J. Hopfield's *Neural networks and physical systems
 with emergent collective computational abilities* (PNAS 79:2554–2558, 1982)
