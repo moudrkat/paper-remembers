@@ -254,6 +254,55 @@ header .tagline {
   letter-spacing: 0.06em;
   color: #6b6257;
 }
+/* printed equation beside the line of code that runs it */
+.codepair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 18px 0;
+}
+.codepair .side {
+  border: 1px solid rgba(40, 30, 10, 0.25);
+  background: color-mix(in srgb, var(--accent) 5%, var(--card));
+  display: flex;
+  flex-direction: column;
+}
+.codepair .side-tag {
+  font-family: ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(40, 30, 10, 0.18);
+}
+.codepair .side-body {
+  padding: 18px 14px;
+  flex: 1;
+  overflow-x: auto;
+}
+.codepair .side-body.eq {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.05rem;
+  text-align: center;
+}
+.codepair .side-body.eq div + div { margin-top: 10px; }
+.codepair pre {
+  margin: 0;
+  text-align: left;
+  font-family: ui-monospace, monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.physics code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  padding: 1px 4px;
+}
+.codepair pre code { background: none; padding: 0; }
+.physics p code { white-space: nowrap; }
+
 .physics blockquote {
   margin: 4px 0 10px;
   padding: 10px 16px;
@@ -497,6 +546,7 @@ footer strong { color: #a09684; }
   .stamp { white-space: nowrap; }
   .reveal, .physics, .attention, .story, .provenance, .note, .limits { padding-left: 15px; padding-right: 15px; }
   .reveal h2, .physics h2, .attention h2, .story h2, .provenance h2 { font-size: 1.15rem; }
+  .codepair { grid-template-columns: 1fr; }
   .eq-display { overflow-x: auto; }
   .eq-body { font-size: 1.3rem; }
   .card { padding: 12px; }
