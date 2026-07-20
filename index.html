@@ -132,13 +132,13 @@
     </div>
 
     <details class="limits">
-      <summary>The honest details — is this really the paper?</summary>
+      <summary>The fine print — is this really the paper?</summary>
       <ul>
-        <li><strong>Storing five whole pages in one network is the hard case.</strong> Hopfield's original 1982 rule can't do it — pages share so much white space they blur into one ghost (you can switch to that rule, right, and watch it happen). To make recall work this page uses the <strong>projection (pseudo-inverse) rule</strong>, a well-known 1985 improvement (Personnaz–Guyon–Dreyfus). Same network, same "roll downhill" dynamics, same energy — only the way memories are written into the weights is smarter.</li>
-        <li>The page runs at a reduced resolution (the network's-eye view is a pure black/white bitmap), so tiny text looks rough — that is the memory, not a photo.</li>
-        <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. Both are honest; the readout tells you.</li>
-        <li>Pixels-as-switches is the classic way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
-        <li><strong>Is the credit clean?</strong> Not entirely. Similar ideas came earlier (Shun'ichi Amari, 1972; William Little, 1974, whom Hopfield cites), and some argue the model shouldn't carry his name alone. What Hopfield added — the energy-function framing and a telling clear enough to cross from physics into biology — is what made it take off. The 2024 physics Nobel for neural networks was itself debated as to whether it counts as physics.</li>
+        <li><strong>The storage rule is 1985, not 1982.</strong> The five pages share most of their white background, and p. 2557 states that "memories too close to each other are confused and tend to merge." Under Hopfield's 1982 rule (Eq [2]) they do merge — the toggle on the right runs that rule, and the pages come back as one ghost. This page therefore stores them with the <strong>projection (pseudo-inverse) rule</strong> (Personnaz–Guyon–Dreyfus, 1985), which makes every stored pattern an exact fixed point regardless of overlap. Same network, same Eq [1] dynamics, same Eq [7] energy; only how the memories enter the weights differs.</li>
+        <li>The network's-eye view is a pure black/white bitmap at reduced resolution, so tiny text looks rough — that is the memory, not a photo.</li>
+        <li>Scribble out <strong>more than half</strong> a page and it rolls into the photographic negative — an equally deep valley. Damage it past its basin and it can land on a <em>different</em> page. The readout names which one happened.</li>
+        <li>Pixels-as-switches is the standard way to picture a Hopfield network — the memory is a bitmap, not "understanding." It does not read the words as language.</li>
+        <li><strong>Is the credit clean?</strong> Not entirely. Similar ideas came earlier (Shun'ichi Amari, 1972; William Little, 1974, whom Hopfield cites), and some argue the model shouldn't carry his name alone. What this paper added was the energy function of Eq [7] and the proof that the dynamics can only decrease it. The 2024 physics Nobel for neural networks was itself debated as to whether it counts as physics.</li>
       </ul>
     </details>
 
