@@ -7,6 +7,10 @@
 }
 @media (prefers-color-scheme: dark) {
   :root { --paper-bg: #262320; --ink: #1a1816; --card: #efe9dc; }
+  /* --ink stays dark because the cards stay light — so anything set directly
+     on the dark page must not inherit it. Body text defaults to a light tone;
+     every light-card container pins color: var(--ink) itself below. */
+  body { color: color-mix(in srgb, var(--card) 92%, black); }
 }
 
 * { box-sizing: border-box; }
@@ -85,6 +89,7 @@ header .tagline {
   box-shadow: var(--shadow);
   border: 1px solid rgba(40, 30, 10, 0.25);
   background: var(--card);
+  color: var(--ink);
   overscroll-behavior: contain;
 }
 .stage .caption { margin-top: 10px; }
@@ -334,7 +339,7 @@ body.rule-1982 .lc-t-1982 { display: block; }
   font-variant-numeric: tabular-nums;
 }
 .lc-unit { font-size: 0.63rem; color: #7d7568; letter-spacing: 0.05em; }
-/* the honest caveat: what you watch is sampled, not the whole run */
+/* the caveat: what you watch is sampled, not the whole run */
 .lc-sample {
   display: block;
   font-size: 0.6rem;
@@ -346,6 +351,7 @@ body.rule-1982 .lc-t-1982 { display: block; }
 /* the story in four links */
 .story {
   background: var(--card);
+  color: var(--ink);
   border: 1px solid rgba(40, 30, 10, 0.25);
   box-shadow: var(--shadow);
   padding: 16px 20px 16px 8px;
@@ -396,6 +402,7 @@ body.rule-1982 .lc-t-1982 { display: block; }
   position: sticky;
   top: 14px;
   background: var(--card);
+  color: var(--ink);
   border: 1px solid rgba(40, 30, 10, 0.25);
   box-shadow: var(--shadow);
   padding: 14px;
@@ -450,6 +457,7 @@ button:hover { background: rgba(40, 30, 10, 0.08); }
 /* cards inline with the pages */
 .note, .bench {
   background: var(--card);
+  color: var(--ink);
   border: 1px solid rgba(40, 30, 10, 0.25);
   box-shadow: var(--shadow);
   padding: 14px 16px;
@@ -459,6 +467,7 @@ button:hover { background: rgba(40, 30, 10, 0.08); }
 
 .limits {
   background: var(--card);
+  color: var(--ink);
   border: 1px solid rgba(40, 30, 10, 0.25);
   box-shadow: var(--shadow);
   padding: 10px 16px;

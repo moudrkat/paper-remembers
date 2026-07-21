@@ -187,6 +187,10 @@ function buildStage() {
     const cv = document.createElement('canvas');
     cv.width = state.W; cv.height = state.H;
     cv.className = 'page-canvas';
+    cv.setAttribute('role', 'img');
+    cv.setAttribute('aria-label', 'scanned page ' + p.label.replace('p. ', '') +
+      ' of Hopfield 1982 — draw across it to damage the print; ' +
+      'let go and the network rebuilds it');
     cv.addEventListener('pointerdown', e => startDamage(e, i));
     const note = document.createElement('div');
     note.className = 'page-note';
@@ -262,6 +266,11 @@ function canvasXY(ev, cv) {
 
 function startDamage(e, i) {
   const cv = state.canvases[i];
+  // Scribbling IS skipping the intro — the person who draws mid-narration has
+  // already gotten the point. Without this, the intro's heal loop (which does
+  // not set state.healing) kept overwriting their strokes every frame and a
+  // second loop could start on the same network at pointerup.
+  if (!state.introAborted) endIntro();
   // Only interrupt a rebuild that is on THIS page — scribbling page B must not
   // abandon page A half-healed. Other pages keep rebuilding and stay queued.
   if (state.healing && state.healingPage === i) stopHeal();
@@ -400,6 +409,8 @@ function verdict(i) {
   }
   if (own === 0) {
     state.heals[i]++;
+    state.touched[i] = false; // the page is the original again
+
     setVerdict(state.heals[i] === 1
       ? `${label} · exact · 0 of ${N} pixels wrong`
       : `${label} · exact · ${state.heals[i]} scribbles → 1 identical ending`);
@@ -478,6 +489,7 @@ function sayIntro(t) {
 
 async function narrateIntro() {
   if (location.search.includes('debug')) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (state.demoDone) return;
   state.demoDone = true;
   setActive(0); // the top page, already in view
@@ -557,6 +569,11 @@ function endIntro() {
   state.introAborted = true;
   state.introTimers.forEach(clearTimeout);
   state.introTimers = [];
+  // if the intro heal was mid-flight, its next tick just got cleared with the
+  // timers — it will never run again, so clean up what it would have
+  state.spot = null;
+  document.querySelectorAll('.page-canvas.healing')
+    .forEach(c => c.classList.remove('healing'));
   const ov = $('#intro');
   ov.classList.remove('show');
   setTimeout(() => { ov.hidden = true; }, 450);
@@ -600,7 +617,6 @@ function drawTrace() {
   ctx.textAlign = 'center'; ctx.fillText('50%', W/2, top - 2);
   ctx.fillStyle = accent; ctx.textAlign = 'left';
   ctx.fillText('E — equation [7]', pad, top - 11);
-  ctx.globalAlpha = 1;
   ctx.globalAlpha = 1;
 }
 
