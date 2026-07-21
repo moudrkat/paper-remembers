@@ -21,21 +21,23 @@ const PAGES = [
 const PAGE_NOTES = [
   // p. 2554 — the abstract
   `<strong>Memory looked up by content, not address.</strong> A computer fetches
-   “slot #4837.” This is handed a fragment, or a damaged copy, and gives back
-   the whole — the way a glimpse of a face brings back the face. Hopfield's
-   name for it is in the abstract's first line: <em>content-addressable
-   memory</em>.`,
+   “slot #4837.” This memory is handed a fragment, or a damaged copy, and gives
+   back the whole — the way a glimpse of a face brings back the face.
+   Hopfield's name for it is in the abstract's first line:
+   <em>content-addressable memory</em>.`,
 
   // p. 2555 — equations [1] and [2]
   `<strong>The two working rules.</strong> <b>[1]</b> is recall: each switch
    flips to match what the others are telling it. That is what rebuilds your
-   scribbles, and the panel on the right runs this exact line, pixel by pixel.
-   <b>[2]</b> is storage: link two pixels that agree in a stored page.
+   scribbles — the equation panel runs this exact line, pixel by pixel.
+   <b>[2]</b> is storage: strengthen the link between two pixels that agree in
+   a stored page.
    <span class="note-eq">T<sub>ij</sub> = ∑<sub>s,r</sub> ξ<sub>i</sub><sup>s</sup> <b>(G<sup>−1</sup>)<sub>sr</sub></b> ξ<sub>j</sub><sup>r</sup></span>
-   One change here is not from 1982: storage uses the 1985 projection rule
-   above. <b>G</b> is how much the pages overlap; set <b>G</b> to the identity
-   and it collapses back into <b>[2]</b>. Five pages of one journal overlap far
-   too much for <b>[2]</b> — the toggle on the right shows them merging.`,
+   The one change not from 1982 sits here: this demo writes the pages in with
+   the 1985 recipe above, where <b>G</b> measures how much the five pages
+   overlap. Tell <b>G</b> the pages share nothing, and the formula becomes the
+   paper's own <b>[2]</b>. Five pages of one journal share far too much for
+   that — the 1982 toggle in the panel shows them merging.`,
 
   // p. 2556 — equations [7] and [8]
   `<strong>[7] is the energy — the whole theory.</strong> One number for how
@@ -44,8 +46,8 @@ const PAGE_NOTES = [
    rolling to the nearest floor. Hopfield, four lines down: <em>“This case is
    isomorphic with an Ising model… when T<sub>ij</sub> is symmetric but has a
    random character (the spin glass) there are known to be many (locally)
-   stable states.”</em> An Ising model is a magnet. That is why a paper about
-   neurons is physics.`,
+   stable states.”</em> Translated: this memory is the same mathematics as a
+   magnet. That is why a paper about neurons is physics.`,
 
   // p. 2557 — Fig. 2, the attractor sentence, the merge warning
   `<strong>He names the valleys here.</strong> In italics, right column:
@@ -53,15 +55,15 @@ const PAGE_NOTES = [
    the nominally assigned memories.”</em> An attractor: many different starts,
    one shared ending. Scribble this page two completely different ways and
    watch both land on the identical print. Also here, the warning that forced
-   the 1985 rule: <em>“memories too close to each other are confused and tend
-   to merge.”</em> And Fig. 2 — the capacity experiment, re-runnable just
-   below.`,
+   the 1985 pen: <em>“memories too close to each other are confused and tend
+   to merge.”</em> And Fig. 2 — the experiment measuring how many memories
+   fit, re-runnable just below.`,
 
   // p. 2558 — discussion
   `<strong>It fails softly.</strong> Overload it and recall degrades instead of
    collapsing — the closing pages are about categories, forgetting, and why
    this behaves like real memory. Forty-two years later it won the Nobel Prize
-   in Physics, and the continuous version of rule <b>[1]</b> turned out to be
+   in Physics, and rule <b>[1]</b>, redone in shades of grey, turned out to be
    the “attention” inside every chatbot you use.`,
 ];
 const SPOT_HOLD = 9;           // frames (~145ms) one sampled update stays put
