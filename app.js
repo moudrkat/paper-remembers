@@ -649,9 +649,14 @@ function runFig2(n) {
     }
   }
   drawFig2(counts.map(c => c / trials), n);
+  // one plain sentence saying what the numbers mean, judged from the
+  // measurement itself, not from n — the run is random and owns its verdict
+  const pct = Math.round(100 * exact / trials);
+  const read = pct >= 85 ? `That fits — well under the 0.15 N limit.`
+    : pct >= 25 ? `The edge of the 0.15 N limit — they are starting to crumble.`
+    : `Overloaded — past the 0.15 N limit they fall apart, untouched.`;
   $('#fig2-out').textContent =
-    `n = ${n}, N = 100: ${Math.round(100*exact/trials)}% of memories recalled ` +
-    `with zero errors. The paper: about 0.15 N before recall fails.`;
+    `n = ${n}, N = 100: ${pct}% of memories came through with zero errors. ${read}`;
 }
 
 function drawFig2(probs, n) {
