@@ -192,6 +192,9 @@
       <div id="verdict"></div>
 
       <h2>equation [1], firing</h2>
+      <div class="hint">One pixel at a time asks the rest of the page what it
+      should be. The intact print outvotes the scribble — that is the whole
+      trick.</div>
       <div class="livecode" id="livecode">
         <div class="lc-tag">hopfield.js · updateOne() · <span id="lc-state">idle</span></div>
         <div class="lc-eq">
@@ -201,7 +204,7 @@
           </div>
           <div class="lc-row">
             <i>h<sub>i</sub></i> = ∑<sub>j</sub> <i>T<sub>ij</sub></i><i>V<sub>j</sub></i> = <b id="lc-h">—</b>
-            <span class="lc-c">add up what the whole page<br>says pixel <i>i</i> should be</span>
+            <span class="lc-c">every other pixel votes on it,<br>through the wiring. this is the tally</span>
           </div>
           <!-- T is the only thing the 1982/1985 toggle changes — so show it,
                and swap it live when the toggle flips -->
@@ -214,9 +217,9 @@
             <i>T<sub>ii</sub></i> = 0
             <span class="lc-c">the wiring · Hopfield 1982, eq&nbsp;[2].<br>same line with <b>G</b> = identity</span>
           </div>
-          <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">becomes ink</span></div>
-          <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">becomes paper</span></div>
-          <div class="lc-b" id="lc-b3"><i>V<sub>i</sub></i> unchanged &nbsp;if <i>h<sub>i</sub></i> = 0<span class="lc-c">stays as it is</span></div>
+          <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">the page voted ink</span></div>
+          <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">the page voted paper</span></div>
+          <div class="lc-b" id="lc-b3"><i>V<sub>i</sub></i> unchanged &nbsp;if <i>h<sub>i</sub></i> = 0<span class="lc-c">a tie — stays as it is</span></div>
           <!-- every symbol on screen gets defined here — nothing is assumed -->
           <div class="lc-foot">
             <span><i>V</i> = the page right now · 1 = ink, 0 = paper</span>
