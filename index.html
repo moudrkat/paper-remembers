@@ -91,8 +91,9 @@
           E = −∑<sub>s</sub> exp(ξ<sup>s⊤</sup> <b>x</b>)
         </p>
         <p>
-          ξ<sup>s</sup> is still stored page <i>s</i>, as everywhere on this
-          page; <b>x</b> is the page on screen, in ±1.
+          ξ<sup>s</sup> is still stored page <i>s</i>; <b>x</b> is the page on
+          screen. Each term scores how well the screen matches one stored
+          page, and the exp lets the best match tower over the rest.
         </p>
         <p>
           <strong>Then shades of grey</strong>, which buys differentiability —
@@ -102,6 +103,11 @@
         </p>
         <p class="reveal-eq">
           <b>x</b><sup>new</sup> = <b>X</b> softmax(β <b>X</b><sup>⊤</sup> <b>x</b>)
+        </p>
+        <p>
+          The softmax turns the five match scores into weights that sum to
+          one — a gentler "pick the best" — and the new page is the stored
+          pages blended by those weights. β sets how hard the winner wins.
         </p>
         <p>
           Feed the memories through three learned projections — <em>query</em>,
