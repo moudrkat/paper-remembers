@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The paper that remembers itself — Hopfield 1982, live</title>
 <meta name="description" content="Rub out any part of a 1982 Nobel-winning paper and watch the whole page rebuild itself — the same memory mechanism that powers modern AI.">
+<!-- link previews — the image is a real frame of the network mid-scribble -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="The paper that remembers itself — Hopfield 1982, live">
+<meta property="og:description" content="Rub out any part of a 1982 Nobel-winning paper and watch the whole page rebuild itself — the same memory mechanism that powers modern AI.">
+<meta property="og:url" content="https://unt1l1f1nd-paper-remembers.static.hf.space/">
+<meta property="og:image" content="https://unt1l1f1nd-paper-remembers.static.hf.space/media/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧲</text></svg>">
 <link rel="stylesheet" href="style.css">
 <!-- start fetching the page images during HTML parse so the intro starts sooner -->
 <link rel="preload" as="image" href="media/page-2.png" crossorigin>
@@ -14,6 +24,12 @@
 <link rel="preload" as="image" href="media/page-6.png" crossorigin>
 </head>
 <body>
+<noscript>
+  <p style="max-width: 62ch; margin: 20px auto; padding: 0 16px;">
+  This page is a live demonstration and needs JavaScript to run. The paper
+  itself is free to read at
+  <a href="https://www.pnas.org/doi/10.1073/pnas.79.8.2554">pnas.org</a>.</p>
+</noscript>
 
 <header>
   <div class="masthead">
@@ -28,8 +44,8 @@
   <p class="age">
     A real paper from 1982, by the physicist John Hopfield, describing the kind
     of memory that brings back a whole song from two notes. The paper is now
-    stored inside the memory it describes: every speck of ink below is one
-    switch in the network. The idea won the 2024 Nobel Prize in Physics.
+    stored inside the memory it describes: every pixel below, ink and blank
+    paper alike, is one switch in the network. The idea won the 2024 Nobel Prize in Physics.
   </p>
 </header>
 
@@ -72,15 +88,20 @@
           capacity turns exponential — still in black and white:
         </p>
         <p class="reveal-eq">
-          E = −∑ exp(<b>x</b><sub>i</sub><sup>⊤</sup> ξ)
+          E = −∑<sub>s</sub> exp(ξ<sup>s⊤</sup> <b>x</b>)
+        </p>
+        <p>
+          ξ<sup>s</sup> is still stored page <i>s</i>, as everywhere on this
+          page; <b>x</b> is the page on screen, in ±1.
         </p>
         <p>
           <strong>Then shades of grey</strong>, which buys differentiability —
           not capacity — so the whole thing can sit inside a trained network.
-          Recall is now one line:
+          Recall is now one line, with <b>X</b> the five stored pages set
+          side by side as columns:
         </p>
         <p class="reveal-eq">
-          ξ<sup>new</sup> = <b>X</b> softmax(β <b>X</b><sup>⊤</sup> ξ)
+          <b>x</b><sup>new</sup> = <b>X</b> softmax(β <b>X</b><sup>⊤</sup> <b>x</b>)
         </p>
         <p>
           Feed the memories through three learned projections — <em>query</em>,
@@ -125,6 +146,7 @@
         <li><strong>"Holds exponentially more" above is a different test, not the same scoreboard.</strong> The 1982 limit — about 0.15 memories per switch — was measured on random patterns, allowing a few wrong pixels. The modern figure assumes memories already very unlike each other. The jump is real, but it is not one number rising on one chart.</li>
         <li><strong>This demo is a side branch, not a step toward chatbots.</strong> It runs the 1982 network, with the 1985 pen, in black and white, until it settles. Attention grew from the same 1982 root along a different branch — what they share is the move "start from a fragment, land on the nearest memory," not this exact machinery.</li>
         <li><strong>Related earlier work,</strong> for anyone tracing the theory: Shun'ichi Amari (1972) and William Little (1974), whom Hopfield cites as refs. 6–8 and 25 on the last page above.</li>
+        <li>Scribbling needs a pointer — mouse, finger, or pen. There is no keyboard way to damage a page yet.</li>
       </ul>
     </details>
 
@@ -140,6 +162,7 @@
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15" selected>15</option>
+          <option value="25">25</option>
         </select>
       </label>
       <button id="btn-fig2">run the 1982 experiment</button>
@@ -208,7 +231,8 @@
 
       <details class="deeper">
         <summary>try Hopfield's original 1982 storage recipe</summary>
-        <div class="trace-cap">only <b>T</b> changes — then scribble a page</div>
+        <div class="trace-cap">only <b>T</b> changes — then scribble a page.
+        switching resets all five pages</div>
         <div class="controls">
           <button id="btn-merge">switch to Hopfield's 1982 recipe</button>
         </div>

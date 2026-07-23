@@ -64,9 +64,9 @@ of the stored memories — the line that named the endings sits inside one.
   merge — a toggle on the page switches to that recipe and lets you watch
   all five blur into one ghost.
 - **Fig. 2 is re-run live.** The paper's capacity experiment: a network of
-  100 switches, a growing number of random memories, the 1982 recipe; each
-  memory is nudged in and left to settle, and a bar chart counts how many
-  pixels came back wrong. The paper's limit — about 0.15 memories per switch
+  100 switches, a growing number of random memories, the 1982 recipe; the
+  network is started at each stored memory in turn and left to settle, and a
+  bar chart counts how many of its pixels it failed to hold. The paper's limit — about 0.15 memories per switch
   before recall falls apart — shows up in your browser in milliseconds:
   5 memories come back near-perfect, 15 fall apart, matching the paper's
   "almost always stable" vs "about half … evolved to states quite
@@ -141,6 +141,8 @@ prize.
   verdicts, energy instrument, intro narration, Fig. 2 replication
 - `media/page-*.png` — the scan, 150 dpi renders (the source PDF itself is
   deliberately not in the repo — see Provenance & rights)
+- `media/og-card.png` — the link-preview image: a real frame of the network
+  mid-scribble
 - `?debug` in the URL skips the intro
 
 ## Dev
@@ -159,8 +161,8 @@ read from the publisher — [pnas.org](https://www.pnas.org/doi/10.1073/pnas.79.
 Only reduced-resolution page renders ship here, for non-commercial,
 educational use, with the original copyright notice left intact on the print.
 They are the substrate this demonstration runs on, not a reading copy. The
-source PDF is not distributed: it is neither in the working tree nor anywhere
-in the git history.
+source PDF is not distributed: it is not tracked in the repository, nor
+anywhere in its git history.
 
 This is an independent tribute. It is not published, endorsed by, or connected
 with John Hopfield, PNAS, or the National Academy of Sciences. Any rights

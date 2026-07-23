@@ -308,7 +308,9 @@ function startDamage(e, i) {
   };
   const up = () => {
     cleanup();
-    if (state.touched[i]) {
+    // `drawing` too: a plain tap that never drew must not re-queue a page
+    // whose touched flag survived an earlier inexact settle
+    if (drawing && state.touched[i]) {
       state.pending[i] = true;
       setStatus('let go — now watch the page rebuild itself…');
       state.autoHeal = setTimeout(healNext, 600);
