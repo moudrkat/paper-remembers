@@ -335,6 +335,22 @@ function startDamage(e, i) {
 
 // ---------- rebuild (the network recalling the page) ----------
 
+// Choose the flip the ring and the panel hold up next. Down-flips outnumber
+// up-flips heavily on print (the damage is mostly ink specks on blank paper),
+// so always showing the batch's dominant direction lit "becomes paper" almost
+// permanently. Alternate directions whenever both actually fired — each shown
+// decision is still a real one; the flip counter keeps the true totals.
+function sampleSpot(net, page) {
+  const preferUp = state.spot ? state.spot.to === 0
+                              : net.upFlips >= net.downFlips;
+  const pick = (preferUp && net.upFlips) ? net.lastUp
+             : (!preferUp && net.downFlips) ? net.lastDown
+             : net.upFlips ? net.lastUp
+             : net.downFlips ? net.lastDown : null;
+  if (pick) { state.spot = { i: pick.i, h: pick.h, to: pick.to, page }; state.spotShown++; }
+  state.spotAge = 0;
+}
+
 // One network is shared by all five pages, so only one can rebuild at a time.
 // Scribble several and they queue: the page you last touched goes first, the
 // rest follow in order. Without this, damage on any page but the active one
@@ -370,13 +386,8 @@ function heal(i) {
     chunk = Math.max(MIN_CHUNK, Math.min(MAX_CHUNK,
       Math.round(chunk * TARGET_FLIPS / Math.max(1, net.upFlips + net.downFlips))));
     state.works[i].set(net.V);
-    // hold one genuine update from this batch, in the direction that actually
-    // dominated it, until the hold expires
-    if (++state.spotAge >= SPOT_HOLD || !state.spot) {
-      const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
-      if (pick) { state.spot = { i: pick.i, h: pick.h, to: pick.to, page: i }; state.spotShown++; }
-      state.spotAge = 0;
-    }
+    // hold one genuine update from this batch until the hold expires
+    if (++state.spotAge >= SPOT_HOLD || !state.spot) sampleSpot(net, i);
     render(i);
     $('#e-value').textContent = fmtE(net.energy());
     showLive(net, true);
@@ -558,11 +569,7 @@ function healAwait(i) {
       state.works[i].set(net.V);
       // same held sample as the main rebuild — the intro is where most people
       // watch this happen, so it must show the ring too
-      if (++state.spotAge >= SPOT_HOLD || !state.spot) {
-        const pick = net.upFlips >= net.downFlips ? net.lastUp : net.lastDown;
-        if (pick) { state.spot = { i: pick.i, h: pick.h, to: pick.to, page: i }; state.spotShown++; }
-        state.spotAge = 0;
-      }
+      if (++state.spotAge >= SPOT_HOLD || !state.spot) sampleSpot(net, i);
       render(i);
       showLive(net, true);
       $('#e-value').textContent = fmtE(net.energy());
@@ -717,10 +724,6 @@ function net_clearLive() {
 }
 
 function showLive(net, running) {
-  // Mid-rebuild, lastFlip is one sample out of ~20,000 updates a frame, so the
-  // lit branch coin-tosses at 60Hz. Show the direction that actually dominated
-  // the batch instead — and the numbers from a flip that really went that way,
-  // so the h on screen always agrees with the branch lit below it.
   // Mid-rebuild, show the held update — the same one ringed on the page — so
   // i, h and the lit branch all describe one decision and stay still long
   // enough to read. lastFlip alone resampled 60 times a second.
