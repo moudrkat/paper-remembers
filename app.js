@@ -66,7 +66,10 @@ const PAGE_NOTES = [
    in Physics, and rule <b>[1]</b>, redone in shades of grey, turned out to be
    the “attention” inside every chatbot you use.`,
 ];
-const SPOT_HOLD = 9;           // frames (~145ms) one sampled update stays put
+// Long enough to actually read one decision. At 9 (~145ms) the lit branch
+// alternated between "becomes ink" and "becomes paper" seven times a second,
+// which read as senseless blinking rather than a sequence of decisions.
+const SPOT_HOLD = 30;          // frames (~0.5s) one sampled update stays put
 // Pace the rebuild by how much ink is still moving, not by a fixed batch size.
 // Each frame, aim for about TARGET_FLIPS pixels actually changing: if fewer are
 // changing, check more pixels per frame; if more, check fewer. So the visible

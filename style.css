@@ -322,6 +322,9 @@ body.rule-1982 .lc-t-1982 { display: block; }
   padding: 2px 5px;
   margin: 0 -5px;
   color: color-mix(in srgb, var(--ink) 55%, var(--card));
+  /* fade between decisions instead of hard-flipping — the panel should read
+     as one decision after another, not as a blink */
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 .lc-b .lc-c { display: inline; margin-left: 6px; }
 .lc-b.on {
