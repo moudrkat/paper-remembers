@@ -115,6 +115,7 @@ const activeNet = () => state.merged ? state.hebbNet : state.net;
 // ---------- boot ----------
 
 window.addEventListener('load', () => {
+  let loaded = 0;
   Promise.all(PAGES.map(p => new Promise((res, rej) => {
     const im = new Image();
     // Hugging Face serves these via a cross-origin CDN redirect; without CORS
@@ -122,12 +123,18 @@ window.addEventListener('load', () => {
     // Access-Control-Allow-Origin: *, so anonymous CORS is clean here and on
     // any same-origin host too.
     im.crossOrigin = 'anonymous';
-    im.onload = () => res(im);
+    im.onload = () => {
+      const c = $('#load-count');
+      if (c) c.textContent = ++loaded;
+      res(im);
+    };
     im.onerror = () => rej(new Error('could not load ' + p.src));
     im.src = p.src;
   }))).then(init).catch(err => {
     console.error(err);
     setStatus('could not load the page images — try a hard refresh');
+    const ld = $('#stage-loading');
+    if (ld) ld.textContent = 'could not load the page images — try a hard refresh';
   });
 });
 
@@ -176,6 +183,8 @@ function init(imgs) {
 
 function buildStage() {
   const host = $('#stage-scroll');
+  const ld = $('#stage-loading');
+  if (ld) ld.remove();
   PAGES.forEach((p, i) => {
     state.works[i] = Uint8Array.from(state.patterns[i]);
     state.touched[i] = false;

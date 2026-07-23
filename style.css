@@ -94,6 +94,21 @@ header .tagline {
 }
 .stage .caption { margin-top: 10px; }
 
+/* while the five scans arrive — the stage must not sit empty and silent */
+.stage-loading {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  animation: stage-loading-pulse 1.1s ease-in-out infinite alternate;
+}
+.stage-loading b { margin: 0 0.4em; font-variant-numeric: tabular-nums; }
+@keyframes stage-loading-pulse { from { opacity: 0.45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .stage-loading { animation: none; } }
+
 .caption {
   font-family: ui-monospace, monospace;
   font-size: 0.75rem;
