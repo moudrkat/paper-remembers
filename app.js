@@ -65,8 +65,8 @@ const PAGE_NOTES = [
   `<strong>It fails softly.</strong> Overload it and recall degrades instead of
    collapsing — the closing pages are about categories, forgetting, and why
    this behaves like real memory. Forty-two years later it won the Nobel Prize
-   in Physics, and rule <b>[1]</b>, redone in shades of grey, turned out to be
-   the “attention” inside every chatbot you use.`,
+   in Physics, and rule <b>[1]</b>, given a sharper energy and then shades of
+   grey, turned out to be the “attention” inside every chatbot you use.`,
 ];
 // Long enough to actually read one decision. At 9 (~145ms) the lit branch
 // alternated between "becomes ink" and "becomes paper" seven times a second,
