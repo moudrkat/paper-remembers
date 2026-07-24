@@ -44,8 +44,9 @@
   <p class="age">
     A real paper from 1982, by the physicist John Hopfield, describing the kind
     of memory that brings back a whole song from two notes. The paper is now
-    stored inside the memory it describes: every pixel below, ink and blank
-    paper alike, is one switch in the network. The idea won the 2024 Nobel Prize in Physics.
+    stored inside the memory it describes: every pixel position below, ink and
+    blank paper alike, is one switch in a single network — the same 784,320
+    switches hold all five pages. The idea won the 2024 Nobel Prize in Physics.
   </p>
 </header>
 
@@ -66,7 +67,7 @@
         <div class="stage-loading" id="stage-loading">the paper is loading —
         <b id="load-count">0</b> of 5 pages</div>
       </div>
-      <div class="caption">all five pages · 784,320 pixels, each one a switch in the same network</div>
+      <div class="caption">all five pages · one network of 784,320 switches · each pixel position is one switch, shared by all five</div>
     </div>
 
     <div class="reveal">
@@ -94,7 +95,7 @@
         </p>
         <p>
           ξ<sup>s</sup> is still stored page <i>s</i>; <b>x</b> is the page on
-          screen. Each term scores how well the screen matches one stored
+          screen — both written as ±1 per pixel. Each term scores how well the screen matches one stored
           page, and the exp lets the best match tower over the rest.
         </p>
         <p>
@@ -112,8 +113,9 @@
           pages blended by those weights. β sets how sharply the best match dominates.
         </p>
         <p>
-          Feed the memories through three learned projections — <em>query</em>,
-          <em>key</em>, <em>value</em> — set β = 1/√<i>d</i><sub>k</sub>, and
+          Feed the fragment and the memories through three learned
+          projections — <em>query</em>, <em>key</em>, <em>value</em> — set
+          β = 1/√<i>d</i><sub>k</sub>, and
           that same line is attention:
         </p>
         <p class="reveal-eq">
@@ -153,7 +155,7 @@
         <li>Pixels-as-switches is the usual way to picture this network — the memory is a picture, not "understanding." It does not read the words as language.</li>
         <li><strong>"Holds exponentially more" above is a different test, not the same scoreboard.</strong> The 1982 limit — about 0.15 memories per switch — was measured on random patterns, allowing a few wrong pixels. The modern figure assumes memories already very unlike each other. The jump is real, but it is not one number rising on one chart.</li>
         <li><strong>This demo is a side branch, not a step toward chatbots.</strong> It runs the 1982 network, with the 1985 pen, in black and white, until it settles. Attention grew from the same 1982 root along a different branch — what they share is the move "start from a fragment, land on the nearest memory," not this exact machinery.</li>
-        <li><strong>Related earlier work,</strong> for anyone tracing the theory: Shun'ichi Amari (1972) and William Little (1974), whom Hopfield cites as refs. 6–8 and 25 on the last page above.</li>
+        <li><strong>Related earlier work,</strong> for anyone tracing the theory: Shun'ichi Amari (1972) and William Little (1974). Both are cited on the last page above — Little's 1974 paper is ref. 8, Little &amp; Shaw ref. 25, and Amari refs. 6–7 (his 1977–78 papers).</li>
         <li>Scribbling needs a pointer — mouse, finger, or pen. There is no keyboard way to damage a page yet.</li>
       </ul>
     </details>
@@ -165,7 +167,8 @@
       <p><em>N</em> = 100 switches, <em>n</em> random memories, the 1982 rule.
       Each memory is set in perfectly, then left alone — the bars count how
       many of its pixels drift away. Past 0.15&nbsp;<em>N</em> memories it
-      breaks down.</p>
+      breaks down. The printed figure shows <em>n</em> = 5, 10, 15; the 25
+      here is one step further over the cliff.</p>
       <label>n =
         <select id="fig2-n">
           <option value="5">5</option>
@@ -203,8 +206,8 @@
             <span class="lc-c">pick one pixel, at random —<br>the red ring marks it on the page</span>
           </div>
           <div class="lc-row">
-            <i>h<sub>i</sub></i> = ∑<sub>j</sub> <i>T<sub>ij</sub></i><i>V<sub>j</sub></i> = <b id="lc-h">—</b>
-            <span class="lc-c">every other pixel votes on it,<br>through the wiring. this is the tally</span>
+            <i>h<sub>i</sub></i> = ∑<sub>j</sub> <i>T<sub>ij</sub></i> <i>μ<sub>j</sub></i> = <b id="lc-h">—</b>
+            <span class="lc-c">the whole page votes on it,<br>through the wiring. this is the tally</span>
           </div>
           <!-- T is the only thing the 1982/1985 toggle changes — so show it,
                and swap it live when the toggle flips -->
@@ -215,7 +218,7 @@
           <div class="lc-row lc-t lc-t-1982">
             <i>T<sub>ij</sub></i> = ∑<sub>s</sub> <i>ξ<sub>i</sub><sup>s</sup></i> <i>ξ<sub>j</sub><sup>s</sup></i>,
             <i>T<sub>ii</sub></i> = 0
-            <span class="lc-c">the wiring · Hopfield 1982, eq&nbsp;[2].<br>same line with <b>G</b> = identity</span>
+            <span class="lc-c">the wiring · Hopfield 1982, eq&nbsp;[2].<br>the 1985 line, once <b>G</b> says<br>the pages share nothing</span>
           </div>
           <div class="lc-b" id="lc-b1"><i>V<sub>i</sub></i> → 1 &nbsp;if <i>h<sub>i</sub></i> &gt; 0<span class="lc-c">the page voted ink</span></div>
           <div class="lc-b" id="lc-b2"><i>V<sub>i</sub></i> → 0 &nbsp;if <i>h<sub>i</sub></i> &lt; 0<span class="lc-c">the page voted paper</span></div>
@@ -223,6 +226,7 @@
           <!-- every symbol on screen gets defined here — nothing is assumed -->
           <div class="lc-foot">
             <span><i>V</i> = the page right now · 1 = ink, 0 = paper</span>
+            <span><i>μ</i> = 2<i>V</i>−1 = that page as ±1 — the paper's own p.&nbsp;2557 form, threshold 0</span>
             <span>→ = becomes</span>
             <span><i>ξ<sup>s</sup></i> = stored page <i>s</i>, ±1 per pixel · <i>s</i>, <i>r</i> = 1…5</span>
             <span>then pick another pixel. that is the whole rule.</span>
@@ -273,11 +277,12 @@
 
   <p><strong>Also cited.</strong> Projection rule: Personnaz, Guyon &amp;
   Dreyfus, J. Phys. Lett. 46, L359 (1985). The exponential capacity above is
-  not from continuous states — it comes from the new energy function, in
-  networks that were still binary: Krotov &amp; Hopfield,
-  <a href="https://arxiv.org/abs/1606.01164">arXiv:1606.01164</a> (2016), and
-  Demircigil et al., <a href="https://arxiv.org/abs/1702.01929">arXiv:1702.01929</a>
-  (2017). The attention equivalence is for the modern <em>continuous</em>
+  not from continuous states — it comes from the sharper energy, in networks
+  that were still binary. The energy family, whose polynomial versions already
+  lift capacity well past 0.15&nbsp;<em>N</em>: Krotov &amp; Hopfield,
+  <a href="https://arxiv.org/abs/1606.01164">arXiv:1606.01164</a> (2016). The
+  exp energy and the exponential capacity itself: Demircigil et al.,
+  <a href="https://arxiv.org/abs/1702.01929">arXiv:1702.01929</a> (2017). The attention equivalence is for the modern <em>continuous</em>
   Hopfield network: Ramsauer et al.,
   <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a> (2020). 2024
   Nobel Prize in Physics: Hopfield &amp; Hinton. Everything runs in your

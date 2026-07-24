@@ -23,8 +23,8 @@ const PAGE_NOTES = [
   `<strong>Memory looked up by content, not address.</strong> A computer fetches
    “slot #4837.” This memory is handed a fragment, or a damaged copy, and gives
    back the whole — the way a glimpse of a face brings back the face.
-   Hopfield's name for it is in the abstract's first line:
-   <em>content-addressable memory</em>.`,
+   Hopfield's name for it is in the keyword line under the title, and again
+   in the abstract's second sentence: <em>content-addressable memory</em>.`,
 
   // p. 2555 — equations [1] and [2]
   `<strong>The two working rules.</strong> <b>[1]</b> is recall: each switch
@@ -36,7 +36,8 @@ const PAGE_NOTES = [
    The one change not from 1982 sits here: this demo writes the pages in with
    the 1985 recipe above, where <b>G</b> measures how much the five pages
    overlap. Tell <b>G</b> the pages share nothing, and the formula becomes the
-   paper's own <b>[2]</b>. Five pages of one journal share far too much for
+   paper's own <b>[2]</b>, up to a rescaling the recall never notices. Five
+   pages of one journal share far too much for
    that — the 1982 toggle in the panel shows them merging.`,
 
   // p. 2556 — equations [7] and [8]
@@ -44,15 +45,16 @@ const PAGE_NOTES = [
    much the switches disagree with their wiring; <b>[8]</b> proves recall can
    only lower it. So memories are valleys, and a scribbled page is a ball
    rolling to the nearest floor. Hopfield, four lines down: <em>“This case is
-   isomorphic with an Ising model… when T<sub>ij</sub> is symmetric but has a
+   isomorphic with an Ising model… When T<sub>ij</sub> is symmetric but has a
    random character (the spin glass) there are known to be many (locally)
    stable states.”</em> Translated: this memory is the same mathematics as a
    magnet. That is why a paper about neurons is physics.`,
 
   // p. 2557 — Fig. 2, the attractor sentence, the merge warning
-  `<strong>He names the valleys here.</strong> In italics, right column:
+  `<strong>He names the valleys here.</strong> In italics, left column:
    <em>“The phase space flow is apparently dominated by attractors which are
-   the nominally assigned memories.”</em> An attractor: many different starts,
+   the nominally assigned memories, each of which dominates a substantial
+   region around it.”</em> An attractor: many different starts,
    one shared ending. Scribble this page two completely different ways and
    watch both land on the identical print. Also here, the warning that forced
    the 1985 pen: <em>“memories too close to each other are confused and tend
@@ -646,7 +648,8 @@ function drawTrace() {
 // ---------- Fig. 2 (unchanged capacity replication) ----------
 
 function runFig2(n) {
-  const NN = 100, MATRICES = 10, bins = [0, 1, 3, 6, 10, 20, 30, 40, 50];
+  // bin edges follow the printed figure's axis: 3, 6, 9, then decades
+  const NN = 100, MATRICES = 10, bins = [0, 1, 4, 7, 10, 20, 30, 40, 50];
   const counts = new Array(bins.length).fill(0);
   let trials = 0, exact = 0;
   for (let m = 0; m < MATRICES; m++) {
@@ -695,7 +698,7 @@ function drawFig2(probs, n) {
     ctx.strokeRect(x, y, bw - 6, h);
   });
   ctx.font = '10px ui-monospace, monospace'; ctx.textAlign = 'center';
-  ['0','1-2','3-5','6-9','10-','20-','30-','40-','>49'].forEach((l, i) =>
+  ['0','1-3','4-6','7-9','10-19','20-29','30-39','40-49','>49'].forEach((l, i) =>
     ctx.fillText(l, left + i*bw + bw/2, H - 14));
   ctx.fillText('errors in the rebuilt memory', (W + left) / 2, H - 2);
   ctx.textAlign = 'left'; ctx.fillText(`n = ${n} memories, N = 100`, left + 8, 20);
